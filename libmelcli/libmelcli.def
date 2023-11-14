@@ -1,0 +1,34 @@
+LIBRARY libmelcli
+
+EXPORTS
+    melcli_init @1
+    melcli_uninit @2
+
+    melcli_new_context @10
+    melcli_free_context @11
+    melcli_connect @12
+    melcli_disconnect @13
+    melcli_set_debug @14
+    melcli_free @15
+
+    melcli_batch_read @20
+    melcli_batch_write @21
+    melcli_random_read @22
+    melcli_random_write @23
+    melcli_remote_control @24
+    melcli_remote_password @25
+    melcli_self_test @26
+    melcli_clear_error_code @27
+    melcli_clear_error_history @28
+    melcli_random_read_word @29
+    melcli_random_read_dword @30
+    melcli_random_write_bit @31
+    melcli_random_write_word @32
+    melcli_random_write_dword @33
+    melcli_remote_run @34
+    melcli_remote_stop @35
+    melcli_remote_reset @36
+    melcli_remote_pause @37
+    melcli_remote_latch_clear @38
+    melcli_remote_read_type_name @39
+

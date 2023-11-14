@@ -1,0 +1,91 @@
+/**
+
+\mainpage Open-source C/C++ Library for SLMP (Seamless Message Protocol)
+
+\tableofcontents
+
+\section sec_intro Introduction
+libslmp is an open-source C/C++ library for writing SLMP client or server 
+applications.
+
+Go to <a href="https://github.com/Neucrede/libslmp2">the Github repository</a>
+to obtain the source code or pre-built binaries.
+
+SLMP (SeamLess Message Protocol) is a common protocol to implement communication
+between applications seamlessly without awareness of the network hierarchy and 
+boundaries between the CC-Link family network and general-purpose Ethernet 
+devices. [1]
+
+Visit https://www.mitsubishielectric.com/fa to download latest
+SLMP specifications (free of charge).
+
+[1] SLMP (Seamless Message Protocol) Specifications (Overview) BAP-C2006ENG-001-J
+
+
+\section sec_libslmp The SLMP Library
+The SLMP library offers:
+- Data structure of SLMP commands
+    - \ref cmdcode.h "Command and sub-command code definitions"
+    - \ref intmem.h "Internal memory"
+    - \ref dpmem.h "Dual port memory"
+    - \ref extunit.h "Extension module"
+    - \ref remctrl.h "Remote control"
+    - \ref filecmd.h "File"
+    - \ref selftest.h "Loopback test"
+    - \ref clearerr.h "Error initialization"
+    - \ref rempswd.h "Remote password"
+    - \ref nodeconn.h "Device connection"
+    - \ref nodemon.h "Monitoring devices"
+    - \ref paramset.h "Setting parameters"
+- Command codecs
+    - \ref intmem_codec.h "Internal memory"
+    - \ref dpmem_codec.h "Dual port memory"
+    - \ref extunit_codec.h "Extension module"
+    - \ref remctrl_codec.h "Remote control"
+    - \ref filecmd_codec.h "File"
+    - \ref selftest_codec.h "Loopback test"
+    - \ref clearerr_codec.h "Error initialization"
+    - \ref rempswd_codec.h "Remote password"
+    - \ref nodeconn_codec.h "Device connection"
+    - \ref nodemon_codec.h "Monitoring devices"
+    - \ref paramset_codec.h "Setting parameters"
+- \ref slmp_frame "Data structure of SLMP frames"
+- \ref slmpcodec.h "Frame codecs"
+- \ref slmppktio.h "Packet IO"
+    - \ref tcpip.h "TCP/IP dedicated functions"
+    - \ref udpip.h "UDP/IP dedicated functions"
+- \ref slmpfrmio.h "High-level frame transmission and receipt"
+- \ref slmpmem.h "Thread specific memory management"
+- \ref slmperr.h "Thread specific error number support"
+- \ref slmpinit.h "Library initialization / uninitialization"
+- \ref slmpdef.h "Constant definitions"
+
+
+\section sec_libmelcli The MELSEC Client Library
+libmelcli is an SLMP client library dedicated for Mitsubishi(R) MELSEC(R) series 
+PLCs. It also serves as a demonstration on typical usage of libslmp.
+
+The MELSEC client library offers:
+- Connection context management
+- Simple debug print support
+- Sequential and random access on internal memory
+- Sequential access on buffer memory
+- Remote control
+- Remote password
+- Error initialization
+
+See \ref melcli.h "the documentation of libmelcli" for detailed description
+on abovementioned functions. Also refer to the source code of the demonstration 
+program in `samples/mcdemo` directory.
+
+
+\section sec_about About
+libslmp is developed and maintained by 
+<a href="https://github.com/Neucrede">Neucrede</a>.
+
+
+\section sec_bugreport Bug Report
+To report a bug, please feel free to drop me an email at <neucrede@sina.com>.
+
+
+*/

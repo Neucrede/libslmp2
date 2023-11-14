@@ -1,0 +1,25 @@
+/* **************************************************************************
+ * Name: config.h
+ *
+ * Automatically generated configuration file.
+ *
+ * !!! DO NOT EDIT !!!
+ * *************************************************************************/
+
+
+#ifndef __LIBSLMP_CONFIG_H__
+#define __LIBSLMP_CONFIG_H__
+
+#define LIBSLMP_VERSION "v1.0"
+
+#cmakedefine HAVE_STRLCPY
+
+#cmakedefine HAVE_STDINT_H
+
+#cmakedefine ENABLE_TSD
+
+#cmakedefine01 USE_WINDOWS_THREADS
+#cmakedefine01 USE_POSIX_THREADS
+#cmakedefine HAVE_PTHREADS
+
+#endif /* __LIBSLMP_CONFIG_H__ */

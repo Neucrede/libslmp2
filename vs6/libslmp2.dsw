@@ -1,0 +1,101 @@
+Microsoft Developer Studio Workspace File, Format Version 6.00
+# WARNING: DO NOT EDIT OR DELETE THIS WORKSPACE FILE!
+
+###############################################################################
+
+Project: "Ccgen"=..\libslmp\CommandCodecGenerator\Ccgen\Ccgen.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "CodecFuncsSample"=.\CodecFuncsSample.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name libslmp
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "EchoClientSample"=.\EchoClientSample.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name libslmp
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "EchoServerSample"=.\EchoServerSample.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name libslmp
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "libmelcli"=.\libmelcli.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name libslmp
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "libslmp"=.\libslmp.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Global:
+
+Package=<5>
+{{{
+}}}
+
+Package=<3>
+{{{
+}}}
+
+###############################################################################
+

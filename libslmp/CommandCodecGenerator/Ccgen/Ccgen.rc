@@ -1,0 +1,645 @@
+//Microsoft Developer Studio generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// Chinese (P.R.C.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
+#ifdef _WIN32
+LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
+#pragma code_page(936)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#define _AFX_NO_OLE_RESOURCES\r\n"
+    "#define _AFX_NO_TRACKER_RESOURCES\r\n"
+    "#define _AFX_NO_PROPERTY_RESOURCES\r\n"
+    "\r\n"
+    "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)\r\n"
+    "#ifdef _WIN32\r\n"
+    "LANGUAGE 9, 1\r\n"
+    "#pragma code_page(1252)\r\n"
+    "#endif //_WIN32\r\n"
+    "#include ""res\\Ccgen.rc2""  // non-Microsoft Visual C++ edited resources\r\n"
+    "#include ""afxres.rc""         // Standard components\r\n"
+    "#include ""afxprint.rc""       // printing/print preview resources\r\n"
+    "#endif\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+#endif    // Chinese (P.R.C.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_COMMAND_FORM DIALOG DISCARDABLE  0, 0, 350, 433
+STYLE WS_CHILD
+FONT 8, "MS Sans Serif"
+BEGIN
+    EDITTEXT        IDC_COMMAND_NAME,32,7,311,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_STRUCT_TYPE,7,40,279,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "Auto",IDC_AUTO_STRUCT_TYPE,293,40,50,14
+    EDITTEXT        IDC_COMMAND_BRIEF,7,73,336,50,ES_MULTILINE | 
+                    ES_WANTRETURN | WS_VSCROLL | WS_HSCROLL
+    CONTROL         "Aware of Address &Length",IDC_ADDR_LEN_DEP,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,7,130,123,10
+    COMBOBOX        IDC_STREAM_TYPE_SUPPORTED,245,129,98,117,
+                    CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    CONTROL         "Tree1",IDC_CMD_TREE,"SysTreeView32",TVS_HASBUTTONS | 
+                    TVS_HASLINES | TVS_SHOWSELALWAYS | WS_BORDER | 
+                    WS_TABSTOP,7,199,123,227
+    PUSHBUTTON      "&New...",IDC_NEW,7,159,50,14
+    PUSHBUTTON      "&Delete",IDC_DELETE,7,178,50,14
+    PUSHBUTTON      "Move &Up",IDC_MOVE_UP,80,159,50,14
+    PUSHBUTTON      "Move Do&wn",IDC_MOVE_DOWN,80,178,50,14
+    EDITTEXT        IDC_FIELD_NAME,187,167,148,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_FIELD_BRIEF,187,187,147,14,ES_AUTOHSCROLL
+    CONTROL         "&Variable Size",IDC_VARIABLE_SIZE,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,187,234,83,10
+    CONTROL         "String(&1)",IDC_STRING_FIELD_VAR_SIZE,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,278,234,52,10
+    CONTROL         "Size &Field:",IDC_ENABLE_SIZE_FIELD,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,157,253,60,10
+    EDITTEXT        IDC_SIZE_FIELD,220,250,105,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_SIZE_BIN_16B,187,291,40,14,ES_AUTOHSCROLL | 
+                    ES_NUMBER
+    CONTROL         "String(&2)",IDC_STRING_FIELD_BIN_16B,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,187,310,52,10
+    EDITTEXT        IDC_SIZE_ASC_16B,278,291,40,14,ES_AUTOHSCROLL | 
+                    ES_NUMBER
+    CONTROL         "String(&3)",IDC_STRING_FIELD_ASC_16B,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,278,310,52,10
+    EDITTEXT        IDC_SIZE_BIN_32B,187,347,40,14,ES_AUTOHSCROLL | 
+                    ES_NUMBER
+    CONTROL         "String(&4)",IDC_STRING_FIELD_BIN_32B,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,187,366,52,10
+    EDITTEXT        IDC_SIZE_ASC_32B,278,347,40,14,ES_AUTOHSCROLL | 
+                    ES_NUMBER
+    CONTROL         "String(&5)",IDC_STRING_FIELD_ASC_32B,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,278,366,52,10
+    CONTROL         "&Binary Only",IDC_AVAIL_BIN,"Button",BS_AUTORADIOBUTTON | 
+                    WS_GROUP,147,407,60,10
+    CONTROL         "&ASCII Only",IDC_AVAIL_ASC,"Button",BS_AUTORADIOBUTTON,
+                    220,407,56,10
+    CONTROL         "Bo&th",IDC_AVAIL_BOTH,"Button",BS_AUTORADIOBUTTON,295,
+                    407,32,10
+    LTEXT           "C struct type (without prefix 'slmp_' and suffix '_t'):",
+                    IDC_STATIC,7,28,221,8
+    LTEXT           "Brief:",IDC_STATIC,7,61,25,8
+    LTEXT           "Name:",IDC_STATIC,7,10,21,8
+    GROUPBOX        "Size",IDC_STATIC,140,213,203,179
+    GROUPBOX        "16-bit Address / Address Length Independent",IDC_STATIC,
+                    147,277,188,51
+    LTEXT           "Binary:",IDC_STATIC,154,294,29,8
+    LTEXT           "ASCII:",IDC_STATIC,249,294,25,8
+    GROUPBOX        "32-bit Address",IDC_STATIC,147,332,188,51
+    LTEXT           "Binary:",IDC_STATIC,154,348,29,8
+    LTEXT           "ASCII:",IDC_STATIC,249,348,25,8
+    GROUPBOX        "Stream Type(s) Available",IDC_STATIC,140,395,203,31
+    GROUPBOX        "Information",IDC_STATIC,140,155,203,54
+    LTEXT           "Name:",IDC_STATIC,147,170,21,8
+    LTEXT           "Brief:",IDC_STATIC,147,190,25,8
+    GROUPBOX        "Variable Size",IDC_STATIC,147,222,188,51
+    LTEXT           "Supported Stream Type(s):",IDC_STATIC,140,131,101,8
+    CONTROL         "",IDC_STATIC,"Static",SS_BLACKFRAME | SS_SUNKEN,7,149,
+                    336,1
+END
+
+IDD_GLOBALPROPS_FORM DIALOG DISCARDABLE  0, 0, 350, 367
+STYLE WS_CHILD
+FONT 8, "MS Sans Serif"
+BEGIN
+    EDITTEXT        IDC_EDIT_DESCRIPTION,7,20,336,180,ES_MULTILINE | 
+                    ES_NOHIDESEL | ES_WANTRETURN | WS_VSCROLL | WS_HSCROLL
+    LTEXT           "Description:",IDC_STATIC,7,7,49,8
+    LTEXT           "Command Header:",IDC_STATIC,15,236,61,8
+    EDITTEXT        IDC_EDIT_COMMAND_HEADER,83,233,125,14,ES_AUTOHSCROLL
+    LTEXT           "Codec Header:",IDC_STATIC,15,256,53,8
+    LTEXT           "Codec Source:",IDC_STATIC,15,276,53,8
+    EDITTEXT        IDC_EDIT_CODEC_HEADER,83,252,125,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_CODEC_SOURCE,83,273,125,14,ES_AUTOHSCROLL
+    GROUPBOX        "Source && Header Filenames",IDC_STATIC,7,219,209,78
+    GROUPBOX        "Export Definitions",IDC_STATIC,7,302,209,58
+    CONTROL         "Including &Ordinal",IDC_INCLUDING_ORDINAL,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,15,318,179,10
+    LTEXT           "Ordinal Begins with:",IDC_STATIC,15,338,81,8
+    EDITTEXT        IDC_ORDINAL_BEGIN,102,336,106,14,ES_AUTOHSCROLL
+END
+
+IDD_ABOUTBOX DIALOG DISCARDABLE  0, 0, 235, 58
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "About Ccgen"
+FONT 8, "MS Sans Serif"
+BEGIN
+    ICON            IDR_MAINFRAME,IDC_STATIC,11,17,20,20
+    LTEXT           "Command Codec Generator",IDC_STATIC,40,10,119,8,
+                    SS_NOPREFIX
+    LTEXT           "Neucrede <neucrede@sina.com>",IDC_STATIC,40,25,119,8
+    DEFPUSHBUTTON   "OK",IDOK,178,7,50,14,WS_GROUP
+END
+
+IDD_CCGEN_FORM DIALOG DISCARDABLE  0, 0, 320, 200
+STYLE WS_CHILD
+FONT 8, "MS Sans Serif"
+BEGIN
+END
+
+IDD_NEW_COMMAND DIALOG DISCARDABLE  0, 0, 187, 45
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "New Command"
+FONT 8, "MS Sans Serif"
+BEGIN
+    EDITTEXT        IDC_COMMAND_NAME,7,20,110,14,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "OK",IDOK,130,7,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,130,24,50,14
+    LTEXT           "Name:",IDC_STATIC,7,7,21,8
+END
+
+IDD_NEW_CMDELEM DIALOG DISCARDABLE  0, 0, 200, 113
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "New Element"
+FONT 8, "MS Sans Serif"
+BEGIN
+    EDITTEXT        IDC_NAME,7,92,128,14,ES_AUTOHSCROLL
+    CONTROL         "&Group",IDC_TYPE,"Button",BS_AUTORADIOBUTTON | WS_GROUP,
+                    15,20,36,10
+    CONTROL         "&Field",IDC_FIELD,"Button",BS_AUTORADIOBUTTON,15,35,36,
+                    10
+    CONTROL         "&Standalone Field",IDC_FIELD_ROOT,"Button",
+                    BS_AUTORADIOBUTTON,15,50,80,10
+    DEFPUSHBUTTON   "OK",IDOK,143,11,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,143,28,50,14
+    GROUPBOX        "Type",IDC_STATIC,7,7,128,62
+    LTEXT           "Name:",IDC_STATIC,7,79,21,8
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO DISCARDABLE 
+BEGIN
+    IDD_COMMAND_FORM, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 343
+        VERTGUIDE, 40
+        VERTGUIDE, 130
+        VERTGUIDE, 140
+        VERTGUIDE, 147
+        VERTGUIDE, 154
+        VERTGUIDE, 187
+        VERTGUIDE, 220
+        VERTGUIDE, 232
+        VERTGUIDE, 278
+        VERTGUIDE, 335
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 426
+    END
+
+    IDD_GLOBALPROPS_FORM, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 343
+        VERTGUIDE, 15
+        VERTGUIDE, 208
+        VERTGUIDE, 216
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 360
+    END
+
+    IDD_ABOUTBOX, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 228
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 51
+    END
+
+    IDD_CCGEN_FORM, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 313
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 193
+    END
+
+    IDD_NEW_COMMAND, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 180
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 38
+    END
+
+    IDD_NEW_CMDELEM, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 193
+        VERTGUIDE, 15
+        VERTGUIDE, 135
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 106
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDR_TREE_IMAGE_LIST     BITMAP  DISCARDABLE     "res\\tree_img.bmp"
+IDR_MAINFRAME           BITMAP  MOVEABLE PURE   "res\\Toolbar.bmp"
+IDR_CMDTREE_IMAGE_LIST  BITMAP  DISCARDABLE     "res\\cmdtree.bmp"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Toolbar
+//
+
+IDR_TREE_IMAGE_LIST TOOLBAR DISCARDABLE  16, 15
+BEGIN
+    BUTTON      ID_BUTTON32772
+    BUTTON      ID_BUTTON32773
+    BUTTON      ID_BUTTON32775
+    BUTTON      ID_BUTTON32782
+END
+
+IDR_MAINFRAME TOOLBAR DISCARDABLE  16, 15
+BEGIN
+    BUTTON      ID_FILE_NEW
+    BUTTON      ID_FILE_OPEN
+    BUTTON      ID_FILE_SAVE
+    SEPARATOR
+    BUTTON      ID_NEW_COMMAND
+    BUTTON      ID_EDIT_CLEAR
+    BUTTON      ID_MOVE_UP
+    BUTTON      ID_MOVE_DOWN
+    SEPARATOR
+    BUTTON      ID_GENERATE_TYPEDEF
+    SEPARATOR
+    BUTTON      ID_GENERATE_HEADER
+    BUTTON      ID_GENERATE_SOURCE
+    BUTTON      ID_GENERATE_EXPDEF
+    SEPARATOR
+    BUTTON      ID_APP_ABOUT
+END
+
+IDR_CMDTREE_IMAGE_LIST TOOLBAR DISCARDABLE  16, 15
+BEGIN
+    BUTTON      ID_BUTTON32777
+    BUTTON      ID_BUTTON32776
+    BUTTON      ID_BUTTON32778
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_MAINFRAME MENU PRELOAD DISCARDABLE 
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "&New\tCtrl+N",                ID_FILE_NEW
+        MENUITEM "&Open...\tCtrl+O",            ID_FILE_OPEN
+        MENUITEM "&Save\tCtrl+S",               ID_FILE_SAVE
+        MENUITEM "Save &As...",                 ID_FILE_SAVE_AS
+        MENUITEM SEPARATOR
+        MENUITEM "Recent File",                 ID_FILE_MRU_FILE1, GRAYED
+        MENUITEM SEPARATOR
+        MENUITEM "E&xit",                       ID_APP_EXIT
+    END
+    POPUP "&Edit"
+    BEGIN
+        MENUITEM "&New Command...\tCtrl+Shift+N", ID_NEW_COMMAND
+        MENUITEM "&Delete\tCtrl+D",             ID_EDIT_CLEAR
+        MENUITEM "Move &Up",                    ID_MOVE_UP
+        MENUITEM "Move Do&wn",                  ID_MOVE_DOWN
+    END
+    POPUP "&View"
+    BEGIN
+        MENUITEM "&Toolbar",                    ID_VIEW_TOOLBAR
+        MENUITEM "&Status Bar",                 ID_VIEW_STATUS_BAR
+    END
+    POPUP "&Generate"
+    BEGIN
+        MENUITEM "&Command Header",             ID_GENERATE_TYPEDEF
+        MENUITEM SEPARATOR
+        MENUITEM "Co&dec Header",               ID_GENERATE_HEADER
+        MENUITEM "Codec &Source",               ID_GENERATE_SOURCE
+        MENUITEM "&Export definitions",         ID_GENERATE_EXPDEF
+    END
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "&About Ccgen...",             ID_APP_ABOUT
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDR_MAINFRAME           ICON    DISCARDABLE     "res\\Ccgen.ico"
+IDR_CCGENTYPE           ICON    DISCARDABLE     "res\\CcgenDoc.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Accelerator
+//
+
+IDR_MAINFRAME ACCELERATORS PRELOAD MOVEABLE PURE 
+BEGIN
+    "D",            ID_EDIT_CLEAR,          VIRTKEY, CONTROL, NOINVERT
+    "N",            ID_FILE_NEW,            VIRTKEY, CONTROL, NOINVERT
+    "N",            ID_NEW_COMMAND,         VIRTKEY, SHIFT, CONTROL, 
+                                                    NOINVERT
+    "O",            ID_FILE_OPEN,           VIRTKEY, CONTROL, NOINVERT
+    "S",            ID_FILE_SAVE,           VIRTKEY, CONTROL, NOINVERT
+    VK_F6,          ID_NEXT_PANE,           VIRTKEY, NOINVERT
+    VK_F6,          ID_PREV_PANE,           VIRTKEY, SHIFT, NOINVERT
+END
+
+
+#ifndef _MAC
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,1
+ PRODUCTVERSION 1,0,0,1
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904B0"
+        BEGIN
+            VALUE "CompanyName", "\0"
+            VALUE "FileDescription", "Ccgen MFC Application\0"
+            VALUE "FileVersion", "1, 0, 0, 1\0"
+            VALUE "InternalName", "Ccgen\0"
+            VALUE "LegalCopyright", "Neucrede <neucrede@sina.com>\0"
+            VALUE "LegalTrademarks", "\0"
+            VALUE "OriginalFilename", "Ccgen.EXE\0"
+            VALUE "ProductName", "Ccgen Application\0"
+            VALUE "ProductVersion", "1, 0, 0, 1\0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1200
+    END
+END
+
+#endif    // !_MAC
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog Info
+//
+
+IDD_COMMAND_FORM DLGINIT
+BEGIN
+    IDC_STREAM_TYPE_SUPPORTED, 0x403, 12, 0
+0x6942, 0x616e, 0x7972, 0x4f20, 0x6c6e, 0x0079, 
+    IDC_STREAM_TYPE_SUPPORTED, 0x403, 11, 0
+0x5341, 0x4943, 0x2049, 0x6e4f, 0x796c, "\000" 
+    IDC_STREAM_TYPE_SUPPORTED, 0x403, 5, 0
+0x6f42, 0x6874, "\000" 
+    0
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE PRELOAD DISCARDABLE 
+BEGIN
+    IDR_MAINFRAME           "Command Codec Generator\n\nCCGEN\nCCGEN Files (*.cge)\n.cge\nCcgen.Document\nCCGEN Document"
+END
+
+STRINGTABLE PRELOAD DISCARDABLE 
+BEGIN
+    AFX_IDS_APP_TITLE       "Ccgen"
+    AFX_IDS_IDLEMESSAGE     "Ready"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_INDICATOR_EXT        "EXT"
+    ID_INDICATOR_CAPS       "CAP"
+    ID_INDICATOR_NUM        "NUM"
+    ID_INDICATOR_SCRL       "SCRL"
+    ID_INDICATOR_OVR        "OVR"
+    ID_INDICATOR_REC        "REC"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_FILE_NEW             "Create a new document\nNew"
+    ID_FILE_OPEN            "Open an existing document\nOpen"
+    ID_FILE_CLOSE           "Close the active document\nClose"
+    ID_FILE_SAVE            "Save the active document\nSave"
+    ID_FILE_SAVE_AS         "Save the active document with a new name\nSave As"
+    ID_FILE_PAGE_SETUP      "Change the printing options\nPage Setup"
+    ID_FILE_PRINT_SETUP     "Change the printer and printing options\nPrint Setup"
+    ID_FILE_PRINT           "Print the active document\nPrint"
+    ID_FILE_PRINT_PREVIEW   "Display full pages\nPrint Preview"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_APP_ABOUT            "Display program information, version number and copyright\nAbout"
+    ID_APP_EXIT             "Quit the application; prompts to save documents\nExit"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_FILE_MRU_FILE1       "Open this document"
+    ID_FILE_MRU_FILE2       "Open this document"
+    ID_FILE_MRU_FILE3       "Open this document"
+    ID_FILE_MRU_FILE4       "Open this document"
+    ID_FILE_MRU_FILE5       "Open this document"
+    ID_FILE_MRU_FILE6       "Open this document"
+    ID_FILE_MRU_FILE7       "Open this document"
+    ID_FILE_MRU_FILE8       "Open this document"
+    ID_FILE_MRU_FILE9       "Open this document"
+    ID_FILE_MRU_FILE10      "Open this document"
+    ID_FILE_MRU_FILE11      "Open this document"
+    ID_FILE_MRU_FILE12      "Open this document"
+    ID_FILE_MRU_FILE13      "Open this document"
+    ID_FILE_MRU_FILE14      "Open this document"
+    ID_FILE_MRU_FILE15      "Open this document"
+    ID_FILE_MRU_FILE16      "Open this document"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_NEXT_PANE            "Switch to the next window pane\nNext Pane"
+    ID_PREV_PANE            "Switch back to the previous window pane\nPrevious Pane"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_WINDOW_SPLIT         "Split the active window into panes\nSplit"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_EDIT_CLEAR           "Erase the selection\nErase"
+    ID_EDIT_CLEAR_ALL       "Erase everything\nErase All"
+    ID_EDIT_COPY            "Copy the selection and put it on the Clipboard\nCopy"
+    ID_EDIT_CUT             "Cut the selection and put it on the Clipboard\nCut"
+    ID_EDIT_FIND            "Find the specified text\nFind"
+    ID_EDIT_PASTE           "Insert Clipboard contents\nPaste"
+    ID_EDIT_REPEAT          "Repeat the last action\nRepeat"
+    ID_EDIT_REPLACE         "Replace specific text with different text\nReplace"
+    ID_EDIT_SELECT_ALL      "Select the entire document\nSelect All"
+    ID_EDIT_UNDO            "Undo the last action\nUndo"
+    ID_EDIT_REDO            "Redo the previously undone action\nRedo"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_VIEW_TOOLBAR         "Show or hide the toolbar\nToggle ToolBar"
+    ID_VIEW_STATUS_BAR      "Show or hide the status bar\nToggle StatusBar"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    AFX_IDS_SCSIZE          "Change the window size"
+    AFX_IDS_SCMOVE          "Change the window position"
+    AFX_IDS_SCMINIMIZE      "Reduce the window to an icon"
+    AFX_IDS_SCMAXIMIZE      "Enlarge the window to full size"
+    AFX_IDS_SCNEXTWINDOW    "Switch to the next document window"
+    AFX_IDS_SCPREVWINDOW    "Switch to the previous document window"
+    AFX_IDS_SCCLOSE         "Close the active window and prompts to save the documents"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    AFX_IDS_SCRESTORE       "Restore the window to normal size"
+    AFX_IDS_SCTASKLIST      "Activate Task List"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    AFX_IDS_PREVIEW_CLOSE   "Close print preview mode\nCancel Preview"
+    IDS_COMMAND_EXISTS      "Command '%s' already exists."
+    IDS_CONFIRM_DELETE_COMMAND "Command '%s' will be deleted.\nAre you sure?"
+    IDS_UNKNOWN_CLASS       "Unknown class: %s"
+    IDS_CONFIRM_DELETE_ELEMENT 
+                            "The selected element and all its child items will be deleted.\nAre you sure?"
+    IDS_NOT_IMPL            "Not implemented."
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_NEW_COMMAND          "Create a new command\nNew command"
+    ID_GEN_TYPEDEF          "Generate typedef code\nGenerate typedef"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_GENERATE_SOURCE      "Generate source file for command codec\nGenerate codec source"
+    ID_GENERATE_HEADER      "Generate header file for command codec\nGenerate codec header"
+    ID_GENERATE_TYPEDEF     "Generate header for commands\nGenerate command header"
+    ID_GENERATE_EXPDEF      "Generate codec function export definitions\nGenerate export definitions"
+    ID_MOVE_UP              "Move item up\nMove up"
+    ID_MOVE_DOWN            "Move item down\nMove down"
+END
+
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+#define _AFX_NO_OLE_RESOURCES
+#define _AFX_NO_TRACKER_RESOURCES
+#define _AFX_NO_PROPERTY_RESOURCES
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE 9, 1
+#pragma code_page(1252)
+#endif //_WIN32
+#include "res\Ccgen.rc2"  // non-Microsoft Visual C++ edited resources
+#include "afxres.rc"         // Standard components
+#include "afxprint.rc"       // printing/print preview resources
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+
