@@ -21,7 +21,7 @@
  * It may be needed to modify these values according to actual hardware 
  * configuration.
  */
-#if 1   /* 1: UDP/IP, 0: TCP/IP */
+#if 0   /* 1: UDP/IP, 0: TCP/IP */
     const int ctxtype = MELCLI_TYPE_UDPIP;
     const char *target_ip_addr = "192.168.128.200";
     const int target_port = 8889;
@@ -53,7 +53,7 @@ static void nap(int duration);
 #define NAP_DURATION_SECONDS    1
 #define NAP()                   nap(NAP_DURATION_SECONDS)
 
-int main()
+int main(int argc, char *argv[])
 {
     printf(
         "*************************************** \n"
@@ -133,7 +133,7 @@ static void demo_batch_read_write()
     
     for (i = 0;; ++i) {
         printf("Reading M1000 till M1003. \n");
-        if (melcli_batch_read(g_ctx, NULL, "M1000", 4, (char**)(&rd_bits)) != 0) 
+        if (melcli_batch_read(g_ctx, NULL, "M1000", 4, (char**)(&rd_bits), NULL) != 0) 
         {
             printf("Failed.\n");
             return;
@@ -164,7 +164,7 @@ static void demo_batch_read_write()
     
     for (i = 0;; ++i) {
         printf("Reading D100 till D103. \n");
-        if (melcli_batch_read(g_ctx, NULL, "D100", 4, (char**)(&rd_words)) != 0) 
+        if (melcli_batch_read(g_ctx, NULL, "D100", 4, (char**)(&rd_words), NULL) != 0) 
         {
             printf("Failed.\n");
             return;
@@ -209,7 +209,7 @@ static void demo_random_read_write()
     
     for (i = 0;; ++i) {
         printf("Reading D107, D105, D104 and D108. \n");
-        if (melcli_random_read_word(g_ctx, NULL, word_addrs, &data) != 0) {
+        if (melcli_random_read_word(g_ctx, NULL, word_addrs, &data, NULL) != 0) {
             printf("Failed.\n");
             goto __done;
         }
@@ -260,7 +260,7 @@ static void demo_buffer_read_write()
 
     for (i = 0;; ++i) {
         printf("Reading %d word units starting from 0x%08X. \n", n, addr);
-        if (melcli_buffer_read(g_ctx, NULL, addr, n, &data) != 0) {
+        if (melcli_buffer_read(g_ctx, NULL, addr, n, &data, NULL) != 0) {
             printf("Failed.\n");
             goto __done;
         }

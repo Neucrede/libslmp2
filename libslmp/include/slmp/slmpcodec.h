@@ -6,6 +6,9 @@
  * For general description about command codec functions, refer to 
  * \ref cmdcodec.h "command codec" .
  *
+ * \author Neucrede <neucrede@sina.com>
+ * \version 1.0
+ * \copyright BSD 2-Clause License
  */
 
 #ifndef __SLMPCODEC_H__
@@ -54,9 +57,6 @@ SLMPAPI size_t SLMPCALL slmp_encode_frame(
  * \remarks Free returned frame pointer by calling slmp_free()
  * after use.
  *
- * \author Neucrede <neucrede@sina.com>
- * \version 1.0
- * \copyright BSD 2-Clause License
  */
 SLMPAPI slmp_frame_t* SLMPCALL slmp_decode_frame(
     uint8_t *stream, size_t len, int type, size_t *len_remains);

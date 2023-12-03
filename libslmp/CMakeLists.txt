@@ -10,6 +10,7 @@ file (GLOB_RECURSE glthread_sources ${PROJECT_SOURCE_DIR}/glthread/*.c)
 file (GLOB_RECURSE memory_sources ${PROJECT_SOURCE_DIR}/memory/*.c)
 file (GLOB_RECURSE tsd_sources ${PROJECT_SOURCE_DIR}/tsd/*.c)
 file (GLOB_RECURSE frameio_sources ${PROJECT_SOURCE_DIR}/frameio/*.c)
+file (GLOB_RECURSE server_sources ${PROJECT_SOURCE_DIR}/server/*.c)
 
 set(sources
     ${PROJECT_SOURCE_DIR}/libslmp.c
@@ -20,6 +21,7 @@ set(sources
     ${memory_sources}
     ${tsd_sources}
     ${frameio_sources}
+    ${server_sources}
 )
 
 if (CMAKE_HOST_WIN32)

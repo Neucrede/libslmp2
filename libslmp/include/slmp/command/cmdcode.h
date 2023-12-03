@@ -153,11 +153,34 @@
 
 /* Data collection */
 
-/* Device connection */
+/**
+ * \name Device connection
+ * @{
+ */
+#define SLMP_CMD_NODE_SEARCH                            0x0E30
+#define SLMP_CMD_IP_ADDRESS_SET                         0x0E31
+/** @} */
 
-/* Parameter settings */
+/**
+ * \name \Parameter settings
+ * @{
+ */
+#define SLMP_CMD_DEVICE_INFO_COMPARE                    0x0E32
+#define SLMP_CMD_GET_PARAM                              0x0E33
+#define SLMP_CMD_SET_PARAM                              0x0E34
+#define SLMP_CMD_PARAM_SET_START                        0x0E35
+#define SLMP_CMD_PARAM_SET_END                          0x0E36
+#define SLMP_CMD_PARAM_SET_CANCEL                       0x0E3A
+/** @} */
 
-/* Monitoring device */
+/**
+ * \name Monitoring device
+ * @{
+ */
+#define SLMP_CMD_STATUS_READ                            0x0E44
+#define SLMP_CMD_STATUS_READ_MULTI                      0x0E53
+#define SLMP_CMD_GET_COMM_SETTINGS                      0x0E45
+/** @} */
 
 /* Accessing CAN application objects */
 

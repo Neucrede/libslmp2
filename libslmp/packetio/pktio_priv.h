@@ -48,10 +48,26 @@
     #define MSG_NOSIGNAL 0
 #endif
 
-
 #ifndef ___max
 #define ___max(a, b)    (((a) > (b)) ? (a) : (b))
 #endif
+
+#define __DBGPRINT_FMT_STR(s)       "[DEBUG] %s(): "s"\n",__FUNCTION__
+
+#define __DBGPRINT0(s)   \
+    if (pktio->echo) { pktio->dbgprint(__DBGPRINT_FMT_STR(s)); }
+    
+#define __DBGPRINT1(s, x1)   \
+    if (pktio->echo) { pktio->dbgprint(__DBGPRINT_FMT_STR(s), x1); }
+    
+#define __DBGPRINT2(s, x1, x2)   \
+    if (pktio->echo) { pktio->dbgprint(__DBGPRINT_FMT_STR(s), x1, x2); }
+    
+#define __DBGPRINT3(s, x1, x2, x3)   \
+    if (pktio->echo) { pktio->dbgprint(__DBGPRINT_FMT_STR(s), x1, x2, x3); }
+    
+#define __DBGPRINT4(t, s, x1, x2, x3, x4)   \
+    if (pktio->echo) { pktio->dbgprint(__DBGPRINT_FMT_STR(s), x1, x2, x3, x4); }
 
 typedef struct pktio_backend pktio_backend_t;
 typedef struct slmp_pktio pktio_t;
@@ -61,6 +77,7 @@ typedef pktio_t* (*pfn_pktio_new_t)(int /* type */);
 typedef int (*pfn_pktio_init_t)(pktio_t* /* pktio */);
 typedef int (*pfn_pktio_open_t)(pktio_t* /* pktio */);
 typedef int (*pfn_pktio_close_t)(pktio_t* /* pktio */);
+typedef int (*pfn_pktio_disconnect_t)(pktio_t* /* pktio */);
 typedef int (*pfn_pktio_accept_t)(pktio_t* /* pktio */);
 typedef size_t (*pfn_pktio_send_t)(pktio_t* /* pktio */, void* /* buf */,
     size_t /* len */);
@@ -74,6 +91,7 @@ struct pktio_backend {
     pfn_pktio_init_t pfn_init;
     pfn_pktio_open_t pfn_open;
     pfn_pktio_close_t pfn_close;
+    pfn_pktio_disconnect_t pfn_disconnect;
     pfn_pktio_accept_t pfn_accept;
     pfn_pktio_send_t pfn_send;
     pfn_pktio_recv_t pfn_recv;
@@ -82,15 +100,17 @@ struct pktio_backend {
 };
 
 struct slmp_pktio {
-    int type;
+    int type;                                       /* Implementation type */
     
-    int fd;
-    int fd2;
+    int fd;                                         /* Client / server socket */
+    int fd2;                                        /* Accepted socket */
+    char peer_ipaddr[24];                           /* Peer IP address */
 
-    int echo;
+    int echo;                               /* Whether to dump traffic data */
+    int (CDECLCALL *dbgprint)(const char*, ...);    /* Debug print function */
     
-    pktio_backend_t* backend;
-    void* backend_ctx;
+    pktio_backend_t* backend;                       /* Function table */
+    void* backend_ctx;                              /* Impl specific context */
 };
 
 

@@ -69,7 +69,7 @@ int main(int argc, char *argv[])
         goto __cleanup;
     }
     else {
-        printf("Accepted. \n");
+        printf("Accepted %s. \n", slmp_pktio_get_peer_ipaddr(pktio));
     }
     
     do {

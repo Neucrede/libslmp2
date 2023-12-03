@@ -6,6 +6,8 @@
 
 #include "melcli/melcli.h"
 
+static const char version[] = LIBMELCLI_VERSION;
+
 #if defined(_WIN32)
 
 #include <windows.h>

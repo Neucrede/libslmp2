@@ -47,6 +47,10 @@ const err_msg_desc_t err_msg[] = {
     { SLMP_ERROR_ALREADY_OPEN, "Connection is already opened." },
     { SLMP_ERROR_CONNECTION_CLOSED, "Connection closed." },
     
+    { SLMP_ERROR_STILL_RUNNING, "Still running." },
+    { SLMP_ERROR_NOT_RUNNING, "Not running." },
+    { SLMP_ERROR_INITIALIZATION_FAILED, "Initialization has failed." },
+    
 
     /* The following line marks the end of array. DO NOT DELETE. */
     { 0xABCD0123, NULL }

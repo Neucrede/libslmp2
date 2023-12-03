@@ -18,85 +18,8 @@
 
 #include <stdint.h>
 #include "melcliapi.h"
+#include "melclidef.h"
 
-/**
- * \name Error codes
- * @{
- */
-#define MELCLI_ERROR_SUCCESS                            0
-#define MELCLI_ERROR_INVALID_POINTER                    -1
-#define MELCLI_ERROR_INVALID_ARGUMENTS                  -2
-#define MELCLI_ERROR_INVALID_ADDRESS                    -3
-#define MELCLI_ERROR_UNIT_TYPE_NOT_SUPPORTED            -4
-#define MELCLI_ERROR_BUILD_REQUEST_FRAME                -5
-#define MELCLI_ERROR_OUT_OF_MEMORY                      -6
-#define MELCLI_ERROR_DECODE_FRAME                       -7
-#define MELCLI_ERROR_ENCODE_COMMAND                     -8
-#define MELCLI_ERROR_CONNECT_FAILED                     -10
-#define MELCLI_ERROR_SEND_FRAMES                        -11
-#define MELCLI_ERROR_RECEIVE_FRAMES                     -12
-#define MELCLI_ERROR_OPERATION_FAILED                   -13
-#define MELCLI_ERROR_FRAME_SERIAL_MISMATCH              -14
-#define MELCLI_ERROR_SELF_TEST_FAILED                   -15
-/** @} */
-
-/**
- * \name Communication types
- * @{
- */
-/** TCP/IP */
-#define MELCLI_TYPE_TCPIP                               1
-/** UDP/IP */
-#define MELCLI_TYPE_UDPIP                               2
-/** @} */
-
-/**
- * \name Remote control codes
- * @{
- */
-/** Issue a remote RUN request. */
-#define MELCLI_REMOTE_RUN                               1
-/** Issue a remote STOP request. */
-#define MELCLI_REMOTE_STOP                              2
-/** Issue a remote RESET request. */
-#define MELCLI_REMOTE_RESET                             3
-/** Issue a remote PAUSE request. */
-#define MELCLI_REMOTE_PAUSE                             4
-/** 
- * Issue a remote latch clear request when the target device is in the 
- * STOP state. 
- * */
-#define MELCLI_REMOTE_LATCH_CLEAR                       5
-/** Read the processor model code of the target deivce. */
-#define MELCLI_REMOTE_READ_TYPE_NAME                    6
-/** @} */
-
-/**
- * \name Mode flags
- *
- * Used when `ctl_code` is `MELCLI_REMOTE_RUN` or 
- * `MELCLI_REMOTE_PAUSE`.
- *
- * @{
- */
-/** 
- * Forced execution allowed. Remote RUN can be executed even when other device
- * is performing the remote STOP or remote PAUSE.
- */
-#define MELCLI_FORCE_MODE                               (1 << 0)
-/** Do not clear the device. */
-#define MELCLI_CLEAR_NONE                               (1 << 5)
-/** Clear all devices except those in the latch range. */
-#define MELCLI_CLEAR_EXCLUDE_LATCHED                    (1 << 6)
-/** Clear all devices. */
-#define MELCLI_CLEAR_ALL                                (1 << 7)
-/** @} */
-
-/** Initializer for connected station. */
-#define MELCLI_CONNECTED_STATION    { 0x00, 0xFF, 0x03FF, 0x00, 0x00 }
-
-/** Initializer for default timeout values. */
-#define MELCLI_TIMEOUT_DEFAULT      { 5, 1, 1000, 5 }
 
 /**
  * \brief Data structure that describes an request destination.
@@ -162,6 +85,15 @@ MELCLIAPI int MELCLICALL melcli_init();
  * returns -1.
  */
 MELCLIAPI int MELCLICALL melcli_uninit();
+
+/**
+ * \brief Get description of the error number.
+ *
+ * \param[in] err Error number.
+ *
+ * \return Description of error number `err`.
+ */
+MELCLIAPI const char* MELCLICALL melcli_get_err_msg(int err);
 
 /**
  * \brief Create a new connection context.
@@ -322,7 +254,7 @@ MELCLIAPI void MELCLICALL melcli_free(
  */
 MELCLIAPI int MELCLICALL melcli_batch_read(
     melcli_ctx_t* ctx, const melcli_station_t* station, const char* addr,
-    int n, char** data);
+    int n, char** data, int* datalen);
 
 /**
  * \brief Perform sequential write on internal memory (device) units.
@@ -333,6 +265,8 @@ MELCLIAPI int MELCLICALL melcli_batch_read(
  * \param[in] addr Address string of the starting unit.
  * \param[in] n Number of units to access.
  * \param[in] data Pointer to data to be written into target units.
+ * \param[out] data_len Optional output parameter that stores the byte length
+ * of `data`.
  *
  * \return If the function succeeds, the return value is 0. If the function fails,
  * the return value is one of the following error codes.
@@ -402,7 +336,11 @@ MELCLIAPI int MELCLICALL melcli_batch_write(
  * read from. The array must terminate by a NULL pointer which indicates the
  * end of array elements.
  * \param[out] word_data Pointer to the word data buffer pointer.
+ * \param[out] word_data_len Optional output parameter that stores the byte length
+ * of `word_data`.
  * \param[out] dword_data Pointer to the double-word data buffer pointer.
+ * \param[out] dword_data_len Optional output parameter that stores the byte length
+ * of `dword_data`.
  *
  * \return If the function succeeds, the return value is 0. If the function fails,
  * the return value is one of the following error codes.
@@ -466,7 +404,8 @@ MELCLIAPI int MELCLICALL melcli_batch_write(
 MELCLIAPI int MELCLICALL melcli_random_read(
     melcli_ctx_t* ctx, const melcli_station_t* station, 
     const char** word_unit_addrs, const char** dword_unit_addrs, 
-    uint16_t** word_data, uint32_t** dword_data);
+    uint16_t** word_data, int* word_data_len, 
+    uint32_t** dword_data, int* dword_data_len);
 
 /**
  * Provided for convenience. 
@@ -474,7 +413,7 @@ MELCLIAPI int MELCLICALL melcli_random_read(
  */
 MELCLIAPI int MELCLICALL melcli_random_read_word(
     melcli_ctx_t* ctx, const melcli_station_t* station,
-    const char** addrs, uint16_t** data);
+    const char** addrs, uint16_t** data, int* data_len);
 
 /** 
  * Provided for convenience.
@@ -482,7 +421,7 @@ MELCLIAPI int MELCLICALL melcli_random_read_word(
  */
 MELCLIAPI int MELCLICALL melcli_random_read_dword(
     melcli_ctx_t* ctx, const melcli_station_t* station,
-    const char** addrs, uint32_t** data);
+    const char** addrs, uint32_t** data, int* data_len);
 
 /**
  * \brief Perform random write on internal memory (device) units.
@@ -603,6 +542,8 @@ MELCLIAPI int MELCLICALL melcli_random_write_dword(
  * \param[in] addr Address of the starting unit.
  * \param[in] n Number of word units to access.
  * \param[out] data Pointer to the data buffer pointer.
+ * \param[out] data_len Optional output parameter that stores the byte length
+ * of `data`.
  *
  * \return If the function succeeds, the return value is 0. If the function fails,
  * the return value is one of the following error codes.
@@ -654,7 +595,7 @@ MELCLIAPI int MELCLICALL melcli_random_write_dword(
  */
 MELCLIAPI int MELCLICALL melcli_buffer_read(
     melcli_ctx_t* ctx, const melcli_station_t* station,
-    uint32_t addr, int n, uint16_t** data);
+    uint32_t addr, int n, uint16_t** data, int* data_len);
 
 /**
  * \brief Perform sequential write on buffer (dual port memory) units.

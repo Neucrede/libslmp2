@@ -14,8 +14,6 @@
 
 #include "slmp/slmpapi.h"
 
-/** Maximal connection timeout value (sec). */
-#define UDPIP_PKTIO_MAX_CONN_TIMEOUT           3600
 /** Default connection timeout (sec). */
 #define UDPIP_PKTIO_DEFAULT_CONN_TIMEOUT       2
 /** Default receive timeout (sec). */

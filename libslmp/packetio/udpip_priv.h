@@ -11,11 +11,11 @@
 #include "pktio_priv.h"
 
 typedef struct _ctx {
-    int conn_timeout;
-    int recv_timeout;
+    int conn_timeout;               /* connection timeout */
+    int recv_timeout;               /* default recv timeout */
 
     struct sockaddr_in sa_bind;     /* local */
-    struct sockaddr_in sa_peer;
+    struct sockaddr_in sa_peer;     /* remote */
 } _ctx_t;
 
 

@@ -63,7 +63,7 @@ SLMPAPI int SLMPCALL slmp_pktio_init(slmp_pktio_t *pktio);
 SLMPAPI int SLMPCALL slmp_pktio_open(slmp_pktio_t *pktio);
 
 /** 
- * \brief Close a connection.
+ * \brief Close all connections.
  * 
  * \param[in] pktio Pointer to packet IO object.
  *
@@ -72,6 +72,17 @@ SLMPAPI int SLMPCALL slmp_pktio_open(slmp_pktio_t *pktio);
  * slmp_get_errno() to get the error number.
  */
 SLMPAPI int SLMPCALL slmp_pktio_close(slmp_pktio_t *pktio);
+
+/**
+ * \brief Close the accepted connection.
+ *
+ * \param[in] pktio Pointer to packet IO object.
+ *
+ * \return If the function succeeds, it returns the value of 0. 
+ * If the function fails, the function returns a value of -1. Call
+ * slmp_get_errno() to get the error number.
+ */
+SLMPAPI int SLMPCALL slmp_pktio_disconnect(slmp_pktio_t *pktio);
 
 /** 
  * \brief Accept a pending connection request.
@@ -123,8 +134,23 @@ SLMPAPI size_t SLMPCALL slmp_pktio_recv(slmp_pktio_t *pktio, void *buf, size_t l
  */
 SLMPAPI void SLMPCALL slmp_pktio_discard(slmp_pktio_t *pktio);
 
+/**
+ * \brief For TCP/IP, this function returns the IP address of the station
+ * that `pktio` is connected to. For UDP/IP, this function returns the IP
+ * address of the last station that sends data to `pktio` after data is
+ * received.
+ *
+ * \param[in] pktio Pointer to packet IO object.
+ *
+ * \return Pointer to the IP address string.
+ *
+ * \remark The returned pointer is to the internal buffer and does **NOT**
+ * need to be free()-ed after use.
+ */
+SLMPAPI const char* SLMPCALL slmp_pktio_get_peer_ipaddr(slmp_pktio_t *pktio);
+
 /** 
- * \brief Toggle echo mode. When echo mode is enabled, data sent / received
+ * \brief Toggle echo mode. If echo mode is enabled, data sent / received
  * will be dumped to `stdout` in hexadecimal form.
  *
  * \param[in] pktio Pointer to packet IO object.
@@ -145,6 +171,16 @@ SLMPAPI void SLMPCALL slmp_pktio_set_echo(slmp_pktio_t *pktio, int echo);
  * slmp_get_errno() to get the error number.
  */
 SLMPAPI int SLMPCALL slmp_pktio_set_timeout(slmp_pktio_t *pktio, int type, int timeout);
+
+/**
+ * \brief Setup debug print function.
+ *
+ * \param[in] pktio Pointer to packet IO object.
+ * \param[in] pfn Pointer to a function that performs formatted output like
+ * `printf()` does.
+ */
+SLMPAPI int SLMPCALL slmp_pktio_set_dbgprint_fcn(
+    slmp_pktio_t *pktio, int (CDECLCALL* pfn)(const char*, ...));
 
 #ifdef __cplusplus
 }

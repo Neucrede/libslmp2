@@ -46,7 +46,7 @@ SLMPAPI size_t SLMPCALL slmp_send_frames(
  * \param[in,out] frames Array consists of pointers to frames received. The size
  * of the array should be at least `n`. 
  * \param[in] n Maximum number of frames to receive.
- * \param[in] type Stream type.
+ * \param[out] type Stream type.
  * \param[in] timeout Timeout value in milliseconds. A value of zero indicates
  * infinite waiting.
  * 
@@ -57,7 +57,8 @@ SLMPAPI size_t SLMPCALL slmp_send_frames(
  * \remarks Free each frame pointer by calling slmp_free() after use.
  */
 SLMPAPI size_t SLMPCALL slmp_receive_frames(
-    slmp_pktio_t *pktio, slmp_frame_t **frames, size_t n, int type, int timeout);
+    slmp_pktio_t *pktio, slmp_frame_t **frames, size_t n, int *type, 
+    int timeout);
 
 #ifdef __cplusplus
 }

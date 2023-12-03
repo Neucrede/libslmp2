@@ -3,6 +3,7 @@ LIBRARY libmelcli
 EXPORTS
     melcli_init @1
     melcli_uninit @2
+	melcli_get_err_msg @3
 
     melcli_new_context @10
     melcli_free_context @11
@@ -31,4 +32,9 @@ EXPORTS
     melcli_remote_pause @37
     melcli_remote_latch_clear @38
     melcli_remote_read_type_name @39
+	melcli_buffer_read @40
+	melcli_buffer_write @41
+	melcli_remote_lock @42
+	melcli_remote_unlock @43
+	melcli_set_dbgprint_fcn @44
 

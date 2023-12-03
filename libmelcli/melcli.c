@@ -20,12 +20,12 @@ static int parse_dev_addr(const char* addr, uint8_t* mem_type_s,
     int* unit_type);
 static slmp_frame_t* build_req_frame(melcli_ctx_t* ctx, 
     const melcli_station_t* station, int cmd, int sub_cmd, slmp_cmd_hdr_t* hdr, 
-    pfn_encode_command_t pfn_enc, int* serial);
+    slmp_command_encode_t pfn_enc, int* serial);
 static int send_frame(melcli_ctx_t* ctx, const melcli_station_t* station,
     slmp_frame_t** frame, int free_after_sent);
 static int receive_frame(melcli_ctx_t* ctx, int serial, slmp_frame_t** frame);
 static int extract_units_read_data(const uint8_t* resp_data, int unit_type, 
-    int n, uint8_t** buf);
+    int n, uint8_t** buf, int* data_len);
 static int fill_units_write_data(const char* src, int unit_type, int n, 
     uint8_t* data);
 static int encode_dev_random_read_units(const char** addrs, int* use_32bit_addr, 
@@ -37,6 +37,26 @@ static int fill_dev_random_write_word_units(const char** addrs,
 static int fill_dev_random_write_dword_units(const char** addrs, 
     const uint32_t* data, int* use_32bit_addr, uint8_t** pstrm);
 
+static const err_msg_desc_t err_msg[] = {
+    { MELCLI_ERROR_SUCCESS, "Succeeded" },
+    { MELCLI_ERROR_INVALID_POINTER, "Invalid pointer." }, 
+    { MELCLI_ERROR_INVALID_ARGUMENTS, "Invalid arguments." },
+    { MELCLI_ERROR_INVALID_ADDRESS, "Invalid address." },
+    { MELCLI_ERROR_UNIT_TYPE_NOT_SUPPORTED, "Unit type not supported." },
+    { MELCLI_ERROR_BUILD_REQUEST_FRAME, "Unable to build request frame." },
+    { MELCLI_ERROR_OUT_OF_MEMORY, "Run out of memory." },
+    { MELCLI_ERROR_DECODE_FRAME, "Unable to decode a response frame." },
+    { MELCLI_ERROR_ENCODE_COMMAND, "An error occured in command encoding." },
+    { MELCLI_ERROR_CONNECT_FAILED, "Unable to establish a connection." },
+    { MELCLI_ERROR_SEND_FRAMES, "Unable to send frames." },
+    { MELCLI_ERROR_RECEIVE_FRAMES, "Error receiving frames." },
+    { MELCLI_ERROR_OPERATION_FAILED, "Operation failed." },
+    { MELCLI_ERROR_FRAME_SERIAL_MISMATCH, "Frame serial mismatch." },
+    { MELCLI_ERROR_SELF_TEST_FAILED, "Self test failed." },
+
+    { -1, NULL }
+};
+
 /* **************************************************************************/
 
 MELCLIAPI int MELCLICALL melcli_init()
@@ -47,6 +67,21 @@ MELCLIAPI int MELCLICALL melcli_init()
 MELCLIAPI int MELCLICALL melcli_uninit()
 {
     return slmp_uninit();
+}
+
+MELCLIAPI const char* MELCLICALL melcli_get_err_msg(int err)
+{
+    err_msg_desc_t const *desc = &err_msg[0];
+    
+    do {
+        if (desc->err == err) {
+            return desc->msg;
+        }
+
+        ++desc;
+    } while (desc->msg != NULL);
+
+    return "Unknown error.";
 }
 
 MELCLIAPI melcli_ctx_t* MELCLICALL melcli_new_context(
@@ -221,7 +256,7 @@ MELCLIAPI void MELCLICALL melcli_free(
 
 MELCLIAPI int MELCLICALL melcli_batch_read(
     melcli_ctx_t* ctx, const melcli_station_t* station, const char* addr,
-    int n, char** data)
+    int n, char** data, int* data_len)
 {
     int ret = MELCLI_ERROR_SUCCESS;
     uint8_t mem_type_s;
@@ -321,7 +356,7 @@ MELCLIAPI int MELCLICALL melcli_batch_read(
     }
 
     if (!extract_units_read_data(frame->raw_data, unit_type, n, 
-        (uint8_t**)(data))) 
+        (uint8_t**)(data), data_len)) 
     {
         ret = MELCLI_ERROR_OUT_OF_MEMORY;
         goto __done;
@@ -440,7 +475,8 @@ __done:
 MELCLIAPI int MELCLICALL melcli_random_read(
     melcli_ctx_t* ctx, const melcli_station_t* station, 
     const char** word_unit_addrs, const char** dword_unit_addrs, 
-    uint16_t** word_data, uint32_t** dword_data)
+    uint16_t** word_data, int* word_data_len, uint32_t** dword_data,
+    int* dword_data_len)
 {
     int ret = MELCLI_ERROR_SUCCESS;
     const char** addr;
@@ -545,7 +581,7 @@ MELCLIAPI int MELCLICALL melcli_random_read(
     
     if (word_data &&
         !extract_units_read_data(frame->raw_data, UNIT_WORD, num_word_units, 
-            (uint8_t**)(word_data)))
+            (uint8_t**)(word_data), word_data_len))
     {
         ret = MELCLI_ERROR_OUT_OF_MEMORY;
         goto __done;
@@ -553,7 +589,8 @@ MELCLIAPI int MELCLICALL melcli_random_read(
     
     if (dword_data &&
         !extract_units_read_data(frame->raw_data + (num_word_units * 2), 
-            UNIT_DWORD, num_dword_units, (uint8_t**)(dword_data)))
+            UNIT_DWORD, num_dword_units, (uint8_t**)(dword_data), 
+            dword_data_len))
     {
         if (word_data) {
             free(*word_data);
@@ -571,16 +608,16 @@ __done:
 
 MELCLIAPI int MELCLICALL melcli_random_read_word(
     melcli_ctx_t* ctx, const melcli_station_t* station,
-    const char** addrs, uint16_t** data)
+    const char** addrs, uint16_t** data, int* data_len)
 {
-    return melcli_random_read(ctx, station, addrs, NULL, data, NULL);
+    return melcli_random_read(ctx, station, addrs, NULL, data, data_len, NULL, NULL);
 }
 
 MELCLIAPI int MELCLICALL melcli_random_read_dword(
     melcli_ctx_t* ctx, const melcli_station_t* station,
-    const char** addrs, uint32_t** data)
+    const char** addrs, uint32_t** data, int* data_len)
 {
-    return melcli_random_read(ctx, station, NULL, addrs, NULL, data);
+    return melcli_random_read(ctx, station, NULL, addrs, NULL, NULL, data, data_len);
 }
 
 MELCLIAPI int MELCLICALL melcli_random_write(
@@ -788,7 +825,7 @@ MELCLIAPI int MELCLICALL melcli_random_write_dword(
 
 MELCLIAPI int MELCLICALL melcli_buffer_read(
     melcli_ctx_t* ctx, const melcli_station_t* station,
-    uint32_t addr, int n, uint16_t** data)
+    uint32_t addr, int n, uint16_t** data, int* data_len)
 {
     int ret = MELCLI_ERROR_SUCCESS;
     slmp_req_memory_read_t req;
@@ -839,7 +876,7 @@ MELCLIAPI int MELCLICALL melcli_buffer_read(
     }
 
     if (!extract_units_read_data(frame->raw_data, UNIT_WORD, n, 
-        (uint8_t**)(data))) 
+        (uint8_t**)(data), data_len)) 
     {
         ret = MELCLI_ERROR_OUT_OF_MEMORY;
         goto __done;
@@ -1035,10 +1072,7 @@ MELCLIAPI int MELCLICALL melcli_remote_control(
         goto __done;
     }
 
-    if (ctl_code != MELCLI_REMOTE_READ_TYPE_NAME) {
-        slmp_pktio_discard(ctx->pktio);
-    }
-    else {
+    if (ctl_code == MELCLI_REMOTE_READ_TYPE_NAME) {
         slmp_res_read_type_name_t *res = NULL;
         
         ret = receive_frame(ctx, serial, &frame);
@@ -1070,6 +1104,9 @@ MELCLIAPI int MELCLICALL melcli_remote_control(
         
         strlcpy(*type_name, (const char*)(res->type), sizeof(res->type) + 1);
         *type_code = (int)(res->type_code);
+    }
+    else {
+        slmp_pktio_discard(ctx->pktio);
     }
     
 __done:
@@ -1415,6 +1452,12 @@ static int split_dev_addr(const char* addr, char* prefix, char* trailing)
 
     for (i = 0; i != len; ++i) {
         char ch = addr[i];
+        
+        /* Skip spaces and tabs. */
+        if ((ch == '\x20') || (ch == '\t')) {
+            continue;
+        }
+
         if (isalpha(ch)) {
             prefix[j] = toupper(ch);
             if (++j >= MAX_DEV_ADDR_PREFIX_LEN) {
@@ -1561,7 +1604,7 @@ static int parse_dev_addr(const char* addr, uint8_t* mem_type_s,
 
 static slmp_frame_t* build_req_frame(melcli_ctx_t* ctx, 
     const melcli_station_t* station, int cmd, int sub_cmd, slmp_cmd_hdr_t* hdr, 
-    pfn_encode_command_t pfn_enc, int* serial)
+    slmp_command_encode_t pfn_enc, int* serial)
 {
     slmp_frame_t *frame;
     size_t data_len = pfn_enc(hdr, NULL, SLMP_BINARY_STREAM);
@@ -1611,10 +1654,6 @@ static int send_frame(melcli_ctx_t* ctx, const melcli_station_t* station,
 {
     int ret = MELCLI_ERROR_SUCCESS;
 
-    if (ctx->debug) {
-        ctx->dbgprint("[SEND] ");
-    }
-    
     if (slmp_send_frames(ctx->pktio, frame, 1, SLMP_BINARY_STREAM, 0) != 1) {
         if (ctx->debug) {
             ctx->dbgprint("[ERROR] %s\n", slmp_get_err_msg(slmp_get_errno()));
@@ -1636,11 +1675,8 @@ static int receive_frame(melcli_ctx_t* ctx, int serial, slmp_frame_t** frame)
 {
     int timeout;
     int frame_wait_time = ctx->timeout.frame_timer * 250;
-    
-    if (ctx->debug) {
-        ctx->dbgprint("[RECV] ");
-    }
-    
+    int stm_type;
+      
     if (ctx->timeout.frame_timer == 0) {
         timeout = 0;
     }
@@ -1651,8 +1687,7 @@ static int receive_frame(melcli_ctx_t* ctx, int serial, slmp_frame_t** frame)
         timeout = frame_wait_time;
     }
     
-    if (slmp_receive_frames(ctx->pktio, frame, 1, SLMP_BINARY_STREAM, 
-        timeout) != 1)
+    if (slmp_receive_frames(ctx->pktio, frame, 1, &stm_type, timeout) != 1)
     {
         if (ctx->debug) {
             ctx->dbgprint("[ERROR] %s\n", slmp_get_err_msg(slmp_get_errno()));
@@ -1685,7 +1720,7 @@ static int receive_frame(melcli_ctx_t* ctx, int serial, slmp_frame_t** frame)
 }
 
 static int extract_units_read_data(const uint8_t* resp_data, int unit_type, 
-    int n, uint8_t** buf)
+    int n, uint8_t** buf, int* data_len)
 {
     if (unit_type == UNIT_BIT) {
         uint8_t *buf_bit;
@@ -1709,6 +1744,10 @@ static int extract_units_read_data(const uint8_t* resp_data, int unit_type,
                 buf_bit[j++] = (resp_data[i] & 0x0F) ? 1 : 0;
             }
         }
+
+        if (data_len != NULL) {
+            *data_len = n;
+        }
     }
     else if (unit_type == UNIT_WORD) {
         uint16_t *buf_word;
@@ -1726,6 +1765,10 @@ static int extract_units_read_data(const uint8_t* resp_data, int unit_type,
             buf_word[i] 
                 = (uint16_t)(resp_data[2 * i]) 
                 | ((uint16_t)(resp_data[2 * i + 1]) << 8);
+        }
+
+        if (data_len != NULL) {
+            *data_len = 2 * n;
         }
     }
     else if (unit_type == UNIT_DWORD) {
@@ -1746,6 +1789,10 @@ static int extract_units_read_data(const uint8_t* resp_data, int unit_type,
                 | ((uint32_t)(resp_data[4 * i + 1]) << 8)
                 | ((uint32_t)(resp_data[4 * i + 2]) << 16)
                 | ((uint32_t)(resp_data[4 * i + 3]) << 24);
+        }
+
+        if (data_len != NULL) {
+            *data_len = 4 * n;
         }
     }
     else {

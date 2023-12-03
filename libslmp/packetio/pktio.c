@@ -15,14 +15,15 @@
 
 #include "pktio_priv.h"
 
-static void hex_print(const char* buf, size_t len)
+static void hex_print(slmp_pktio_t *pktio, const char* buf, size_t len)
 {
     size_t i;
 
     for (i = 0; i < len; ++i) {
         printf("%02X ", buf[i] & 0xFF);
     }
-    printf("\n");
+    
+    fputs("\n", stdout);
 }
 
 SLMPAPI void SLMPCALL slmp_pktio_free(slmp_pktio_t *pktio)
@@ -69,6 +70,17 @@ SLMPAPI int SLMPCALL slmp_pktio_close(slmp_pktio_t *pktio)
     return pktio->backend->pfn_close(pktio);
 }
 
+SLMPAPI int SLMPCALL slmp_pktio_disconnect(slmp_pktio_t *pktio)
+{
+    assert(pktio != NULL);
+    if (pktio == NULL) {
+        slmp_set_errno(SLMP_ERROR_INVALID_ARGUMENTS);
+        return -1;
+    }
+
+    return pktio->backend->pfn_disconnect(pktio);
+}
+
 SLMPAPI int SLMPCALL slmp_pktio_accept(slmp_pktio_t *pktio)
 {
     assert(pktio != NULL);
@@ -80,8 +92,16 @@ SLMPAPI int SLMPCALL slmp_pktio_accept(slmp_pktio_t *pktio)
     return pktio->backend->pfn_accept(pktio);
 }
 
-SLMPAPI size_t SLMPCALL slmp_pktio_send(slmp_pktio_t *pktio, void *buf, size_t len)
+SLMPAPI size_t SLMPCALL slmp_pktio_send(slmp_pktio_t *pktio, void *buf, 
+    size_t len)
 {
+#ifdef __NATIVE_FUNCTION_MACRO_NOT_DEFINED__
+#   ifdef __FUNCTION__
+#       undef __FUNCTION__
+#   endif
+#   define __FUNCTION__ "slmp_pktio_send"
+#endif
+
     size_t bytes_sent;
 
     assert(pktio != NULL);
@@ -92,8 +112,9 @@ SLMPAPI size_t SLMPCALL slmp_pktio_send(slmp_pktio_t *pktio, void *buf, size_t l
 
     bytes_sent = pktio->backend->pfn_send(pktio, buf, len);
 
-    if (pktio->echo) {
-        hex_print((const char*)buf, bytes_sent);
+    if (pktio->echo && (bytes_sent > 0)) {
+        __DBGPRINT1("Sent %d bytes.", bytes_sent);
+        hex_print(pktio, (const char*)buf, bytes_sent);
     }
 
     return bytes_sent;
@@ -101,6 +122,13 @@ SLMPAPI size_t SLMPCALL slmp_pktio_send(slmp_pktio_t *pktio, void *buf, size_t l
 
 SLMPAPI size_t SLMPCALL slmp_pktio_recv(slmp_pktio_t *pktio, void *buf, size_t len, int timeout)
 {
+#ifdef __NATIVE_FUNCTION_MACRO_NOT_DEFINED__
+#   ifdef __FUNCTION__
+#       undef __FUNCTION__
+#   endif
+#   define __FUNCTION__ "slmp_pktio_recv"
+#endif
+
     size_t bytes_recv;
 
     assert(pktio != NULL);
@@ -111,8 +139,9 @@ SLMPAPI size_t SLMPCALL slmp_pktio_recv(slmp_pktio_t *pktio, void *buf, size_t l
 
     bytes_recv = pktio->backend->pfn_recv(pktio, buf, len, timeout);
 
-    if (pktio->echo) {
-        hex_print((const char*)buf, bytes_recv);
+    if (pktio->echo && (bytes_recv > 0)) {
+        __DBGPRINT1("Received %d bytes.", bytes_recv);
+        hex_print(pktio, (const char*)buf, bytes_recv);
     }
 
     return bytes_recv;
@@ -129,6 +158,17 @@ SLMPAPI void SLMPCALL slmp_pktio_discard(slmp_pktio_t *pktio)
     pktio->backend->pfn_discard(pktio);
 }
 
+SLMPAPI const char* SLMPCALL slmp_pktio_get_peer_ipaddr(slmp_pktio_t *pktio)
+{
+    assert(pktio != NULL);
+    if (pktio == NULL) {
+        slmp_set_errno(SLMP_ERROR_INVALID_ARGUMENTS);
+        return NULL;
+    }
+
+    return pktio->peer_ipaddr;
+}
+
 SLMPAPI void SLMPCALL slmp_pktio_set_echo(slmp_pktio_t *pktio, int echo)
 {
     assert(pktio != NULL);
@@ -140,7 +180,8 @@ SLMPAPI void SLMPCALL slmp_pktio_set_echo(slmp_pktio_t *pktio, int echo)
     pktio->echo = echo;
 }
 
-SLMPAPI int SLMPCALL slmp_pktio_set_timeout(slmp_pktio_t *pktio, int type, int timeout)
+SLMPAPI int SLMPCALL slmp_pktio_set_timeout(slmp_pktio_t *pktio, int type, 
+    int timeout)
 {
     int pktio_type;
 
@@ -177,6 +218,25 @@ SLMPAPI int SLMPCALL slmp_pktio_set_timeout(slmp_pktio_t *pktio, int type, int t
         return -1;
     }
 
+    return 0;
+}
+
+SLMPAPI int SLMPCALL slmp_pktio_set_dbgprint_fcn(
+    slmp_pktio_t *pktio, int (CDECLCALL* pfn)(const char*, ...))
+{
+    assert(pktio != NULL);
+    if (pktio == NULL) {
+        slmp_set_errno(SLMP_ERROR_INVALID_ARGUMENTS);
+        return -1;
+    }
+
+    if (pfn) {
+        pktio->dbgprint = pfn;
+    }
+    else {
+        pktio->dbgprint = &printf;
+    }
+    
     return 0;
 }
 

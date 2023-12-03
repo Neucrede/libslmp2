@@ -18,19 +18,19 @@ Class6=CLeftView
 Class7=CMainFrame
 
 ResourceCount=9
-Resource1=IDD_COMMAND_FORM (English (U.S.))
-Resource2=IDD_ABOUTBOX (English (U.S.))
-Resource3=IDR_TREE_IMAGE_LIST (English (U.S.))
-Resource4=IDD_CCGEN_FORM (English (U.S.))
+Resource1=IDD_CCGEN_FORM (English (U.S.))
+Resource2=IDD_NEW_CMDELEM (English (U.S.))
+Resource3=IDD_ABOUTBOX (English (U.S.))
+Resource4=IDR_TREE_IMAGE_LIST (English (U.S.))
 Class8=CGenCodeView
-Resource5=IDD_NEW_CMDELEM (English (U.S.))
+Resource5=IDD_GLOBALPROPS_FORM (English (U.S.))
 Class9=CCommandView
 Resource6=IDR_CMDTREE_IMAGE_LIST (English (U.S.))
-Resource7=IDD_GLOBALPROPS_FORM (English (U.S.))
+Resource7=IDD_NEW_COMMAND (English (U.S.))
 Class10=CNewCmdDlg
-Resource8=IDD_NEW_COMMAND (English (U.S.))
+Resource8=IDR_MAINFRAME (English (U.S.))
 Class11=CNewCmdElemDlg
-Resource9=IDR_MAINFRAME (English (U.S.))
+Resource9=IDD_COMMAND_FORM (English (U.S.))
 
 [CLS:CCcgenApp]
 Type=0

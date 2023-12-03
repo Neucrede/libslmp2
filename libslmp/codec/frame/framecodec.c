@@ -77,7 +77,7 @@ SLMPAPI slmp_frame_t* SLMPCALL slmp_decode_frame(
         return NULL;
     }
 
-    assert(len >= SLMP_MIN_FRAME_STREAM_LENGTH);
+    /* assert(len >= SLMP_MIN_FRAME_STREAM_LENGTH); */
     if (len < SLMP_MIN_FRAME_STREAM_LENGTH) {
         slmp_set_errno(SLMP_ERROR_INVALID_ARGUMENTS);
         return NULL;
@@ -92,6 +92,9 @@ SLMPAPI slmp_frame_t* SLMPCALL slmp_decode_frame(
 
     /* FTYPE is always at the very beginning of the stream. */
     dec16bp(stream, &ftype);
+    if (type == SLMP_ASCII_STREAM) {
+        ftype = ((ftype >> 8) | (ftype << 8));  /* ror(ftype, 8) */
+    }
 
     switch (ftype) {
     case SLMP_FTYPE_REQ_ST:
@@ -126,14 +129,14 @@ SLMPAPI slmp_frame_t* SLMPCALL slmp_decode_frame(
 
 size_t encode_frame_st(slmp_frame_t *frame, uint8_t *stream, int type)
 {
-    ENCODE_FRAME_DECLARE_LOCAL_VARIABLES();
-    ENCODE_FRAME_INITIALIZE_LOCAL_VARIABLES_1();
+    ENCODE_FRAME_DECLARE_LOCAL_VARIABLES()
+    ENCODE_FRAME_INITIALIZE_LOCAL_VARIABLES_1()
     ENCODE_FRAME_BEGIN_SWITCH_FTYPE()
         ENCODE_FRAME_CASE_FTYPE(REQ_ST)
         ENCODE_FRAME_CASE_FTYPE(RES_ST)
         ENCODE_FRAME_CASE_FTYPE(ERR_ST)
     ENCODE_FRAME_END_SWITCH_FTYPE()
-    ENCODE_FRAME_INITIALIZE_LOCAL_VARIABLES_2();
+    ENCODE_FRAME_INITIALIZE_LOCAL_VARIABLES_2()
 
     if (stream == NULL) {
         return min_buf_size;
@@ -142,6 +145,12 @@ size_t encode_frame_st(slmp_frame_t *frame, uint8_t *stream, int type)
     /* Header */
     enc16b((uint16_t)(frame->hdr.ftype & SLMP_FTYPE_MASK),
         &(stream[m * SLMP_ST_HDR_FTYPE_OFFSET]));
+    if (type == SLMP_ASCII_STREAM) {
+        int i0 = m * SLMP_ST_HDR_FTYPE_OFFSET;
+        uint8_t x = stream[i0];
+        stream[i0] = stream[i0 + 1];
+        stream[i0 + 1] = x;
+    }
 
     /* Sub header*/
     enc8b(frame->sub_hdr.st.net_no,
@@ -198,14 +207,14 @@ size_t encode_frame_st(slmp_frame_t *frame, uint8_t *stream, int type)
 
 size_t encode_frame_mt(slmp_frame_t *frame, uint8_t *stream, int type)
 {
-    ENCODE_FRAME_DECLARE_LOCAL_VARIABLES();
-    ENCODE_FRAME_INITIALIZE_LOCAL_VARIABLES_1();
+    ENCODE_FRAME_DECLARE_LOCAL_VARIABLES()
+    ENCODE_FRAME_INITIALIZE_LOCAL_VARIABLES_1()
     ENCODE_FRAME_BEGIN_SWITCH_FTYPE()
         ENCODE_FRAME_CASE_FTYPE(REQ_MT)
         ENCODE_FRAME_CASE_FTYPE(RES_MT)
         ENCODE_FRAME_CASE_FTYPE(ERR_MT)
     ENCODE_FRAME_END_SWITCH_FTYPE()
-    ENCODE_FRAME_INITIALIZE_LOCAL_VARIABLES_2();
+    ENCODE_FRAME_INITIALIZE_LOCAL_VARIABLES_2()
 
     if (stream == NULL) {
         return min_buf_size;
@@ -214,6 +223,12 @@ size_t encode_frame_mt(slmp_frame_t *frame, uint8_t *stream, int type)
     /* Header */
     enc16b((uint16_t)(frame->hdr.ftype & SLMP_FTYPE_MASK),
         &(stream[m * SLMP_MT_HDR_FTYPE_OFFSET]));
+    if (type == SLMP_ASCII_STREAM) {
+        int i0 = m * SLMP_MT_HDR_FTYPE_OFFSET;
+        uint8_t x = stream[i0];
+        stream[i0] = stream[i0 + 1];
+        stream[i0 + 1] = x;
+    }
     enc16b(frame->hdr.serial, &(stream[m * SLMP_MT_HDR_SERIAL_OFFSET]));
     enc16b(0, &(stream[m * SLMP_MT_HDR_RESERVED1_OFFSET]));
 
@@ -271,14 +286,14 @@ size_t encode_frame_mt(slmp_frame_t *frame, uint8_t *stream, int type)
 
 size_t encode_frame_emt(slmp_frame_t *frame, uint8_t *stream, int type)
 {
-    ENCODE_FRAME_DECLARE_LOCAL_VARIABLES();
-    ENCODE_FRAME_INITIALIZE_LOCAL_VARIABLES_1();
+    ENCODE_FRAME_DECLARE_LOCAL_VARIABLES()
+    ENCODE_FRAME_INITIALIZE_LOCAL_VARIABLES_1()
     ENCODE_FRAME_BEGIN_SWITCH_FTYPE()
         ENCODE_FRAME_CASE_FTYPE(REQ_EMT)
         ENCODE_FRAME_CASE_FTYPE(RES_EMT)
         ENCODE_FRAME_CASE_FTYPE(PUSH_EMT)
     ENCODE_FRAME_END_SWITCH_FTYPE()
-    ENCODE_FRAME_INITIALIZE_LOCAL_VARIABLES_2();
+    ENCODE_FRAME_INITIALIZE_LOCAL_VARIABLES_2()
 
     if (stream == NULL) {
         return min_buf_size;
@@ -287,6 +302,12 @@ size_t encode_frame_emt(slmp_frame_t *frame, uint8_t *stream, int type)
     /* Header */
     enc16b((uint16_t)(frame->hdr.ftype & SLMP_FTYPE_MASK),
         &(stream[m * SLMP_EMT_HDR_FTYPE_OFFSET]));
+    if (type == SLMP_ASCII_STREAM) {
+        int i0 = m * SLMP_EMT_HDR_FTYPE_OFFSET;
+        uint8_t x = stream[i0];
+        stream[i0] = stream[i0 + 1];
+        stream[i0 + 1] = x;
+    }
     enc16b(frame->hdr.serial, &(stream[m * SLMP_EMT_HDR_SERIAL_OFFSET]));
     enc16b(0, &(stream[m * SLMP_EMT_HDR_RESERVED2_OFFSET]));
 
@@ -345,18 +366,18 @@ size_t encode_frame_emt(slmp_frame_t *frame, uint8_t *stream, int type)
 
 size_t encode_frame_lmt(slmp_frame_t *frame, uint8_t *stream, int type)
 {
-    ENCODE_FRAME_DECLARE_LOCAL_VARIABLES();
+    ENCODE_FRAME_DECLARE_LOCAL_VARIABLES()
 
     /* The station number extended MT type has only binary mode. */
     assert(type != SLMP_ASCII_STREAM);
 
-    ENCODE_FRAME_INITIALIZE_LOCAL_VARIABLES_1();
+    ENCODE_FRAME_INITIALIZE_LOCAL_VARIABLES_1()
     ENCODE_FRAME_BEGIN_SWITCH_FTYPE()
         ENCODE_FRAME_CASE_FTYPE(REQ_LMT)
         ENCODE_FRAME_CASE_FTYPE(RES_LMT)
         ENCODE_FRAME_CASE_FTYPE(ERR_LMT)
     ENCODE_FRAME_END_SWITCH_FTYPE()
-    ENCODE_FRAME_INITIALIZE_LOCAL_VARIABLES_2();
+    ENCODE_FRAME_INITIALIZE_LOCAL_VARIABLES_2()
 
     if (stream == NULL) {
         return min_buf_size;
@@ -438,8 +459,8 @@ size_t encode_frame_lmt(slmp_frame_t *frame, uint8_t *stream, int type)
 
 slmp_frame_t* decode_frame_st(uint8_t *stream, size_t len, int type, size_t *len_remains)
 {
-    DECODE_FRAME_DECLARE_LOCAL_VARIABLES();
-    DECODE_FRAME_INITIALIZE_LOCAL_VARIABLES_1(ST);
+    DECODE_FRAME_DECLARE_LOCAL_VARIABLES()
+    DECODE_FRAME_INITIALIZE_LOCAL_VARIABLES_1(ST)
 
     if (ftype == SLMP_FTYPE_RES_ST) {
         dec16bp(&(stream[m * SLMP_ST_SUBHDR_TIMER_ENDCODE_RESERVED2_OFFSET]),
@@ -455,7 +476,7 @@ slmp_frame_t* decode_frame_st(uint8_t *stream, size_t len, int type, size_t *len
         DECODE_FRAME_CASE_FTYPE(ERR, ST)
     DECODE_FRAME_END_SWITCH_FTYPE()
 
-    DECODE_FRAME_INITIALIZE_LOCAL_VARIABLES_2();
+    DECODE_FRAME_INITIALIZE_LOCAL_VARIABLES_2()
 
     /* Header */
     frame->hdr.ftype = ftype;
@@ -512,8 +533,8 @@ slmp_frame_t* decode_frame_st(uint8_t *stream, size_t len, int type, size_t *len
 
 slmp_frame_t* decode_frame_mt(uint8_t *stream, size_t len, int type, size_t *len_remains)
 {
-    DECODE_FRAME_DECLARE_LOCAL_VARIABLES();
-    DECODE_FRAME_INITIALIZE_LOCAL_VARIABLES_1(MT);
+    DECODE_FRAME_DECLARE_LOCAL_VARIABLES()
+    DECODE_FRAME_INITIALIZE_LOCAL_VARIABLES_1(MT)
 
     if (ftype == SLMP_FTYPE_RES_MT) {
         dec16bp(&(stream[m * SLMP_MT_SUBHDR_TIMER_ENDCODE_RESERVED3_OFFSET]),
@@ -529,7 +550,7 @@ slmp_frame_t* decode_frame_mt(uint8_t *stream, size_t len, int type, size_t *len
         DECODE_FRAME_CASE_FTYPE(ERR, MT)
     DECODE_FRAME_END_SWITCH_FTYPE()
 
-    DECODE_FRAME_INITIALIZE_LOCAL_VARIABLES_2();
+    DECODE_FRAME_INITIALIZE_LOCAL_VARIABLES_2()
 
     /* Header */
     frame->hdr.ftype = ftype;
@@ -587,14 +608,14 @@ slmp_frame_t* decode_frame_mt(uint8_t *stream, size_t len, int type, size_t *len
 
 slmp_frame_t* decode_frame_emt(uint8_t *stream, size_t len, int type, size_t *len_remains)
 {
-    DECODE_FRAME_DECLARE_LOCAL_VARIABLES();
-    DECODE_FRAME_INITIALIZE_LOCAL_VARIABLES_1(EMT);
+    DECODE_FRAME_DECLARE_LOCAL_VARIABLES()
+    DECODE_FRAME_INITIALIZE_LOCAL_VARIABLES_1(EMT)
     DECODE_FRAME_BEGIN_SWITCH_FTYPE()
         DECODE_FRAME_CASE_FTYPE(REQ, EMT)
         DECODE_FRAME_CASE_FTYPE(RES, EMT)
         DECODE_FRAME_CASE_FTYPE(PUSH, EMT)
     DECODE_FRAME_END_SWITCH_FTYPE()
-    DECODE_FRAME_INITIALIZE_LOCAL_VARIABLES_2();
+    DECODE_FRAME_INITIALIZE_LOCAL_VARIABLES_2()
 
     /* Header */
     frame->hdr.ftype = ftype;
@@ -656,12 +677,12 @@ slmp_frame_t* decode_frame_emt(uint8_t *stream, size_t len, int type, size_t *le
 
 slmp_frame_t* decode_frame_lmt(uint8_t *stream, size_t len, int type, size_t *len_remains)
 {
-    DECODE_FRAME_DECLARE_LOCAL_VARIABLES();
+    DECODE_FRAME_DECLARE_LOCAL_VARIABLES()
 
     /* The station number extended MT type has only binary mode. */
     assert(type != SLMP_ASCII_STREAM);
 
-    DECODE_FRAME_INITIALIZE_LOCAL_VARIABLES_1(LMT);
+    DECODE_FRAME_INITIALIZE_LOCAL_VARIABLES_1(LMT)
 
     if (ftype == SLMP_FTYPE_RES_LMT) {
         dec16bp(&(stream[m * SLMP_LMT_SUBHDR_TIMER_ENDCODE_OFFSET]),
@@ -677,7 +698,7 @@ slmp_frame_t* decode_frame_lmt(uint8_t *stream, size_t len, int type, size_t *le
         DECODE_FRAME_CASE_FTYPE(ERR, LMT)
     DECODE_FRAME_END_SWITCH_FTYPE()
 
-    DECODE_FRAME_INITIALIZE_LOCAL_VARIABLES_2();
+    DECODE_FRAME_INITIALIZE_LOCAL_VARIABLES_2()
 
     /* Header */
     frame->hdr.ftype = ftype;

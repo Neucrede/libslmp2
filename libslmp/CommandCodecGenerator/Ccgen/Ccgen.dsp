@@ -53,7 +53,17 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 /nologo /subsystem:windows /machine:I386
-# ADD LINK32 winmm.lib /nologo /subsystem:windows /machine:I386
+# ADD LINK32 winmm.lib /nologo /subsystem:windows /debug /machine:I386
+# Begin Custom Build
+OutDir=.\Release
+TargetName=Ccgen
+InputPath=.\Release\Ccgen.exe
+SOURCE="$(InputPath)"
+
+"..\..\..\vs6\$(OutDir)\$(TargetName).exe" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	copy $(InputPath) ..\..\..\vs6\$(OutDir)
+
+# End Custom Build
 
 !ELSEIF  "$(CFG)" == "Ccgen - Win32 Debug"
 
@@ -81,6 +91,16 @@ BSC32=bscmake.exe
 LINK32=link.exe
 # ADD BASE LINK32 /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept
 # ADD LINK32 winmm.lib /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept
+# Begin Custom Build
+OutDir=.\Debug
+TargetName=Ccgen
+InputPath=.\Debug\Ccgen.exe
+SOURCE="$(InputPath)"
+
+"..\..\..\vs6\$(OutDir)\$(TargetName).exe" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	copy $(InputPath) ..\..\..\vs6\$(OutDir)
+
+# End Custom Build
 
 !ENDIF 
 

@@ -72,15 +72,20 @@ size_t strlcpy(char *dest, const char *src, size_t dest_size);
 #define UNIT_WORD                   2
 #define UNIT_DWORD                  3
 
-
 typedef struct melcli_ctx {
     slmp_pktio_t* pktio;
-    melcli_station_t station;
+    melcli_station_t station;   /* default target station */
     melcli_timeout_t timeout;
     int (CDECLCALL *dbgprint)(const char*, ...);
-    int debug;
-    uint16_t serial;
+    int debug;          /* whether to enable debug print */
+    uint16_t serial;    /* next frame serial */
 } melcli_ctx_t;
+
+typedef struct err_msg_desc {
+    int err;
+    const char *msg;
+} err_msg_desc_t;
+
 
 #endif /* __MELCLI_PRIV_H__ */
 

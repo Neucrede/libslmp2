@@ -7,7 +7,7 @@
 #include <assert.h>
 #include <stdlib.h>
 #include <string.h>
-
+#include <stdint.h>
 #include "slmp/slmpdef.h"
 #include "slmp/slmperr.h"
 #include "slmp/slmpfrmio.h"
@@ -15,7 +15,7 @@
 #include "../slmp_intl.h"
 
 
-#define SEND_FRAME_MIN_INTERVAL_MILLIS      10
+#define SEND_FRAME_MIN_INTERVAL_MILLIS      0
 
 
 typedef enum {
@@ -33,8 +33,8 @@ static size_t send_frames_st_mt_emt(slmp_pktio_t *pktio, slmp_frame_t **frames,
 static size_t segm_and_send_lmt_frame(slmp_pktio_t *pktio, slmp_frame_t *frame,
     int type, int interval);
 static size_t receive_frames(slmp_pktio_t *pktio, slmp_frame_t **frames, 
-    size_t n, int type, int timeout);
-
+    size_t n, int *type, int timeout);
+static int identify_stream_type(uint8_t *buf, size_t n);
 
 SLMPAPI size_t SLMPCALL slmp_send_frames(
     slmp_pktio_t *pktio, slmp_frame_t **frames, size_t n, int type, int interval)
@@ -116,16 +116,16 @@ SLMPAPI size_t SLMPCALL slmp_send_frames(
 }
 
 SLMPAPI size_t SLMPCALL slmp_receive_frames(
-    slmp_pktio_t *pktio, slmp_frame_t **frames, size_t n, int type, int timeout)
+    slmp_pktio_t *pktio, slmp_frame_t **frames, size_t n, int *type, int timeout)
 {
     assert(pktio != NULL);
     assert(frames != NULL);
     assert(n != 0);
     assert(timeout >= 0);
-    assert((type == SLMP_BINARY_STREAM) || (type == SLMP_ASCII_STREAM));
+    assert(type != NULL);
 
     if ((pktio == NULL) || (frames == NULL) || (n == 0) || (timeout < 0)
-        || !((type == SLMP_BINARY_STREAM) || (type == SLMP_ASCII_STREAM))) 
+        || (type == NULL)) 
     {
         slmp_set_errno(SLMP_ERROR_INVALID_ARGUMENTS);
         return 0;
@@ -307,7 +307,9 @@ static size_t segm_and_send_lmt_frame(slmp_pktio_t *pktio, slmp_frame_t *frame,
 
         ++cur_frame->cmd_data.lmt.div_no;
 
-        milli_sleep(interval);
+        if (interval > 0) {
+            milli_sleep(interval);
+        }
     }
 
     slmp_set_errno(SLMP_ERROR_SUCCESS);
@@ -325,7 +327,7 @@ __cleanup:
 }
 
 static size_t receive_frames(slmp_pktio_t *pktio, slmp_frame_t **frames, size_t n,
-    int type, int timeout)
+    int *type, int timeout)
 {
     const size_t buf_len = 4096;
     uint8_t *buf;
@@ -337,6 +339,7 @@ static size_t receive_frames(slmp_pktio_t *pktio, slmp_frame_t **frames, size_t 
     slmp_frame_t *frame;
     uint64_t t0 = get_current_timestamp();
     uint64_t t;
+    int cur_type, prev_type = SLMP_BINARY_STREAM;
 
     if ((buf = (uint8_t*)malloc(buf_len)) == NULL) {
         slmp_set_errno(SLMP_ERROR_OUT_OF_MEMORY);
@@ -374,7 +377,13 @@ __outer_for_loop:
 
         t = get_current_timestamp();
         while ((idx_frm != n) && (offset + len_recv > 0)) {
-            frame = slmp_decode_frame(buf, offset + len_recv, type, &len_remains);
+            cur_type = identify_stream_type(buf, offset + len_recv);
+            if (cur_type != -1) {
+                prev_type = cur_type;
+            }
+            
+            frame = slmp_decode_frame(buf, offset + len_recv, 
+                cur_type != -1 ? cur_type : prev_type, &len_remains);
 
             if (frame == NULL) {
                 err = slmp_get_errno();
@@ -400,10 +409,54 @@ __outer_for_loop:
         }
     }
 
+    *type = cur_type;
     slmp_set_errno(SLMP_ERROR_SUCCESS);
 
 __cleanup:
     free(buf);
-    slmp_pktio_discard(pktio);
     return idx_frm;
+}
+
+static int identify_stream_type(uint8_t *buf, size_t n)
+{
+    uint32_t x;
+    uint8_t y[5];
+
+    if (n < 4) {
+        return -1;
+    }
+
+    /* Try binary */
+    x = buf[0] | ((uint32_t)(buf[1]) << 8);
+    switch (x) {
+    case SLMP_FTYPE_REQ_ST:
+    case SLMP_FTYPE_RES_ST:
+    case SLMP_FTYPE_REQ_MT:
+    case SLMP_FTYPE_RES_MT:
+    case SLMP_FTYPE_REQ_EMT:
+    case SLMP_FTYPE_PUSH_EMT:
+    case SLMP_FTYPE_RES_EMT:
+    case SLMP_FTYPE_REQ_LMT:
+    case SLMP_FTYPE_RES_LMT:
+        return SLMP_BINARY_STREAM;
+    default:
+        break;
+    }
+    
+    /* Try ASCII */
+    strlcpy(y, buf, 5);
+    if (
+            strcmp(y, "5000") == 0        /* req_st */
+        ||  strcmp(y, "D000") == 0        /* res_st, err_st */
+        ||  strcmp(y, "5400") == 0        /* req_mt */
+        ||  strcmp(y, "D400") == 0        /* res_mt, err_mt */
+        ||  strcmp(y, "5D00") == 0        /* req_emt */
+        ||  strcmp(y, "9D00") == 0        /* push_emt */
+        ||  strcmp(y, "DD00") == 0        /* res_emt */
+    )
+    {
+        return SLMP_ASCII_STREAM;
+    }
+
+    return -1;
 }

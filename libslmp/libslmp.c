@@ -127,6 +127,16 @@ SLMPAPI const char* SLMPCALL slmp_get_endcode_msg(int endcode)
     return "Unknown error.";
 }
 
+SLMPAPI uint64_t SLMPCALL slmp_get_current_timestamp()
+{
+    return get_current_timestamp();
+}
+
+SLMPAPI void SLMPCALL slmp_milli_sleep(int ms)
+{
+    milli_sleep(ms);
+}
+
 #if defined(_WIN32)
 
 #include <windows.h>

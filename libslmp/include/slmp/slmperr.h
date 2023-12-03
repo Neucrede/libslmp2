@@ -68,6 +68,12 @@
 #define SLMP_ERROR_ALREADY_OPEN                         -111
 #define SLMP_ERROR_CONNECTION_CLOSED                    -112
 
+#define SLMP_ERROR_STILL_RUNNING                        -200
+#define SLMP_ERROR_NOT_RUNNING                          -201
+#define SLMP_ERROR_INITIALIZATION_FAILED                -202
+
+#define SLMP_ERROR_INVALID_POINTERS     SLMP_ERROR_INVALID_POINTER
+
 /** @} */
 
 

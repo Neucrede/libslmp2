@@ -55,6 +55,7 @@ The SLMP library offers:
     - \ref tcpip.h "TCP/IP dedicated functions"
     - \ref udpip.h "UDP/IP dedicated functions"
 - \ref slmpfrmio.h "High-level frame transmission and receipt"
+- \ref slmpserver.h "SLMP server"
 - \ref slmpmem.h "Thread specific memory management"
 - \ref slmperr.h "Thread specific error number support"
 - \ref slmpinit.h "Library initialization / uninitialization"
@@ -78,8 +79,35 @@ See \ref melcli.h "the documentation of libmelcli" for detailed description
 on abovementioned functions. Also refer to the source code of the demonstration 
 program in `samples/mcdemo` directory.
 
+\section sec_samples About Samples
+- codecfcn
 
-\section sec_about About
+This sample demonstrates typical usage of codec functions.
+
+- echosvr
+
+A simple echo server that shows the usage of packet IO.
+
+- echocli
+
+Client program used along with echosvr.
+
+- svrskel
+
+SLMP server demonstration application using structs and routines provided in 
+\ref slmpserver.h
+
+- mcdemo
+
+This sample demonstrates typical usage of the MELSEC client library.
+
+- vb6demo
+
+A program written in Microsoft Visual Basic 6 demonstrating typical usage of the
+COM wrapper of the MELSEC client library namely MelcliCOMWrapper.
+
+
+\section sec_about About Authors
 libslmp is developed and maintained by 
 <a href="https://github.com/Neucrede">Neucrede</a>.
 

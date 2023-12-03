@@ -5,6 +5,7 @@
  */
 
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 #include <signal.h>
 #include <errno.h>
@@ -21,6 +22,7 @@
 static int _init(pktio_t *pktio);
 static int _open(pktio_t *pktio);
 static int _close(pktio_t *pktio);
+static int _disconnect(pktio_t *pktio);
 static int _accept(pktio_t *pktio);
 static size_t _send(pktio_t *pktio, void* buf, size_t len);
 static size_t _recv(pktio_t *pktio, void* buf, size_t len, int timeout);
@@ -31,6 +33,7 @@ static pktio_backend_t backend = {
     _init,
     _open,
     _close,
+    _disconnect,
     _accept,
     _send,
     _recv,
@@ -94,6 +97,7 @@ SLMPAPI slmp_pktio_t* SLMPCALL slmp_pktio_new_tcpip(
     pktio->echo = 0;
     pktio->backend = &backend;
     pktio->backend_ctx = ctx;
+    pktio->dbgprint = &printf;
 
 #if defined(SIGPIPE) && (!defined(MSG_NOSIGNAL) || (MSG_NOSIGNAL == 0))
     /*
@@ -402,6 +406,8 @@ __try_again:
                 }
             }
         }
+        strlcpy(pktio->peer_ipaddr, inet_ntoa(addr.sin_addr), 
+            sizeof(pktio->peer_ipaddr));
         break;
 
     case SLMP_PKTIO_SERVER:
@@ -461,8 +467,30 @@ static int _close(pktio_t *pktio)
         pktio->fd2 = -1;
     }
 
+    pktio->peer_ipaddr[0] = 0x00;
+
     return 0;
 }
+
+static int _disconnect(pktio_t *pktio)
+{
+    assert(pktio->type == SLMP_PKTIO_TCPIP);
+    if (pktio->type != SLMP_PKTIO_TCPIP) {
+        slmp_set_errno(SLMP_ERROR_INVALID_ARGUMENTS);
+        return -1;
+    }
+
+    if (pktio->fd2 >= 0) {
+        shutdown(pktio->fd2, SD_RDWR);
+        close(pktio->fd2);
+        pktio->fd2 = -1;
+    }
+
+    pktio->peer_ipaddr[0] = 0x00;
+
+    return 0;
+}
+
 
 static int _accept(pktio_t *pktio)
 {
@@ -531,13 +559,15 @@ static int _accept(pktio_t *pktio)
     }
 
     if (pktio->fd2 >= 0) {
-        /* SLMP: At most one connection is allowed at a time. */
+        /* SLMP: At most one active connection is allowed. */
         close(fd2);
         slmp_set_errno(SLMP_ERROR_STILL_CONNECTED);
         return -1;
     }
     else {
         pktio->fd2 = fd2;
+        strlcpy(pktio->peer_ipaddr, inet_ntoa(addr.sin_addr), 
+            sizeof(pktio->peer_ipaddr));
     }
 
     return 0;
@@ -752,7 +782,9 @@ static void _discard(pktio_t *pktio)
     int fd;
     int ret;
     char buf[512];
-
+    fd_set rfds;
+    struct timeval tv;
+    
     assert(pktio->type == SLMP_PKTIO_TCPIP);
     if (pktio->type != SLMP_PKTIO_TCPIP) {
         slmp_set_errno(SLMP_ERROR_INVALID_ARGUMENTS);
@@ -783,10 +815,33 @@ static void _discard(pktio_t *pktio)
         slmp_set_errno(SLMP_ERROR_NO_CONNECTION);
         return;
     }
+    
+    if (ctx->recv_timeout > 0) {
+        tv.tv_sec = ctx->recv_timeout;
+        tv.tv_usec = 0;
+    }
+    else {
+        tv.tv_sec = 1;
+        tv.tv_usec = 0;
+    }
 
     /* Remove all data from the input queue. */
     do {
-        ret = recv(fd, buf, sizeof(buf), 0);
+        FD_ZERO(&rfds);
+        
+        #if defined(_WIN32) && defined(_MSC_VER)
+            FD_SET((SOCKET)(fd), &rfds);
+        #else
+            FD_SET(fd, &rfds);
+        #endif
+        
+        ret = select(fd + 1, &rfds, NULL, NULL, &tv); 
+        if (ret > 0) {
+            ret = recv(fd, buf, sizeof(buf), 0);
+        }
+        else {
+            break;
+        }
     } while (ret > 0);
 }
 

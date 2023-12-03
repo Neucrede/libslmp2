@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
         continue;
     }
     
-    printf("Connected. \n");
+    printf("Connected to %s. \n", slmp_pktio_get_peer_ipaddr(pktio));
     
     /* Bang! */
     slmp_pktio_send(pktio, buf, strlen(buf));

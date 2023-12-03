@@ -42,8 +42,8 @@ RSC=rc.exe
 # PROP Intermediate_Dir "Release"
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "LIBSLMP_EXPORTS" /YX /FD /c
-# ADD CPP /nologo /MT /W3 /GX /O2 /I ".\\" /I ".\libslmp" /I "..\libslmp\include" /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "LIBSLMP_EXPORTS" /YX /FD /c
+# ADD BASE CPP /nologo /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "LIBSLMP_EXPORTS" /D "__NATIVE_FUNCTION_MACRO_NOT_DEFINED__" /YX /FD /c
+# ADD CPP /nologo /MT /W3 /GX /O2 /I ".\\" /I ".\libslmp" /I "..\libslmp\include" /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "LIBSLMP_EXPORTS" /D "__NATIVE_FUNCTION_MACRO_NOT_DEFINED__" /YX /FD /c
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x804 /d "NDEBUG"
@@ -53,7 +53,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /machine:I386
-# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib ws2_32.lib /nologo /dll /machine:I386
+# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib ws2_32.lib /nologo /dll /debug /machine:I386
 
 !ELSEIF  "$(CFG)" == "libslmp - Win32 Debug"
 
@@ -68,8 +68,8 @@ LINK32=link.exe
 # PROP Intermediate_Dir "Debug"
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "LIBSLMP_EXPORTS" /YX /FD /GZ /c
-# ADD CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /I ".\\" /I ".\libslmp" /I "..\libslmp\include" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "LIBSLMP_EXPORTS" /YX /FD /GZ /c
+# ADD BASE CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "LIBSLMP_EXPORTS" /D "__NATIVE_FUNCTION_MACRO_NOT_DEFINED__" /YX /FD /GZ /c
+# ADD CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /I ".\\" /I ".\libslmp" /I "..\libslmp\include" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "LIBSLMP_EXPORTS" /D "__NATIVE_FUNCTION_MACRO_NOT_DEFINED__" /YX /FD /GZ /c
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x804 /d "_DEBUG"
@@ -210,6 +210,14 @@ SOURCE=..\libslmp\packetio\udpip.c
 SOURCE=..\libslmp\frameio\frameio.c
 # End Source File
 # End Group
+# Begin Group "server_"
+
+# PROP Default_Filter "*.c"
+# Begin Source File
+
+SOURCE=..\libslmp\server\server.c
+# End Source File
+# End Group
 # Begin Source File
 
 SOURCE=..\libslmp\errmsg.c
@@ -318,6 +326,18 @@ SOURCE=..\libslmp\include\slmp\codec\intmem_codec.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\libslmp\include\slmp\codec\nodeconn_codec.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\libslmp\include\slmp\codec\nodemon_codec.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\libslmp\include\slmp\codec\paramset_codec.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\libslmp\include\slmp\codec\remctrl_codec.h
 # End Source File
 # Begin Source File
@@ -389,6 +409,10 @@ SOURCE=..\libslmp\include\slmp\slmpmem.h
 
 SOURCE=..\libslmp\include\slmp\slmppktio.h
 # End Source File
+# Begin Source File
+
+SOURCE=..\libslmp\include\slmp\slmpserver.h
+# End Source File
 # End Group
 # Begin Group "internal"
 
@@ -459,6 +483,14 @@ SOURCE=..\libslmp\packetio\tcpip_priv.h
 # Begin Source File
 
 SOURCE=..\libslmp\packetio\udpip_priv.h
+# End Source File
+# End Group
+# Begin Group "server__"
+
+# PROP Default_Filter "*.h"
+# Begin Source File
+
+SOURCE=..\libslmp\server\server_priv.h
 # End Source File
 # End Group
 # Begin Source File

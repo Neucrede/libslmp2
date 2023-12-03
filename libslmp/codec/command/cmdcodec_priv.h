@@ -248,25 +248,25 @@
     } } while (0)                                                           \
 
 
-#define DECODE_AND_ADVANCE_STREAM_COPY_MEMORY_N(_dest, _size)                   \
-    do { if (_size != 0) {                                                      \
-        if ((uintptr_t)(stream + _size) > (uintptr_t)(stream0)                  \
-                + (uintptr_t)(len))                                             \
-        {                                                                       \
-            slmp_free(cmd);                                                     \
-            slmp_set_errno(SLMP_ERROR_BUFFER_TOO_SHORT);                        \
-            return NULL;                                                        \
-        }                                                                       \
-        _dest = (uint8_t*)slmp_malloc((size_t)(_size));                         \
-        assert (_dest != NULL);                                                 \
-        if (_dest == NULL) {                                                    \
-            slmp_free(cmd);                                                     \
-            slmp_set_errno(SLMP_ERROR_OUT_OF_MEMORY);                           \
-            return NULL;                                                        \
-        } else {                                                                \
-            DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(_dest, _size);                \
-        }                                                                       \
-    } else { _dest = NULL; } } while (0)                                        \
+#define DECODE_AND_ADVANCE_STREAM_COPY_MEMORY_N(_dest, _size)               \
+    do { if (_size != 0) {                                                  \
+        if ((uintptr_t)(stream + _size) > (uintptr_t)(stream0)              \
+                + (uintptr_t)(len))                                         \
+        {                                                                   \
+            slmp_free(cmd);                                                 \
+            slmp_set_errno(SLMP_ERROR_BUFFER_TOO_SHORT);                    \
+            return NULL;                                                    \
+        }                                                                   \
+        _dest = (uint8_t*)slmp_malloc((size_t)(_size));                     \
+        assert (_dest != NULL);                                             \
+        if (_dest == NULL) {                                                \
+            slmp_free(cmd);                                                 \
+            slmp_set_errno(SLMP_ERROR_OUT_OF_MEMORY);                       \
+            return NULL;                                                    \
+        } else {                                                            \
+            DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(_dest, _size);            \
+        }                                                                   \
+    } else { _dest = NULL; } } while (0)                                    \
 
 
 #endif /* __CMDCODEC_PRIV_H__ */

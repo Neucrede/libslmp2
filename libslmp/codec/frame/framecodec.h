@@ -187,7 +187,7 @@ slmp_frame_t* decode_frame_lmt(uint8_t *stream, size_t len, int type, size_t *le
     pfn_codec_24b_t enc24b;                                                 \
     pfn_codec_32b_t enc32b;                                                 \
     pfn_codec_ptr_t enc8bp, enc16bp, enc24bp, enc32bp;                      \
-    pfn_codec_n_ptr_t encnp                                                 \
+    pfn_codec_n_ptr_t encnp;                                                \
 
 
 #define ENCODE_FRAME_INITIALIZE_LOCAL_VARIABLES_1()                         \
@@ -270,7 +270,7 @@ slmp_frame_t* decode_frame_lmt(uint8_t *stream, size_t len, int type, size_t *le
     size_t raw_data_len;                                                    \
     /* Decode functions.*/                                                  \
     pfn_codec_ptr_t dec8bp, dec16bp, dec24bp, dec32bp;                      \
-    pfn_codec_n_ptr_t decnp                                                 \
+    pfn_codec_n_ptr_t decnp;                                                \
 
 
 #define DECODE_FRAME_INITIALIZE_LOCAL_VARIABLES_1(x)                        \
@@ -296,8 +296,10 @@ slmp_frame_t* decode_frame_lmt(uint8_t *stream, size_t len, int type, size_t *le
         slmp_set_errno(SLMP_ERROR_BUFFER_TOO_SHORT);                        \
         return NULL;                                                        \
     }                                                                       \
-    dec16bp(&(stream[m * SLMP_##x##_HDR_FTYPE_OFFSET]), &ftype)             \
-
+    dec16bp(&(stream[m * SLMP_##x##_HDR_FTYPE_OFFSET]), &ftype);            \
+    if (type == SLMP_ASCII_STREAM) {                                        \
+        ftype = ((ftype >> 8) | (ftype << 8));                              \
+    }                                                                       \
 
 #define DECODE_FRAME_BEGIN_SWITCH_FTYPE()                                   \
     switch (ftype) {                                                        \
@@ -307,7 +309,7 @@ slmp_frame_t* decode_frame_lmt(uint8_t *stream, size_t len, int type, size_t *le
     case SLMP_FTYPE_##x##_##y:                                              \
         dl_offset = SLMP_##x##_##y##_DATA_DL_OFFSET;                        \
         fixed_part_len = SLMP_##x##_##y##_FIXED_PART_LEN;                   \
-        assert(len >= m * fixed_part_len);                                  \
+        /* assert(len >= m * fixed_part_len); */                            \
         if (len < m * fixed_part_len) {                                     \
             slmp_set_errno(SLMP_ERROR_BUFFER_TOO_SHORT);                    \
             return NULL;                                                    \
@@ -325,13 +327,13 @@ slmp_frame_t* decode_frame_lmt(uint8_t *stream, size_t len, int type, size_t *le
 
 
 #define DECODE_FRAME_INITIALIZE_LOCAL_VARIABLES_2()                         \
-    assert(dl >= m * dl_offset);                                            \
+    /* assert(dl >= m * dl_offset); */                                      \
     if (dl < m * dl_offset) {                                               \
         slmp_set_errno(SLMP_ERROR_BAD_FRAME_PACKET);                        \
         return NULL;                                                        \
     }                                                                       \
     raw_data_len = (dl - m * dl_offset) / m;                                \
-    assert(len >= m * (fixed_part_len + raw_data_len));                     \
+    /* assert(len >= m * (fixed_part_len + raw_data_len)); */               \
     if (len < m * (fixed_part_len + raw_data_len)) {                        \
         slmp_set_errno(SLMP_ERROR_BUFFER_TOO_SHORT);                        \
         return NULL;                                                        \
@@ -346,7 +348,7 @@ slmp_frame_t* decode_frame_lmt(uint8_t *stream, size_t len, int type, size_t *le
         slmp_set_errno(SLMP_ERROR_OUT_OF_MEMORY);                           \
         return NULL;                                                        \
     }                                                                       \
-    frame->size = SLMP_FRAME_STRUCT_SIZE(raw_data_len)                      \
+    frame->size = SLMP_FRAME_STRUCT_SIZE(raw_data_len);                     \
 
 
 #endif /* __FRAMECODEC_H__ */

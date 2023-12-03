@@ -21,7 +21,31 @@
 #include "slmpcodec.h"
 #include "slmppktio.h"
 #include "slmpfrmio.h"
+#include "slmpserver.h"
 
 #include "command/cmdcode.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/**
+ * \brief This function returns current timestamp.
+ *
+ * \return Current timestamp.
+ */
+SLMPAPI uint64_t SLMPCALL slmp_get_current_timestamp();
+
+/**
+ * \brief Wait for specified interval.
+ *
+ * \param[in] ms Interval, in milliseconds.
+ */
+SLMPAPI void SLMPCALL slmp_milli_sleep(int ms);
+
+#ifdef __cplusplus
+}
+#endif
+
 
 #endif /* __SLMP_H__ */

@@ -87,12 +87,13 @@ extern "C" {
 #endif
 
 /** Command encoding function pointer type. */
-typedef size_t (SLMPCALL *pfn_encode_command_t)(slmp_cmd_hdr_t* /* hdr */, 
+typedef size_t (SLMPCALL *slmp_command_encode_t)(slmp_cmd_hdr_t* /* hdr */, 
     uint8_t* /* stream */, int /* type */);
 
 /** Command decoding function pointer type. */
-typedef slmp_cmd_hdr_t* (SLMPCALL *pfn_decode_command_t)(uint8_t* /* stream */, 
-    size_t /* len */, int /* type */, int /* addr_width */);
+typedef slmp_cmd_hdr_t* (SLMPCALL *slmp_command_decode_t)(
+    uint8_t* /* stream */, size_t /* len */, int /* type */, 
+    int /* addr_width */);
 
 #ifdef __cplusplus
 }

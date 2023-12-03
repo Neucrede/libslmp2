@@ -60,6 +60,51 @@ Package=<4>
 
 ###############################################################################
 
+Project: "MELSECClientSample"=.\MELSECClientSample.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name libmelcli
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "MelcliCOMWrapper"=..\libmelcli\COMWrapper\MelcliCOMWrapper.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name libmelcli
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "SLMPServerSkeleton"=.\SLMPServerSkeleton.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name libslmp
+    End Project Dependency
+}}}
+
+###############################################################################
+
 Project: "libmelcli"=.\libmelcli.dsp - Package Owner=<4>
 
 Package=<5>

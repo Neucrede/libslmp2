@@ -1,0 +1,195 @@
+import "oaidl.idl";
+
+/* Follow the definitions in melclidef.h *********************************/
+
+typedef enum
+{
+    TCPIP   = 1,
+    UDPIP   = 2
+} ProtocolType;
+
+typedef enum
+{
+    ClearNone               = (1 << 5),
+    ClearExcludeLatched     = (1 << 6),
+    ClearAll                = (1 << 7)
+} ClearMode;
+
+/* ***********************************************************************/
+
+[
+    object,
+    uuid(BB9C2540-7AE5-4c1b-A8F1-B9BF87EE0001),
+    helpstring("IMELSECClientContext Interface"),
+    pointer_default(unique),
+    oleautomation,
+    dual
+]
+interface IMELSECClientContext : IDispatch
+{
+    [helpstring("Type of communication protocol to be used.")]
+    [propget] HRESULT Protocol([out, retval] ProtocolType* pProto);
+    [helpstring("Type of communication protocol to be used.")]
+    [propput] HRESULT Protocol([in] ProtocolType proto);
+
+    [helpstring("IP address of remote connection target.")]
+    [propget] HRESULT RemoteIPAddress([out, retval] BSTR* pbstrIPAddress);
+    [helpstring("IP address of remote connection target.")]
+    [propput] HRESULT RemoteIPAddress([in] BSTR bstrIPAddress);
+
+    [helpstring("Port number of remote connection target.")]
+    [propget] HRESULT RemotePort([out, retval] short* piPort);
+    [helpstring("Port number of remote connection target.")]
+    [propput] HRESULT RemotePort([in] short iPort);
+
+    [helpstring("Local IP address to be bound to the socket.")]
+    [propget] HRESULT LocalIPAddress([out, retval] BSTR* pbstrIPAddress);
+    [helpstring("Local IP address to be bound to the socket.")]
+    [propput] HRESULT LocalIPAddress([in] BSTR bstrIPAddress);
+
+    [helpstring("Local port number to be bound to the socket.")]
+    [propget] HRESULT LocalPort([out, retval] short* piPort);
+    [helpstring("Local port number to be bound to the socket.")]
+    [propput] HRESULT LocalPort([in] short iPort);
+
+    [helpstring("Network number of remote connection target.")]
+    [propget] HRESULT NetworkNumber([out, retval] BYTE* pbNetworkNumber);
+    [helpstring("Network number of remote connection target.")]
+    [propput] HRESULT NetworkNumber([in] BYTE bNetworkNumber);
+
+    [helpstring("Node number of remote connection target.")]
+    [propget] HRESULT NodeNumber([out, retval] BYTE* pbNodeNumber);
+    [helpstring("Node number of remote connection target.")]
+    [propput] HRESULT NodeNumber([in] BYTE bNodeNumber);
+
+    [helpstring("Processor number of remote connection target.")]
+    [propget] HRESULT ProcNumber([out, retval] short* piProcNumber);
+    [helpstring("Processor number of remote connection target.")]
+    [propput] HRESULT ProcNumber([in] short iProcNumber);
+
+    [helpstring("Connection timeout value in seconds.")]
+    [propget] HRESULT ConnectionTimeout([out, retval] short* piTimeout);
+    [helpstring("Connection timeout value in seconds.")]
+    [propput] HRESULT ConnectionTimeout([in] short iTimeout);
+
+    [helpstring("Socket receive timeout value in seconds.")]
+    [propget] HRESULT ReceiveTimeout([out, retval] short* piTimeout);
+    [helpstring("Socket receive timeout value in seconds.")]
+    [propput] HRESULT ReceiveTimeout([in] short iTimeout);
+
+    [helpstring("Frame receipt timeout in milliseconds.")]
+    [propget] HRESULT FrameTimeout([out, retval] short* piTimeout);
+    [helpstring("Frame receipt timeout in milliseconds.")]
+    [propput] HRESULT FrameTimeout([in] short iTimeout);
+
+    [helpstring("SLMP frame timer value in milliseconds.")]
+    [propget] HRESULT FrameWaitTime([out, retval] short* piWaitTime);
+    [helpstring("SLMP frame timer value in milliseconds.")]
+    [propput] HRESULT FrameWaitTime([in] short iWaitTime);
+
+    [helpstring("Try connect to the specified remote target.")]
+    HRESULT Connect(
+        [out, retval] VARIANT_BOOL* pbSuccess);
+    
+    [helpstring("Shutdown the connection")]
+    HRESULT Disconnect();
+
+    [helpstring("Read bit units sequentially.")]
+    HRESULT BatchReadBit(
+        [in] BSTR bstrAddress,
+        [in] short cUnitCount,
+        [out, retval] SAFEARRAY(VARIANT_BOOL)* pparrValues);
+
+    [helpstring("Read word (16 bit) units sequentially.")]
+    HRESULT BatchReadWord(
+        [in] BSTR bstrAddress,
+        [in] short cUnitCount,
+        [out, retval] SAFEARRAY(SHORT)* pparrValues);
+
+    [helpstring("Read double-word (32 bit) units sequentially.")]
+    HRESULT BatchReadDWord(
+        [in] BSTR bstrAddress,
+        [in] short cUnitCount,
+        [out, retval] SAFEARRAY(LONG)* pparrValues);
+
+    [helpstring("Write bit units sequentially.")]
+    HRESULT BatchWriteBit(
+        [in] BSTR bstrAddress,
+        [in] VARIANTARG varValues);
+
+    [helpstring("Write word (16 bit) units sequentially.")]
+    HRESULT BatchWriteWord(
+        [in] BSTR bstrAddress,
+        [in] VARIANTARG varValues);
+
+    [helpstring("Write double-word (32 bit) units sequentially.")]
+    HRESULT BatchWriteDWord(
+        [in] BSTR bstrAddress,
+        [in] VARIANTARG varValues);
+
+    [helpstring("Read word (16 bit) units of specified addresses.")]
+    HRESULT RandomReadWord(
+        [in] VARIANTARG varAddressArray,
+        [out, retval] SAFEARRAY(SHORT)* pparrValues);
+
+    [helpstring("Read double-word (32 bit) units of specified addresses.")]
+    HRESULT RandomReadDWord(
+        [in] VARIANTARG varAddressArray,
+        [out, retval] SAFEARRAY(SHORT)* pparrValues);
+
+    [helpstring("Write into word (16 bit) units of specified addresses.")]
+    HRESULT RandomWriteWord(
+        [in] VARIANTARG varAddressArray,
+        [in] VARIANTARG varValueArray);
+
+    [helpstring("Write into double-word (32 bit) units of specified addresses.")]
+    HRESULT RandomWriteDWord(
+        [in] VARIANTARG varAddressArray,
+        [in] VARIANTARG varValueArray);
+
+    [helpstring("Issue a remote RUN command.")]
+    HRESULT RemoteRun();
+
+    [helpstring("Issue a remote STOP command.")]
+    HRESULT RemoteStop();
+
+    [helpstring("Issue a remote PAUSE command.")]
+    HRESULT RemotePause();
+
+    [helpstring("Issue a remote RESET command.")]
+    HRESULT RemoteReset();
+
+    [helpstring("Read processor type of the remote target.")]
+    HRESULT RemoteReadTypeName(
+        [out, retval] BSTR* pbstrTypeName);
+
+    [helpstring("Issue a ClearErrorCode command.")]
+    HRESULT ClearError();
+
+    [helpstring("Loopback testing.")]
+    HRESULT LoopbackTest(
+        [out, retval] VARIANT_BOOL* pbSuccess);
+};
+
+[
+    uuid(BB9C2540-7AE5-4c1b-A8F1-B9BF87EEFF01),
+    helpstring("Neucrede's MelcliCOMWrapper Library"),
+    version(1.0)
+]
+library MelcliCOMWrapper
+{
+    importlib("stdole32.tlb");
+
+    [
+        uuid(BB9C2540-7AE5-4c1b-A8F1-B9BF87EEF001),
+        helpstring("Neucrede's MELSECClient Component"),
+        version(1.0)
+    ]
+    coclass MELSECClient
+    {
+        [default] interface IMELSECClientContext;
+        interface ISupportErrorInfo;
+    };
+
+
+};
