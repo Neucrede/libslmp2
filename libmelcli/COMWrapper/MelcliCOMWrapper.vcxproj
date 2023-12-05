@@ -150,12 +150,12 @@
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>NDEBUG;WIN32;_WINDOWS;_USRDLL;MelcliCOMWrapper_EXPORTS;_WIN32_DCOM;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AssemblerListingLocation>.\Release\</AssemblerListingLocation>
-      <PrecompiledHeaderOutputFile>.\Release\MelcliCOMWrapper.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\x64\Release\</AssemblerListingLocation>
+      <PrecompiledHeaderOutputFile>.\x64\Release\MelcliCOMWrapper.pch</PrecompiledHeaderOutputFile>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
-      <ObjectFileName>.\Release\</ObjectFileName>
-      <ProgramDataBaseFileName>.\Release\</ProgramDataBaseFileName>
+      <ObjectFileName>.\x64\Release\</ObjectFileName>
+      <ProgramDataBaseFileName>.\x64\Release\</ProgramDataBaseFileName>
     </ClCompile>
     <PostBuildEvent>
       <Command>
@@ -175,14 +175,14 @@
     </ResourceCompile>
     <Bscmake>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <OutputFile>.\Release\MelcliCOMWrapper.bsc</OutputFile>
+      <OutputFile>.\x64\Release\MelcliCOMWrapper.bsc</OutputFile>
     </Bscmake>
     <Link>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <LinkDLL>true</LinkDLL>
       <SubSystem>Console</SubSystem>
-      <OutputFile>.\Release\MelcliCOMWrapper.dll</OutputFile>
-      <ImportLibrary>.\Release\MelcliCOMWrapper.lib</ImportLibrary>
+      <OutputFile>.\x64\Release\MelcliCOMWrapper.dll</OutputFile>
+      <ImportLibrary>.\x64\Release\MelcliCOMWrapper.lib</ImportLibrary>
       <AdditionalDependencies>odbc32.lib;odbccp32.lib;libmelcli.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>.\MelcliCOMWrapper.def</ModuleDefinitionFile>
     </Link>
@@ -248,12 +248,12 @@
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <PreprocessorDefinitions>_DEBUG;WIN32;_WINDOWS;_USRDLL;MelcliCOMWrapper_EXPORTS;_WIN32_DCOM;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AssemblerListingLocation>.\Debug\</AssemblerListingLocation>
-      <PrecompiledHeaderOutputFile>.\Debug\MelcliCOMWrapper.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\x64\Debug\</AssemblerListingLocation>
+      <PrecompiledHeaderOutputFile>.\x64\Debug\MelcliCOMWrapper.pch</PrecompiledHeaderOutputFile>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
-      <ObjectFileName>.\Debug\</ObjectFileName>
-      <ProgramDataBaseFileName>.\Debug\</ProgramDataBaseFileName>
+      <ObjectFileName>.\x64\Debug\</ObjectFileName>
+      <ProgramDataBaseFileName>.\x64\Debug\</ProgramDataBaseFileName>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
     </ClCompile>
     <PostBuildEvent>
@@ -274,15 +274,15 @@
     </ResourceCompile>
     <Bscmake>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <OutputFile>.\Debug\MelcliCOMWrapper.bsc</OutputFile>
+      <OutputFile>.\x64\Debug\MelcliCOMWrapper.bsc</OutputFile>
     </Bscmake>
     <Link>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <LinkDLL>true</LinkDLL>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
-      <OutputFile>.\Debug\MelcliCOMWrapper.dll</OutputFile>
-      <ImportLibrary>.\Debug\MelcliCOMWrapper.lib</ImportLibrary>
+      <OutputFile>.\x64\Debug\MelcliCOMWrapper.dll</OutputFile>
+      <ImportLibrary>.\x64\Debug\MelcliCOMWrapper.lib</ImportLibrary>
       <AdditionalDependencies>odbc32.lib;odbccp32.lib;libmelcli.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>.\MelcliCOMWrapper.def</ModuleDefinitionFile>
     </Link>

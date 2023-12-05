@@ -39,7 +39,7 @@ BOOL APIENTRY DllMain(HANDLE hModule, DWORD dwReason, LPVOID lpReserved)
             
             HANDLE hMap;
             /* Backed by paging file. */
-            g_pDllData->hMap = hMap = CreateFileMapping((HANDLE)(0xFFFFFFFF), 
+            g_pDllData->hMap = hMap = CreateFileMapping((HANDLE)(-1), 
                 NULL, PAGE_READWRITE, 0, dwSizeSharedData, 
                 gs_pszMapObjectName);
             if (!hMap) break;
