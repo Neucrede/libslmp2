@@ -977,7 +977,6 @@ HRESULT MELSECClient::Impl::BatchWriteImpl(BSTR bstrAddress, SAFEARRAY *parrValu
             break;
         }
         
-        
         bool ok = true;
         if (vt == VT_BOOL) {
             VARIANT_BOOL boolVal;
@@ -1027,7 +1026,7 @@ HRESULT MELSECClient::Impl::BatchWriteImpl(BSTR bstrAddress, SAFEARRAY *parrValu
         hr = S_OK;
     } while (false);
 
-    delete[] data;
+    delete data;
     delete lpszAddr;
     return hr;
 }
@@ -1036,6 +1035,7 @@ HRESULT MELSECClient::Impl::RandomReadImpl(SAFEARRAY *psaAddrs, SAFEARRAY **ppar
     VARTYPE vt)
 {
     HRESULT hr = E_FAIL;
+    UINT cUnits = 0;
     char *data = NULL;
     SAFEARRAY *psa = NULL;
     LPCSTR *ppszAddrs = NULL;
@@ -1051,7 +1051,6 @@ HRESULT MELSECClient::Impl::RandomReadImpl(SAFEARRAY *psaAddrs, SAFEARRAY **ppar
             break;
         }
 
-        UINT cUnits;
         hr = CheckSafeArrayValidOneDim(psaAddrs, &cUnits);
         if (FAILED(hr)) {
             break;
@@ -1077,6 +1076,7 @@ HRESULT MELSECClient::Impl::RandomReadImpl(SAFEARRAY *psaAddrs, SAFEARRAY **ppar
             }
 
             ppszAddrs[i] = StrUtil::WideCharToMultiByte(bstrAddr);
+            SysFreeString(bstrAddr);
             if (ppszAddrs[i] == NULL) {
                 hr = E_FAIL;
                 break;
@@ -1136,7 +1136,10 @@ HRESULT MELSECClient::Impl::RandomReadImpl(SAFEARRAY *psaAddrs, SAFEARRAY **ppar
         SafeArrayDestroy(psa);
     }
 
-    delete[] ppszAddrs;
+    for (UINT i = 0; i != cUnits; ++i) {
+        delete const_cast<LPSTR>(ppszAddrs[i]);
+    }
+    delete ppszAddrs;
     melcli_free(data);
     return hr;
 }
@@ -1145,6 +1148,7 @@ HRESULT MELSECClient::Impl::RandomWriteImpl(SAFEARRAY * psaAddrs, SAFEARRAY * pa
     VARTYPE vt)
 {
     HRESULT hr = E_FAIL;
+    UINT cUnits = 0;
     LPCSTR *ppszAddrs = NULL;
     void *pArrData = NULL;
 
@@ -1155,7 +1159,6 @@ HRESULT MELSECClient::Impl::RandomWriteImpl(SAFEARRAY * psaAddrs, SAFEARRAY * pa
             break;
         }
 
-        UINT cUnits;
         hr = CheckSafeArrayValidOneDim(psaAddrs, &cUnits);
         if (FAILED(hr)) {
             break;
@@ -1192,6 +1195,7 @@ HRESULT MELSECClient::Impl::RandomWriteImpl(SAFEARRAY * psaAddrs, SAFEARRAY * pa
             }
 
             ppszAddrs[i] = StrUtil::WideCharToMultiByte(bstrAddr);
+            SysFreeString(bstrAddr);
             if (ppszAddrs[i] == NULL) {
                 hr = E_FAIL;
                 break;
@@ -1231,7 +1235,11 @@ HRESULT MELSECClient::Impl::RandomWriteImpl(SAFEARRAY * psaAddrs, SAFEARRAY * pa
         SafeArrayUnaccessData(parrValues);
     }
 
-    delete[] ppszAddrs;
+    for (UINT i = 0; i != cUnits; ++i) {
+        delete const_cast<LPSTR>(ppszAddrs[i]);
+    }
+    delete ppszAddrs;
+
     return hr;
 }
 
@@ -1287,7 +1295,14 @@ HRESULT MELSECClient::Impl::GetSafeArrayFromVariant(VARIANTARG var, VARTYPE vt,
             }
 
             long rgIndices[1] = { 0 };
-            hr = SafeArrayPutElement(psa, rgIndices, (void*)(&var.byref));
+            if (vt == VT_BSTR) {
+                hr = SafeArrayPutElement(psa, rgIndices, (void*)(var.bstrVal));
+            }
+            else {
+                hr = SafeArrayPutElement(psa, rgIndices, (void*)(&var.byref));
+            }
+
+            VariantClear(&var);
             
             if (FAILED(hr)) {
                 break;

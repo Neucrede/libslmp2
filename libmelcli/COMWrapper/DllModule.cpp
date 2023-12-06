@@ -95,12 +95,6 @@ STDAPI DllRegisterServer()
 			break;
 		}
 
-        if (!RegUtil::SetValue(HKEY_CLASSES_ROOT, sBuf, "AppID", REG_SZ,
-			(const BYTE*)gs_lpszAppId, strlen(gs_lpszAppId) + 1))
-		{
-			break;
-		}
-
 		sprintf(sBuf, "CLSID\\%s\\InprocServer32", lpszCLSID);
 		GetModuleFileName((HMODULE)(g_pDllData->hModule), sBuf2, sizeof(sBuf2));
 		if (!RegUtil::SetValue(HKEY_CLASSES_ROOT, sBuf, NULL, REG_SZ,
@@ -162,13 +156,6 @@ STDAPI DllRegisterServer()
 			break;
 		}
 
-		sprintf(sBuf, "AppID\\%s", gs_lpszAppId);
-		if (!RegUtil::SetValue(HKEY_CLASSES_ROOT, sBuf, "DllSurrogate", REG_SZ,
-            (const BYTE*)"\x0", 1))
-		{
-			break;
-		}
-
 		hr = S_OK;
 	} while (false);
 
@@ -199,9 +186,6 @@ STDAPI DllUnregisterServer()
     CoTaskMemFree(pstr);
 
     sprintf(sBuf, "CLSID\\%s", lpszCLSID);
-    RegUtil::DeleteKey(HKEY_CLASSES_ROOT, sBuf);
-
-    sprintf(sBuf, "AppID\\%s", gs_lpszAppId);
     RegUtil::DeleteKey(HKEY_CLASSES_ROOT, sBuf);
 
     RegUtil::DeleteKey(HKEY_CLASSES_ROOT, gs_lpszProgId);
