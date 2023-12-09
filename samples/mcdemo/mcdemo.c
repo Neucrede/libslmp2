@@ -22,17 +22,17 @@
  * configuration.
  */
 #if 0   /* 1: UDP/IP, 0: TCP/IP */
-    const int ctxtype = MELCLI_TYPE_UDPIP;
-    const char *target_ip_addr = "192.168.128.200";
-    const int target_port = 8889;
-    const char *local_ip_addr = "192.168.128.1";
-    const int local_port = 0;
+    int ctxtype = MELCLI_TYPE_UDPIP;
+    char target_ip_addr[64] = "192.168.128.200";
+    int target_port = 8889;
+    char local_ip_addr[64] = "192.168.128.1";
+    int local_port = 0;
 #else
-    const int ctxtype = MELCLI_TYPE_TCPIP;
-    const char *target_ip_addr = "192.168.128.200";
-    const int target_port = 8888;
-    const char *local_ip_addr = "0.0.0.0";
-    const int local_port = 0;
+    int ctxtype = MELCLI_TYPE_TCPIP;
+    char target_ip_addr[64] = "192.168.128.200";
+    int target_port = 8888;
+    char local_ip_addr[64] = "0.0.0.0";
+    int local_port = 0;
 #endif
 const melcli_station_t target_station = MELCLI_CONNECTED_STATION;
 const melcli_timeout_t timeout = MELCLI_TIMEOUT_DEFAULT;
@@ -93,8 +93,44 @@ int main(int argc, char *argv[])
 
 static int init()
 {
+    char ch;
+
+#define _FLUSH_STDIN()  while (((ch = getchar()) != '\n') && (ch != EOF));
+
     srand((unsigned int)time(NULL));
-    
+
+    printf("Protocol? 1 = TCP; 2 = UDP\n");
+    ch = getchar();
+    switch (ch) {
+    case '1':
+        ctxtype = MELCLI_TYPE_TCPIP;
+        break;
+    case '2':
+        ctxtype = MELCLI_TYPE_UDPIP;
+        break;
+    default:
+        return -1;
+    }
+
+    _FLUSH_STDIN()
+    printf("Target IP address?\n");
+    scanf("%s", target_ip_addr);
+
+    printf("Target port?\n");
+    _FLUSH_STDIN()
+    scanf("%d", &target_port);
+
+    if (ctxtype == MELCLI_TYPE_UDPIP) {
+        printf("Specify local address? [Y/N]\n");
+        _FLUSH_STDIN()
+        ch = getchar();
+        if ((ch == 'Y') || (ch == 'y')) {
+            _FLUSH_STDIN()
+            printf("Local IP address?\n");
+            scanf("%s", local_ip_addr);
+        }
+    }
+        
     /* Create a connection context and store it into `g_ctx`. */
     g_ctx = melcli_new_context(ctxtype, target_ip_addr, target_port,
         local_ip_addr, local_port, &target_station, &timeout);

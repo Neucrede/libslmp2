@@ -142,6 +142,10 @@ SOURCE=.\libmelcli\config.h
 # Begin Group "Resource Files"
 
 # PROP Default_Filter "ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
+# Begin Source File
+
+SOURCE=..\libmelcli\win32rsrc\rsrc.rc
+# End Source File
 # End Group
 # End Target
 # End Project

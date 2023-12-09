@@ -7,7 +7,7 @@ include(GNUInstallDirs)
 file (GLOB sources ${PROJECT_SOURCE_DIR}/*.c ${PROJECT_SOURCE_DIR}/*.cpp)
 
 if (CMAKE_HOST_WIN32)
-    set(sources ${sources} ${PROJECT_SOURCE_DIR}/libmelcli.def)
+    set(sources ${sources} ${PROJECT_SOURCE_DIR}/libmelcli.def ${PROJECT_SOURCE_DIR}/win32rsrc/rsrc.rc)
 endif ()
 
 add_library(melcli SHARED ${sources})

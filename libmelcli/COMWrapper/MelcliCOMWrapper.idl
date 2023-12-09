@@ -135,7 +135,7 @@ interface IMELSECClientContext : IDispatch
     [helpstring("Read double-word (32 bit) units of specified addresses.")]
     HRESULT RandomReadDWord(
         [in] VARIANTARG varAddressArray,
-        [out, retval] SAFEARRAY(SHORT)* pparrValues);
+        [out, retval] SAFEARRAY(LONG)* pparrValues);
 
     [helpstring("Write into word (16 bit) units of specified addresses.")]
     HRESULT RandomWriteWord(

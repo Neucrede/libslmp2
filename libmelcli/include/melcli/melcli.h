@@ -362,6 +362,10 @@ MELCLIAPI int MELCLICALL melcli_batch_write(
  *   
  *   One or more address strings are invalid.
  *
+ * - MELCLI_ERROR_INCONSISTENT_ADDRESS_WIDTH
+ *
+ *   The address width of given units are inconsistent.
+ *
  * - MELCLI_ERROR_BUILD_REQUEST_FRAME
  *
  *   Failed to build a request frame.
@@ -462,6 +466,12 @@ MELCLIAPI int MELCLICALL melcli_random_read_dword(
  * - MELCLI_ERROR_INVALID_ADDRESS
  *   
  *   One or more address strings are invalid.
+ *
+ * - MELCLI_ERROR_INCONSISTENT_ADDRESS_WIDTH
+ *
+ *   Possible causes are:
+ *   - The address width of given bit units are inconsistent.
+ *   - The address width of given multi-byte units are inconsistent.
  *
  * - MELCLI_ERROR_BUILD_REQUEST_FRAME
  *

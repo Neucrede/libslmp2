@@ -1,6 +1,6 @@
 Type=Exe
 Reference=*\G{00020430-0000-0000-C000-000000000046}#2.0#0#..\..\..\..\WINDOWS\system32\stdole2.tlb#OLE Automation
-Reference=*\G{BB9C2540-7AE5-4C1B-A8F1-B9BF87EEFF01}#1.0#0#..\..\vs6\Debug\MelcliCOMWrapper.dll#Neucrede's MelcliCOMWrapper Library
+Reference=*\G{BB9C2540-7AE5-4C1B-A8F1-B9BF87EEFF01}#1.0#0#..\..\..\..\WINDOWS\system32\MelcliCOMWrapper.dll#Neucrede's MelcliCOMWrapper Library
 Reference=*\G{6B263850-900B-11D0-9484-00A0C91110ED}#1.0#0#..\..\..\..\WINDOWS\system32\MSSTDFMT.DLL#Microsoft Data Formatting Object Library 6.0 (SP6)
 Form=FrmMain.frm
 Module=Program; Program.bas

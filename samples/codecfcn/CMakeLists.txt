@@ -1,8 +1,12 @@
 cmake_minimum_required(VERSION 2.6.0)
 
-add_executable(codecfcn 
-    codecfcn.c
-)
+set(sources codecfcn.c)
+
+if (CMAKE_HOST_WIN32)
+    set(sources ${sources} ${CMAKE_CURRENT_SOURCE_DIR}/../win32rsrc/rsrc.rc)
+endif ()
+
+add_executable(codecfcn ${sources})
 
 target_link_libraries(codecfcn PRIVATE slmp)
 

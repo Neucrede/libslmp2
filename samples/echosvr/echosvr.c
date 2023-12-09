@@ -47,7 +47,8 @@ int main(int argc, char *argv[])
     
     /* Wait infinitely until accepted a incoming connection. */
     slmp_pktio_tcpip_set_accept_timeout(pktio, 0);
-    
+
+__listen:
     /* Begin listening on port 8888. */
     if (slmp_pktio_open(pktio) != 0) {
         printf("Failed to listen on port %d. ", port);
@@ -59,7 +60,7 @@ int main(int argc, char *argv[])
     else {
         printf("Listening on port %d...\n", port);
     }
-        
+
     /* Accept incoming connection. */
     if (slmp_pktio_accept(pktio) != 0) {
         printf("Failed to accept connections. ");
@@ -106,6 +107,9 @@ int main(int argc, char *argv[])
         }
     } while (   err != SLMP_ERROR_NO_CONNECTION
             &&  err != SLMP_ERROR_CONNECTION_CLOSED );
+
+    slmp_pktio_close(pktio);
+    goto __listen;
     
 __cleanup:
     /* Close connections and free used resources. */

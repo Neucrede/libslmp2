@@ -197,6 +197,10 @@ SOURCE=.\MelcliCOMWrapper.rc
 # End Group
 # Begin Source File
 
+SOURCE=.\MelcliCOMWrapper.tlb
+# End Source File
+# Begin Source File
+
 SOURCE=.\ReadMe.txt
 # End Source File
 # End Target

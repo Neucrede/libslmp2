@@ -155,6 +155,7 @@ __cleanup:
     slmp_free(frame);
     slmp_free(req);
 
+    getchar();
     return ret;
 }
 

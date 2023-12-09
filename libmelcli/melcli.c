@@ -47,6 +47,7 @@ static const err_msg_desc_t err_msg[] = {
     { MELCLI_ERROR_OUT_OF_MEMORY, "Run out of memory." },
     { MELCLI_ERROR_DECODE_FRAME, "Unable to decode a response frame." },
     { MELCLI_ERROR_ENCODE_COMMAND, "An error occured in command encoding." },
+    { MELCLI_ERROR_INCONSISTENT_ADDRESS_WIDTH, "Inconsistent address width." },
     { MELCLI_ERROR_CONNECT_FAILED, "Unable to establish a connection." },
     { MELCLI_ERROR_SEND_FRAMES, "Unable to send frames." },
     { MELCLI_ERROR_RECEIVE_FRAMES, "Error receiving frames." },
@@ -56,6 +57,7 @@ static const err_msg_desc_t err_msg[] = {
 
     { -1, NULL }
 };
+
 
 /* **************************************************************************/
 
@@ -481,7 +483,7 @@ MELCLIAPI int MELCLICALL melcli_random_read(
     int ret = MELCLI_ERROR_SUCCESS;
     const char** addr;
     size_t num_word_units = 0, num_dword_units = 0;
-    int use_32bit_addr = FALSE;
+    int use_32bit_addr = -1;
     size_t per_req_unit_data_len, req_data_len, req_size;
     slmp_req_device_read_random_unit_t req_unit;
     slmp_req_device_read_random_t *req = NULL;
@@ -629,7 +631,7 @@ MELCLIAPI int MELCLICALL melcli_random_write(
     int ret = MELCLI_ERROR_SUCCESS;
     const char** addr;
     size_t num_bit_units = 0, num_word_units = 0, num_dword_units = 0;
-    int use_32bit_addr = FALSE;
+    int use_32bit_addr = -1;
     slmp_req_device_write_random_bit_unit_t req_unit_b;
     slmp_req_device_write_random_word_unit_t req_unit_w;
     slmp_req_device_write_random_dword_unit_t req_unit_dw;
@@ -758,8 +760,7 @@ MELCLIAPI int MELCLICALL melcli_random_write(
             strm = req_words->data;
         }
         
-        use_32bit_addr = FALSE;
-
+        use_32bit_addr = -1;
         ret = fill_dev_random_write_word_units(word_unit_addrs, word_data,
             &use_32bit_addr, &strm);
         if (ret != MELCLI_ERROR_SUCCESS) {
@@ -1873,13 +1874,16 @@ static int encode_dev_random_read_units(const char** addrs, int* use_32bit_addr,
             return MELCLI_ERROR_INVALID_ADDRESS;
         }
         
-        if (_use_32bit_addr) {
+        if ((*use_32bit_addr != -1) && (*use_32bit_addr != _use_32bit_addr)) {
+            return MELCLI_ERROR_INCONSISTENT_ADDRESS_WIDTH;
+        }
+        else if (_use_32bit_addr) {
             *use_32bit_addr = TRUE;
-            
             req_unit.mem_type.bin.l = mem_type_l;
             req_unit.addr.bin.l = addr_begin;
         }
         else {
+            *use_32bit_addr = FALSE;
             req_unit.mem_type.bin.s = mem_type_s;
             req_unit.addr.bin.s = addr_begin;
         }
@@ -1919,7 +1923,10 @@ static int fill_dev_random_write_bit_units(const char** addrs,
             return MELCLI_ERROR_INVALID_ADDRESS;
         }
         
-        if (_use_32bit_addr) {
+        if ((*use_32bit_addr != -1) && (*use_32bit_addr != _use_32bit_addr)) {
+            return MELCLI_ERROR_INCONSISTENT_ADDRESS_WIDTH;
+        }
+        else if (_use_32bit_addr) {
             *use_32bit_addr = TRUE;
             
             req_unit.mem_type.bin.l = mem_type_l;
@@ -1927,6 +1934,8 @@ static int fill_dev_random_write_bit_units(const char** addrs,
             req_unit.data.bin.l = *(data++) ? 1 : 0;
         }
         else {
+            *use_32bit_addr = FALSE;
+
             req_unit.mem_type.bin.s = mem_type_s;
             req_unit.addr.bin.s = addr_begin;
             req_unit.data.bin.s = *(data++) ? 1 : 0;
@@ -1967,7 +1976,10 @@ static int fill_dev_random_write_word_units(const char** addrs,
             return MELCLI_ERROR_INVALID_ADDRESS;
         }
         
-        if (_use_32bit_addr) {
+        if ((*use_32bit_addr != -1) && (*use_32bit_addr != _use_32bit_addr)) {
+            return MELCLI_ERROR_INCONSISTENT_ADDRESS_WIDTH;
+        }
+        else if (_use_32bit_addr) {
             *use_32bit_addr = TRUE;
             
             req_unit.mem_type.bin.l = mem_type_l;
@@ -1975,6 +1987,8 @@ static int fill_dev_random_write_word_units(const char** addrs,
             req_unit.data = *(data++);
         }
         else {
+            *use_32bit_addr = FALSE;
+
             req_unit.mem_type.bin.s = mem_type_s;
             req_unit.addr.bin.s = addr_begin;
             req_unit.data = *(data++);
@@ -2015,7 +2029,10 @@ static int fill_dev_random_write_dword_units(const char** addrs,
             return MELCLI_ERROR_INVALID_ADDRESS;
         }
         
-        if (_use_32bit_addr) {
+        if ((*use_32bit_addr != -1) && (*use_32bit_addr != _use_32bit_addr)) {
+            return MELCLI_ERROR_INCONSISTENT_ADDRESS_WIDTH;
+        }
+        else if (_use_32bit_addr) {
             *use_32bit_addr = TRUE;
             
             req_unit.mem_type.bin.l = mem_type_l;
@@ -2023,6 +2040,8 @@ static int fill_dev_random_write_dword_units(const char** addrs,
             req_unit.data = *(data++);
         }
         else {
+            *use_32bit_addr = FALSE;
+
             req_unit.mem_type.bin.s = mem_type_s;
             req_unit.addr.bin.s = addr_begin;
             req_unit.data = *(data++);

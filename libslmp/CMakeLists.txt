@@ -25,7 +25,7 @@ set(sources
 )
 
 if (CMAKE_HOST_WIN32)
-    set(sources ${sources} ${PROJECT_SOURCE_DIR}/libslmp.def)
+    set(sources ${sources} ${PROJECT_SOURCE_DIR}/libslmp.def ${PROJECT_SOURCE_DIR}/win32rsrc/rsrc.rc)
 endif ()
 
 add_library(slmp SHARED ${sources})

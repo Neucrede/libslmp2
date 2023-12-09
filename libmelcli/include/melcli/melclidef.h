@@ -27,6 +27,7 @@
 #define MELCLI_ERROR_OUT_OF_MEMORY                      -6
 #define MELCLI_ERROR_DECODE_FRAME                       -7
 #define MELCLI_ERROR_ENCODE_COMMAND                     -8
+#define MELCLI_ERROR_INCONSISTENT_ADDRESS_WIDTH         -9
 #define MELCLI_ERROR_CONNECT_FAILED                     -10
 #define MELCLI_ERROR_SEND_FRAMES                        -11
 #define MELCLI_ERROR_RECEIVE_FRAMES                     -12

@@ -86,6 +86,5 @@ typedef struct err_msg_desc {
     const char *msg;
 } err_msg_desc_t;
 
-
 #endif /* __MELCLI_PRIV_H__ */
 
