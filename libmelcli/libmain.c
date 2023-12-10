@@ -22,13 +22,8 @@ BOOL WINAPI DllMain(HINSTANCE hInstDll, DWORD dwReason, LPVOID lpvReserved)
     switch (dwReason) {
     case DLL_PROCESS_ATTACH:
     case DLL_THREAD_ATTACH:
-        if (melcli_init() != 0) {
-            bRet = FALSE;
-        }
-        break;
     case DLL_THREAD_DETACH:
     case DLL_PROCESS_DETACH:
-        melcli_uninit();
         break;    
     default:
         break;

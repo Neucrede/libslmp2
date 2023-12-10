@@ -499,7 +499,7 @@ __accept_conn:
                 __DBGPRINT0("Sending response frame.");
 
                 resp_frame->hdr.serial = svr->serial;
-                if (slmp_send_frames(pktio, &resp_frame, 1, strm_type, 0) != 0)
+                if (slmp_send_frames(pktio, &resp_frame, 1, strm_type, 0) == 0)
                 {
                     err = slmp_get_errno();
                     __LOGPRINT2(ERR, 
