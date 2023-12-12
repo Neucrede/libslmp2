@@ -65,18 +65,41 @@ SLMPAPI int SLMPCALL slmp_uninit()
         if (init_count == 0) {
             goto _quit;
         }
-        else {
+        else if (init_count > 0) {
             --init_count;
 
             if (init_count != 0) {
                 mem_uninit_per_thread();
             }
+            
+            /* 
+             * [ Win32 only ]  
+             *
+             * Consider
+             *
+             * 1. This DLL, along with other implicitly loaded DLLs, were attached
+             *    to the process hence DllMain() is called with
+             *    dwReason == DLL_PROCESS_ATTACH in which slmp_init() is being 
+             *    called. Now init_count == 1.
+             *
+             * Afterwhile
+             *
+             * 2. OS seeks to unload a DLL that was previously loaded during process 
+             *    startup, in this case DllMain() will be called with
+             *    dwReason == DLL_THREAD_DETACH in which slmp_uninit() is being
+             *    called. Here init_count is zero after decreasing. 
+             *
+             * Now if the statements in else{} block is being executed, both memory 
+             * and errno functions will not working.
+             */
+#ifndef _WIN32
             else {
                 mem_uninit_per_thread();
                 mem_uninit();
                 tsd_free(errno_key);
                 global_init_ok = 0;
             }
+#endif
         }
     }
 
