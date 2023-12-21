@@ -95,6 +95,45 @@ typedef slmp_cmd_hdr_t* (SLMPCALL *slmp_command_decode_t)(
     uint8_t* /* stream */, size_t /* len */, int /* type */, 
     int /* addr_width */);
 
+/**
+ * \brief Encode an array into byte stream.
+ *
+ * \param[in] array Pointer to the array.
+ * \param[in] elem_size Element size. Valid sizes are 1, 2, and 4.
+ * \param[in] n Number of elements.
+ * \param[in] stream Pointer to the stream buffer. If it is setted to NULL,
+ * no actual encoding will be performed except for returning the minimum byte
+ * length required for the stream buffer.
+ * \param[in] type Stream type. Either `SLMP_BINARY_STREAM` or
+ * `SLMP_ASCII_STREAM`.
+ *
+ * \return If the function succeeds, it returns the length of the stream. 
+ * If the function fails, the function returns a value of zero. Call
+ * slmp_get_errno() to get the error number.
+ */
+SLMPAPI size_t SLMPCALL slmp_encode_array(
+    void *array, size_t elem_size, size_t n, uint8_t *stream, int type);
+
+/**
+ * \brief Decode array from byte stream.
+ *
+ * \param[in] stream Byte stream.
+ * \param[in] len Length of the stream.
+ * \param[in] elem_size Element size. Valid sizes are 1, 2, and 4.
+ * \param[in] type Stream type. Either `SLMP_BINARY_STREAM` or
+ * `SLMP_ASCII_STREAM`.
+ *
+ * \return If the function succeeds, it returns the pointer to the decoded array.
+ * If the function fails, the function returns a value of NULL. Call
+ * slmp_get_errno() to get the error number.
+ *
+ * \remarks Free returned array pointer by calling slmp_free()
+ * after use.
+ *
+ */
+SLMPAPI void* SLMPCALL slmp_decode_array(
+    uint8_t *stream, size_t len, size_t elem_size, int type);
+
 #ifdef __cplusplus
 }
 #endif

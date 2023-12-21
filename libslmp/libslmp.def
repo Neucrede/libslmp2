@@ -58,6 +58,9 @@ EXPORTS
     slmp_send_frames @55
     slmp_receive_frames @56
 
+    slmp_encode_array @57
+    slmp_decode_array @58
+
     slmp_encode_req_device_read @60
     slmp_decode_req_device_read @61
     slmp_encode_req_device_read_ext @62
