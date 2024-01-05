@@ -137,6 +137,8 @@ MELSECClient::Impl::Impl(MELSECClient* pBackObj, IUnknown* pUnkOuter)
 
 MELSECClient::Impl::~Impl()
 {
+    SysFreeString(m_bstrLocalIPAddress);
+    SysFreeString(m_bstrRemoteIPAddress);
 }
 
 HRESULT MELSECClient::Impl::Init()

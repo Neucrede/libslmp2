@@ -102,6 +102,10 @@ SOURCE=..\libslmp\codec\command\clearerr_codec.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\libslmp\codec\command\cmdcodec.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\libslmp\codec\command\dpmem_codec.c
 # End Source File
 # Begin Source File
