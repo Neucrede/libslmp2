@@ -240,17 +240,8 @@ static int _open(pktio_t *pktio)
 #endif
 
     assert(pktio->type == SLMP_PKTIO_TCPIP);
-    if (pktio->type != SLMP_PKTIO_TCPIP) {
-        slmp_set_errno(SLMP_ERROR_INVALID_ARGUMENTS);
-        return -1;
-    }
-
     ctx = (_ctx_t*)(pktio->backend_ctx);
     assert(ctx != NULL);
-    if (ctx == NULL) {
-        slmp_set_errno(SLMP_ERROR_NOT_INITIALIZED);
-        return -1;
-    }
 
     if (pktio->fd >= 0) {
         slmp_set_errno(SLMP_ERROR_ALREADY_OPEN);
@@ -451,10 +442,6 @@ __try_again:
 static int _close(pktio_t *pktio)
 {
     assert(pktio->type == SLMP_PKTIO_TCPIP);
-    if (pktio->type != SLMP_PKTIO_TCPIP) {
-        slmp_set_errno(SLMP_ERROR_INVALID_ARGUMENTS);
-        return -1;
-    }
 
     if (pktio->fd >= 0) {
         close(pktio->fd);
@@ -475,10 +462,6 @@ static int _close(pktio_t *pktio)
 static int _disconnect(pktio_t *pktio)
 {
     assert(pktio->type == SLMP_PKTIO_TCPIP);
-    if (pktio->type != SLMP_PKTIO_TCPIP) {
-        slmp_set_errno(SLMP_ERROR_INVALID_ARGUMENTS);
-        return -1;
-    }
 
     if (pktio->fd2 >= 0) {
         shutdown(pktio->fd2, SD_RDWR);
@@ -504,17 +487,8 @@ static int _accept(pktio_t *pktio)
     int fd2;
     
     assert(pktio->type == SLMP_PKTIO_TCPIP);
-    if (pktio->type != SLMP_PKTIO_TCPIP) {
-        slmp_set_errno(SLMP_ERROR_INVALID_ARGUMENTS);
-        return -1;
-    }
-
     ctx = (_ctx_t*)(pktio->backend_ctx);
     assert(ctx != NULL);
-    if (ctx == NULL) {
-        slmp_set_errno(SLMP_ERROR_NOT_INITIALIZED);
-        return -1;
-    }
 
     if (ctx->role != SLMP_PKTIO_SERVER) {
         slmp_set_errno(SLMP_ERROR_OPERATION_NOT_SUPPORTED);
@@ -584,17 +558,8 @@ static size_t _send(pktio_t *pktio, void* buf, size_t len)
 #endif
 
     assert(pktio->type == SLMP_PKTIO_TCPIP);
-    if (pktio->type != SLMP_PKTIO_TCPIP) {
-        slmp_set_errno(SLMP_ERROR_INVALID_ARGUMENTS);
-        return 0;
-    }
-
     ctx = (_ctx_t*)(pktio->backend_ctx);
     assert(ctx != NULL);
-    if (ctx == NULL) {
-        slmp_set_errno(SLMP_ERROR_NOT_INITIALIZED);
-        return 0;
-    }
 
     assert(buf != NULL);
     if (buf == NULL) {
@@ -675,17 +640,8 @@ static size_t _recv(pktio_t *pktio, void* buf, size_t len, int timeout)
 #endif
 
     assert(pktio->type == SLMP_PKTIO_TCPIP);
-    if (pktio->type != SLMP_PKTIO_TCPIP) {
-        slmp_set_errno(SLMP_ERROR_INVALID_ARGUMENTS);
-        return 0;
-    }
-
     ctx = (_ctx_t*)(pktio->backend_ctx);
     assert(ctx != NULL);
-    if (ctx == NULL) {
-        slmp_set_errno(SLMP_ERROR_NOT_INITIALIZED);
-        return 0;
-    }
 
     assert(buf != NULL);
     if (buf == NULL) {
@@ -786,17 +742,8 @@ static void _discard(pktio_t *pktio)
     struct timeval tv;
     
     assert(pktio->type == SLMP_PKTIO_TCPIP);
-    if (pktio->type != SLMP_PKTIO_TCPIP) {
-        slmp_set_errno(SLMP_ERROR_INVALID_ARGUMENTS);
-        return;
-    }
-
     ctx = (_ctx_t*)(pktio->backend_ctx);
     assert(ctx != NULL);
-    if (ctx == NULL) {
-        slmp_set_errno(SLMP_ERROR_NOT_INITIALIZED);
-        return;
-    }
 
     switch (ctx->role) {
     case SLMP_PKTIO_CLIENT:
@@ -850,10 +797,6 @@ static void _free(pktio_t *pktio)
     _ctx_t *ctx;
 
     assert(pktio->type == SLMP_PKTIO_TCPIP);
-    if (pktio->type != SLMP_PKTIO_TCPIP) {
-        slmp_set_errno(SLMP_ERROR_INVALID_ARGUMENTS);
-        return;
-    }
 
     _close(pktio);
 

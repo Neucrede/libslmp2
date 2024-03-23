@@ -236,7 +236,7 @@ static size_t segm_and_send_lmt_frame(slmp_pktio_t *pktio, slmp_frame_t *frame,
     }
 
     raw_data_len = frame->size - sizeof(slmp_frame_t) + 1;
-    num_segm = raw_data_len / SLMP_FRAMEIO_MAX_RAW_DATA_LEN + 1;
+    num_segm = (raw_data_len - 1) / SLMP_FRAMEIO_MAX_RAW_DATA_LEN + 1;
     if (num_segm > UINT16_MAX - 1) {
         slmp_set_errno(SLMP_ERROR_DATA_TOO_LARGE);
         return 0;
@@ -420,7 +420,7 @@ __cleanup:
 static int identify_stream_type(uint8_t *buf, size_t n)
 {
     uint32_t x;
-    uint8_t y[5];
+    uint8_t y[5] = {0};
 
     if (n < 4) {
         return -1;

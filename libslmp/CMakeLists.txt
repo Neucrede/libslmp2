@@ -1,20 +1,18 @@
-cmake_minimum_required(VERSION 2.6.0)
-
-project(slmp)
+cmake_minimum_required(VERSION 2.8.1)
 
 include(GNUInstallDirs)
 
-file (GLOB_RECURSE codec_sources ${PROJECT_SOURCE_DIR}/codec/*.c)
-file (GLOB_RECURSE pktio_sources ${PROJECT_SOURCE_DIR}/packetio/*.c)
-file (GLOB_RECURSE glthread_sources ${PROJECT_SOURCE_DIR}/glthread/*.c)
-file (GLOB_RECURSE memory_sources ${PROJECT_SOURCE_DIR}/memory/*.c)
-file (GLOB_RECURSE tsd_sources ${PROJECT_SOURCE_DIR}/tsd/*.c)
-file (GLOB_RECURSE frameio_sources ${PROJECT_SOURCE_DIR}/frameio/*.c)
-file (GLOB_RECURSE server_sources ${PROJECT_SOURCE_DIR}/server/*.c)
+file (GLOB_RECURSE codec_sources ${CMAKE_CURRENT_SOURCE_DIR}/codec/*.c)
+file (GLOB_RECURSE pktio_sources ${CMAKE_CURRENT_SOURCE_DIR}/packetio/*.c)
+file (GLOB_RECURSE glthread_sources ${CMAKE_CURRENT_SOURCE_DIR}/glthread/*.c)
+file (GLOB_RECURSE memory_sources ${CMAKE_CURRENT_SOURCE_DIR}/memory/*.c)
+file (GLOB_RECURSE tsd_sources ${CMAKE_CURRENT_SOURCE_DIR}/tsd/*.c)
+file (GLOB_RECURSE frameio_sources ${CMAKE_CURRENT_SOURCE_DIR}/frameio/*.c)
+file (GLOB_RECURSE server_sources ${CMAKE_CURRENT_SOURCE_DIR}/server/*.c)
 
 set(sources
-    ${PROJECT_SOURCE_DIR}/libslmp.c
-    ${PROJECT_SOURCE_DIR}/errmsg.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/libslmp.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/errmsg.c
     ${codec_sources}
     ${pktio_sources}
     ${glthread_sources}
@@ -25,7 +23,10 @@ set(sources
 )
 
 if (CMAKE_HOST_WIN32)
-    set(sources ${sources} ${PROJECT_SOURCE_DIR}/libslmp.def ${PROJECT_SOURCE_DIR}/win32rsrc/rsrc.rc)
+    set(sources ${sources} ${CMAKE_CURRENT_SOURCE_DIR}/libslmp.def ${CMAKE_CURRENT_SOURCE_DIR}/win32rsrc/rsrc.rc)
+    set(LIBRARIES ${CMAKE_INSTALL_LIBDIR}/libslmp${CMAKE_IMPORT_LIBRARY_SUFFIX})
+else ()
+    set(LIBRARIES ${CMAKE_INSTALL_LIBDIR}/libslmp${CMAKE_SHARED_LIBRARY_SUFFIX})
 endif ()
 
 add_library(slmp SHARED ${sources})
@@ -56,30 +57,30 @@ endif ()
 include(CheckFunctionExists)
 CHECK_FUNCTION_EXISTS(strlcpy HAVE_STRLCPY)
 if (NOT HAVE_STRLCPY)
-    target_sources(slmp PRIVATE ${PROJECT_SOURCE_DIR}/strlcpy.c)
+    target_sources(slmp PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/strlcpy.c)
 endif ()
 
 include(CheckIncludeFile)
 CHECK_INCLUDE_FILE(stdint.h HAVE_STDINT_H)
 if (NOT HAVE_STDINT_H)
     target_include_directories(slmp SYSTEM PUBLIC
-        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/hdrsup>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/hdrsup>
         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/slmp/hdrsup>
     )
 endif ()
 
 target_include_directories(slmp PUBLIC 
-    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 
 target_include_directories(slmp PUBLIC 
-    $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
 )
 
 configure_file(
-    ${PROJECT_SOURCE_DIR}/config.h.in
-    ${PROJECT_BINARY_DIR}/config.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/config.h.in
+    ${CMAKE_CURRENT_BINARY_DIR}/config.h
 )                                           
 
 install(
@@ -97,19 +98,45 @@ install(
 )
 
 install(
-    DIRECTORY ${PROJECT_SOURCE_DIR}/include/
+    DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
     FILES_MATCHING REGEX ".*[.][Hh][^~]*$"
 )
 
 install(
-    FILES ${PROJECT_BINARY_DIR}/config.h
+    FILES ${CMAKE_CURRENT_BINARY_DIR}/config.h
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/slmp
 )
 
 if (NOT HAVE_STDINT_H)
     install(
-        DIRECTORY ${PROJECT_SOURCE_DIR}/hdrsup/
+        DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/hdrsup/
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/slmp/hdrsup
     )
 endif ()
+
+set(INCLUDE_DIRS ${CMAKE_INSTALL_INCLUDEDIR})
+set(LIBRARY_DIRS ${CMAKE_INSTALL_LIBDIR})
+
+include(CMakePackageConfigHelpers)
+configure_package_config_file(
+    "${CMAKE_CURRENT_SOURCE_DIR}/config.cmake.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/libslmpConfig.cmake"
+    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    PATH_VARS INCLUDE_DIRS LIBRARY_DIRS LIBRARIES
+    NO_SET_AND_CHECK_MACRO
+    NO_CHECK_REQUIRED_COMPONENTS_MACRO
+)
+write_basic_package_version_file(
+    "${CMAKE_CURRENT_BINARY_DIR}/libslmpConfigVersion.cmake"
+    VERSION 1.0.1
+    COMPATIBILITY AnyNewerVersion
+)
+install(
+    FILES
+        "${CMAKE_CURRENT_BINARY_DIR}/libslmpConfig.cmake"
+        "${CMAKE_CURRENT_BINARY_DIR}/libslmpConfigVersion.cmake"
+    DESTINATION
+        ${CMAKE_INSTALL_LIBDIR}
+)
+

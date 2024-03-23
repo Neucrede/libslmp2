@@ -1,0 +1,7 @@
+@PACKAGE_INIT@
+
+set(libmelcli_INCLUDE_DIRS @PACKAGE_INCLUDE_DIRS@)
+set(libmelcli_LIBRARY_DIRS @PACKAGE_LIBRARY_DIRS@)
+set(libmelcli_LIBS @PACKAGE_LIBRARIES@)
+
+include("${CMAKE_CURRENT_LIST_DIR}/melcli/libmelcli.cmake")
