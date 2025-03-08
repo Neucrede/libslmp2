@@ -1,7 +1,7 @@
 /**
  * \file melcli.h
  * 
- * \brief SLMP client library dedicated for Mitsubishi(R) MELSEC(R) series PLCs.
+ * \brief SLMP client library for Mitsubishi(R) MELSEC(R) series PLCs.
  *
  * This library also serves as a demonstration on typical usage of libslmp.
  *

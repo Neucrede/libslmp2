@@ -38,7 +38,7 @@ BEGIN
             VALUE "FileDescription", "SLMP client library dedicated for Mitsubishi(R) MELSEC(R) series PLCs\0"
             VALUE "FileVersion", "1.0\0"
             VALUE "InternalName", "libmelcli.dll\0"
-            VALUE "LegalCopyright", "Copyright (C) 2021-2023 Neucrede <neucrede@sina.com>\0"
+            VALUE "LegalCopyright", "Copyright (C) 2021-2025 Neucrede <neucrede@sina.com>\0"
             VALUE "LegalTrademarks", "BSD 2-Clause License\0"
             VALUE "OriginalFilename", "libmelcli.dll\0"
             VALUE "PrivateBuild", "\0"

@@ -5,8 +5,7 @@
 \tableofcontents
 
 \section sec_intro Introduction
-libslmp is an open-source C/C++ library for writing SLMP client or server 
-applications.
+libslmp is an open-source C/C++ library for SLMP (Seamless Message Protocol). 
 
 Go to <a href="https://github.com/Neucrede/libslmp2">the Github repository</a>
 to obtain the source code or pre-built binaries.
