@@ -152,6 +152,7 @@
 #define SLMP_FTYPE_REQ_EMT          0x005D
 #define SLMP_FTYPE_PUSH_EMT         0x009D
 #define SLMP_FTYPE_RES_EMT          0x00DD
+#define SLMP_FTYPE_ERR_EMT          0x80DD
 #define SLMP_FTYPE_REQ_LMT          0x0068
 #define SLMP_FTYPE_RES_LMT          0x00E8
 #define SLMP_FTYPE_ERR_LMT          0x80E8

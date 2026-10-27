@@ -79,6 +79,7 @@ typedef struct melcli_ctx {
     int (CDECLCALL *dbgprint)(const char*, ...);
     int debug;          /* whether to enable debug print */
     uint16_t serial;    /* next frame serial */
+    int frame_type;     /* MELCLI_FRAME_TYPE_3E or MELCLI_FRAME_TYPE_4E */
 } melcli_ctx_t;
 
 typedef struct err_msg_desc {

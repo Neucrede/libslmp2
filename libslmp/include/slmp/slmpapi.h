@@ -9,7 +9,10 @@
 #define __SLMPAPI_H__
 
 #ifndef SLMPAPI
-    #if defined(_WIN32) /* && defined(MSVC) */
+    #if defined(LIBSLMP_STATIC)
+        /* Static linkage: no dllimport/dllexport decoration. */
+        #define SLMPAPI
+    #elif defined(_WIN32) /* && defined(MSVC) */
         #ifdef LIBSLMP_EXPORTS
             #define SLMPAPI __declspec(dllexport)
         #else

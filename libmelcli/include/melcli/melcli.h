@@ -177,6 +177,34 @@ MELCLIAPI void MELCLICALL melcli_set_debug(
     melcli_ctx_t* ctx, int debug);
 
 /**
+ * \brief Set the frame type for communication.
+ *
+ * \param[in] ctx Connection context.
+ * \param[in] frame_type Frame type. Use one of the following constants:
+ * - MELCLI_FRAME_TYPE_3E: Use 3E (ST type) frames.
+ * - MELCLI_FRAME_TYPE_4E: Use 4E (MT type) frames. This is the default.
+ *
+ * \remark Changing the frame type affects all subsequent API calls
+ * made with this context. The default frame type is MELCLI_FRAME_TYPE_4E
+ * which uses serial numbers for request-response matching.
+ * MELCLI_FRAME_TYPE_3E does not use serial numbers.
+ */
+MELCLIAPI void MELCLICALL melcli_set_frame_type(
+    melcli_ctx_t* ctx, int frame_type);
+
+/**
+ * \brief Get the current frame type setting.
+ *
+ * \param[in] ctx Connection context.
+ *
+ * \return The current frame type value.
+ *
+ * \sa melcli_set_frame_type()
+ */
+MELCLIAPI int MELCLICALL melcli_get_frame_type(
+    melcli_ctx_t* ctx);
+
+/**
  * \brief Free any pointer returned by libmelcli except pointers
  * of type `melcli_ctx_t*`.
  *

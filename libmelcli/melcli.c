@@ -10,7 +10,7 @@
 
 static int split_dev_addr(const char* addr, char* prefix, char* trailing);
 static int lookup_dev_type(const char* prefix, uint16_t* mem_type, 
-    int* unit_type);
+    int* unit_type, int* is_hex_addr);
 static int cvt_dev_addr_s(const char* addr, uint8_t* mem_type, 
     uint32_t* addr_begin, int* unit_type);
 static int cvt_dev_addr_l(const char* addr, uint16_t* mem_type, 
@@ -162,6 +162,7 @@ MELCLIAPI melcli_ctx_t* MELCLICALL melcli_new_context(
     ctx->pktio = pktio;
     ctx->serial = 0;
     ctx->debug = FALSE;
+    ctx->frame_type = MELCLI_FRAME_TYPE_DEFAULT;
 
     return ctx;
 }
@@ -248,6 +249,39 @@ MELCLIAPI void MELCLICALL melcli_set_debug(
     else {
         ctx->dbgprint("[INFO] Debug mode disabled.\n");
     }
+}
+
+MELCLIAPI void MELCLICALL melcli_set_frame_type(
+    melcli_ctx_t* ctx, int frame_type)
+{
+    if (ctx == NULL) {
+        return;
+    }
+
+    if ((frame_type == MELCLI_FRAME_TYPE_3E) || 
+        (frame_type == MELCLI_FRAME_TYPE_4E))
+    {
+        ctx->frame_type = frame_type;
+
+        if (ctx->debug) {
+            if (frame_type == MELCLI_FRAME_TYPE_3E) {
+                ctx->dbgprint("[INFO] Frame type set to 3E (ST).\n");
+            }
+            else {
+                ctx->dbgprint("[INFO] Frame type set to 4E (MT).\n");
+            }
+        }
+    }
+}
+
+MELCLIAPI int MELCLICALL melcli_get_frame_type(
+    melcli_ctx_t* ctx)
+{
+    if (ctx == NULL) {
+        return MELCLI_FRAME_TYPE_DEFAULT;
+    }
+
+    return ctx->frame_type;
 }
 
 MELCLIAPI void MELCLICALL melcli_free(
@@ -1400,85 +1434,97 @@ static const struct dev_type_lookup_entry {
     const char* prefix;
     uint16_t mem_type;
     int unit_type;
+    int is_hex_addr;
 } dev_type_lookup_table[] = {
-    { "SM", DEVICE_SM, UNIT_BIT },
-    { "SD", DEVICE_SD, UNIT_WORD },
-    { "X", DEVICE_X, UNIT_BIT },
-    { "Y", DEVICE_Y, UNIT_BIT },
-    { "M", DEVICE_M, UNIT_BIT },
-    { "L", DEVICE_L, UNIT_BIT },
-    { "F", DEVICE_F, UNIT_BIT },
-    { "V", DEVICE_V, UNIT_BIT },
-    { "B", DEVICE_B, UNIT_BIT },
-    { "D", DEVICE_D, UNIT_WORD },
-    { "W", DEVICE_W, UNIT_WORD },
-    { "TS", DEVICE_TS, UNIT_BIT },
-    { "TC", DEVICE_TC, UNIT_BIT },
-    { "TN", DEVICE_TN, UNIT_WORD },
-    { "LTS", DEVICE_LTS, UNIT_BIT },
-    { "LTC", DEVICE_LTC, UNIT_BIT },
-    { "LTN", DEVICE_LTN, UNIT_DWORD },
-    { "STS", DEVICE_STS, UNIT_BIT },
-    { "STC", DEVICE_STC, UNIT_BIT },
-    { "STN", DEVICE_STN, UNIT_WORD },
-    { "LSTS", DEVICE_LSTS, UNIT_BIT },
-    { "LSTC", DEVICE_LSTC, UNIT_BIT },
-    { "LSTN", DEVICE_LSTN, UNIT_DWORD },
-    { "CS", DEVICE_CS, UNIT_BIT },
-    { "CC", DEVICE_CC, UNIT_BIT },
-    { "CN", DEVICE_CN, UNIT_WORD },
-    { "LCS", DEVICE_LCS, UNIT_BIT },
-    { "LCC", DEVICE_LCC, UNIT_BIT },
-    { "LCN", DEVICE_LCN, UNIT_DWORD },
-    { "SB", DEVICE_SB, UNIT_BIT },
-    { "SW", DEVICE_SW, UNIT_WORD },
-    { "DX", DEVICE_DX, UNIT_BIT },
-    { "DY", DEVICE_DY, UNIT_BIT },
-    { "Z", DEVICE_Z, UNIT_WORD },
-    { "LZ", DEVICE_LZ, UNIT_DWORD },
-    { "R", DEVICE_R, UNIT_WORD },
-    { "ZR", DEVICE_ZR, UNIT_WORD },
-    { "RD", DEVICE_RD, UNIT_WORD },
-    { NULL, 0, 0 }
+    { "SM", DEVICE_SM, UNIT_BIT, 0 },
+    { "SD", DEVICE_SD, UNIT_WORD, 0 },
+    { "X", DEVICE_X, UNIT_BIT, 1 },
+    { "Y", DEVICE_Y, UNIT_BIT, 1 },
+    { "M", DEVICE_M, UNIT_BIT, 0 },
+    { "L", DEVICE_L, UNIT_BIT, 0 },
+    { "F", DEVICE_F, UNIT_BIT, 0 },
+    { "V", DEVICE_V, UNIT_BIT, 0 },
+    { "B", DEVICE_B, UNIT_BIT, 1 },
+    { "D", DEVICE_D, UNIT_WORD, 0 },
+    { "W", DEVICE_W, UNIT_WORD, 1 },
+    { "TS", DEVICE_TS, UNIT_BIT, 0 },
+    { "TC", DEVICE_TC, UNIT_BIT, 0 },
+    { "TN", DEVICE_TN, UNIT_WORD, 0 },
+    { "LTS", DEVICE_LTS, UNIT_BIT, 0 },
+    { "LTC", DEVICE_LTC, UNIT_BIT, 0 },
+    { "LTN", DEVICE_LTN, UNIT_DWORD, 0 },
+    { "STS", DEVICE_STS, UNIT_BIT, 0 },
+    { "STC", DEVICE_STC, UNIT_BIT, 0 },
+    { "STN", DEVICE_STN, UNIT_WORD, 0 },
+    { "LSTS", DEVICE_LSTS, UNIT_BIT, 0 },
+    { "LSTC", DEVICE_LSTC, UNIT_BIT, 0 },
+    { "LSTN", DEVICE_LSTN, UNIT_DWORD, 0 },
+    { "CS", DEVICE_CS, UNIT_BIT, 0 },
+    { "CC", DEVICE_CC, UNIT_BIT, 0 },
+    { "CN", DEVICE_CN, UNIT_WORD, 0 },
+    { "LCS", DEVICE_LCS, UNIT_BIT, 0 },
+    { "LCC", DEVICE_LCC, UNIT_BIT, 0 },
+    { "LCN", DEVICE_LCN, UNIT_DWORD, 0 },
+    { "SB", DEVICE_SB, UNIT_BIT, 1 },
+    { "SW", DEVICE_SW, UNIT_WORD, 1 },
+    { "DX", DEVICE_DX, UNIT_BIT, 1 },
+    { "DY", DEVICE_DY, UNIT_BIT, 1 },
+    { "Z", DEVICE_Z, UNIT_WORD, 0 },
+    { "LZ", DEVICE_LZ, UNIT_DWORD, 0 },
+    { "R", DEVICE_R, UNIT_WORD, 0 },
+    { "ZR", DEVICE_ZR, UNIT_WORD, 0 },
+    { "RD", DEVICE_RD, UNIT_WORD, 0 },
+    { NULL, 0, 0, 0 }
 };
 
 static int split_dev_addr(const char* addr, char* prefix, char* trailing)
 {
     size_t len = strlen(addr);
-    size_t i, j;
+    size_t leading_ws = 0;
+    size_t letters = 0;
+    size_t prefix_len;
+    size_t i;
 
     memset(prefix, 0, MAX_DEV_ADDR_PREFIX_LEN + 1);
     memset(trailing, 0, len + 1);
-    j = 0;
 
-    for (i = 0; i != len; ++i) {
-        char ch = addr[i];
-        
-        /* Skip spaces and tabs. */
-        if ((ch == '\x20') || (ch == '\t')) {
-            continue;
-        }
-
-        if (isalpha(ch)) {
-            prefix[j] = toupper(ch);
-            if (++j >= MAX_DEV_ADDR_PREFIX_LEN) {
-                break;
-            }
-        }
+    /* Skip leading spaces and tabs. */
+    while (leading_ws < len &&
+           ((addr[leading_ws] == '\x20') || (addr[leading_ws] == '\t'))) {
+        ++leading_ws;
     }
 
-    if (j == 0) {
+    /* Longest run of letters from the start is the candidate prefix. */
+    while (leading_ws + letters < len &&
+           isalpha((unsigned char)addr[leading_ws + letters]) &&
+           letters < MAX_DEV_ADDR_PREFIX_LEN) {
+        ++letters;
+    }
+
+    if (letters == 0) {
         return FALSE;
     }
-    else if (j < len) {
-        strlcpy(trailing, addr + j, len + 1);
+
+    /* Greedy match: try the longest prefix first so hex addresses (e.g. "XA"
+       -> X device @ 0xA, "DX1F" -> DX device @ 0x1F) split correctly.
+       The table lookup decides where the prefix actually ends. */
+    for (prefix_len = letters; prefix_len >= 1; --prefix_len) {
+        for (i = 0; i < prefix_len; ++i) {
+            prefix[i] = toupper((unsigned char)addr[leading_ws + i]);
+        }
+        prefix[prefix_len] = '\0';
+
+        if (lookup_dev_type(prefix, NULL, NULL, NULL)) {
+            strlcpy(trailing, addr + leading_ws + prefix_len, len + 1);
+            return TRUE;
+        }
     }
 
-    return TRUE;
+    return FALSE;
 }
 
 static int lookup_dev_type(const char* prefix, uint16_t* mem_type, 
-    int* unit_type)
+    int* unit_type, int* is_hex_addr)
 {
     size_t prefix_len;
     const struct dev_type_lookup_entry* entry;
@@ -1498,8 +1544,15 @@ static int lookup_dev_type(const char* prefix, uint16_t* mem_type,
         return FALSE;
     }
 
-    *mem_type = entry->mem_type;
-    *unit_type = entry->unit_type;
+    if (mem_type) {
+        *mem_type = entry->mem_type;
+    }
+    if (unit_type) {
+        *unit_type = entry->unit_type;
+    }
+    if (is_hex_addr) {
+        *is_hex_addr = entry->is_hex_addr;
+    }
     return TRUE;
 }
 
@@ -1513,6 +1566,7 @@ static int cvt_dev_addr_l(const char* addr, uint16_t* mem_type,
     size_t trailing_len;
     size_t i;
     int offset;
+    int is_hex_addr = 0;
 
     do {
         trailing = malloc(addr_len + 1);
@@ -1529,17 +1583,27 @@ static int cvt_dev_addr_l(const char* addr, uint16_t* mem_type,
             break;
         }
 
-        for (i = 0; i != trailing_len; ++i) {
-            if (!isdigit(trailing[i])) {
-                break;
-            }
-        }
-
-        if (!lookup_dev_type(prefix, mem_type, unit_type)) {
+        if (!lookup_dev_type(prefix, mem_type, unit_type, &is_hex_addr)) {
             break;
         }
 
-        offset = atoi(trailing);
+        for (i = 0; i != trailing_len; ++i) {
+            if (is_hex_addr) {
+                if (!isxdigit(trailing[i])) {
+                    break;
+                }
+            } else {
+                if (!isdigit(trailing[i])) {
+                    break;
+                }
+            }
+        }
+
+        if (is_hex_addr) {
+            offset = (int)strtol(trailing, NULL, 16);
+        } else {
+            offset = atoi(trailing);
+        }
         *addr_begin = (uint32_t)offset;
 
         ret = TRUE;
@@ -1610,6 +1674,7 @@ static slmp_frame_t* build_req_frame(melcli_ctx_t* ctx,
     slmp_frame_t *frame;
     size_t data_len = pfn_enc(hdr, NULL, SLMP_BINARY_STREAM);
     const melcli_station_t *_station = station ? station : &(ctx->station);
+    int frame_type = ctx->frame_type;
 
     do {
         frame = slmp_calloc(1, SLMP_FRAME_STRUCT_SIZE(data_len));
@@ -1619,19 +1684,33 @@ static slmp_frame_t* build_req_frame(melcli_ctx_t* ctx,
 
         frame->size = SLMP_FRAME_STRUCT_SIZE(data_len);
 
-        frame->hdr.ftype = SLMP_FTYPE_REQ_MT;
+        if (frame_type == MELCLI_FRAME_TYPE_3E) {
+            frame->hdr.ftype = SLMP_FTYPE_REQ_ST;
 
-        ctx->serial = (ctx->serial + 1) & 0xFFFF;
-        frame->hdr.serial = ctx->serial;
+            frame->sub_hdr.st.net_no = _station->net_num;
+            frame->sub_hdr.st.node_no = _station->node_num;
+            frame->sub_hdr.st.dst_proc_no = _station->dst_proc_num;
+            frame->sub_hdr.st.data_len = (uint16_t)data_len;
+            frame->sub_hdr.st.un.timer = ctx->timeout.frame_timer;
 
-        frame->sub_hdr.mt.net_no = _station->net_num;
-        frame->sub_hdr.mt.node_no = _station->node_num;
-        frame->sub_hdr.mt.dst_proc_no = _station->dst_proc_num;
-        frame->sub_hdr.mt.data_len = (uint16_t)data_len;
-        frame->sub_hdr.mt.un.timer = ctx->timeout.frame_timer;
+            frame->cmd_data.st.cmd = cmd;
+            frame->cmd_data.st.sub_cmd = sub_cmd;
+        }
+        else {
+            frame->hdr.ftype = SLMP_FTYPE_REQ_MT;
 
-        frame->cmd_data.mt.cmd = cmd;
-        frame->cmd_data.mt.sub_cmd = sub_cmd;
+            ctx->serial = (ctx->serial + 1) & 0xFFFF;
+            frame->hdr.serial = ctx->serial;
+
+            frame->sub_hdr.mt.net_no = _station->net_num;
+            frame->sub_hdr.mt.node_no = _station->node_num;
+            frame->sub_hdr.mt.dst_proc_no = _station->dst_proc_num;
+            frame->sub_hdr.mt.data_len = (uint16_t)data_len;
+            frame->sub_hdr.mt.un.timer = ctx->timeout.frame_timer;
+
+            frame->cmd_data.mt.cmd = cmd;
+            frame->cmd_data.mt.sub_cmd = sub_cmd;
+        }
 
         if (pfn_enc(hdr, frame->raw_data, SLMP_BINARY_STREAM) != data_len) {
             slmp_free(frame);
@@ -1645,7 +1724,7 @@ static slmp_frame_t* build_req_frame(melcli_ctx_t* ctx,
             ctx->dbgprint("[ERROR] %s\n", slmp_get_err_msg(slmp_get_errno()));
         }
     }
-    else if (serial) {
+    else if (serial && (frame_type == MELCLI_FRAME_TYPE_4E)) {
         *serial = ctx->serial;
     }
 
@@ -1679,6 +1758,7 @@ static int receive_frame(melcli_ctx_t* ctx, int serial, slmp_frame_t** frame)
     int timeout;
     int frame_wait_time = ctx->timeout.frame_timer * 250;
     int stm_type;
+    int frame_type = ctx->frame_type;
       
     if (ctx->timeout.frame_timer == 0) {
         timeout = 0;
@@ -1699,21 +1779,25 @@ static int receive_frame(melcli_ctx_t* ctx, int serial, slmp_frame_t** frame)
         return MELCLI_ERROR_RECEIVE_FRAMES;
     }
 
-    if ((*frame)->hdr.serial != serial) {
-        if (ctx->debug) {
-            ctx->dbgprint("[ERROR] Frame serial mismatch. "
-                "Expected '%d' but received '%d'.\n", 
-                serial, (*frame)->hdr.serial);
-        }
+    if (frame_type == MELCLI_FRAME_TYPE_4E) {
+        if ((*frame)->hdr.serial != serial) {
+            if (ctx->debug) {
+                ctx->dbgprint("[ERROR] Frame serial mismatch. "
+                    "Expected '%d' but received '%d'.\n", 
+                    serial, (*frame)->hdr.serial);
+            }
 
-        return MELCLI_ERROR_FRAME_SERIAL_MISMATCH;
+            return MELCLI_ERROR_FRAME_SERIAL_MISMATCH;
+        }
     }
 
-    if ((*frame)->hdr.ftype == SLMP_FTYPE_ERR_MT) {
+    if ((*frame)->hdr.ftype & SLMP_FTYPE_ERR_MASK) {
         if (ctx->debug) {
-            ctx->dbgprint("[ERROR] Endcode (0x%04X): %s\n", 
-                    (*frame)->sub_hdr.mt.un.end_code,
-                    slmp_get_endcode_msg((*frame)->sub_hdr.mt.un.end_code));
+            uint16_t end_code = (frame_type == MELCLI_FRAME_TYPE_3E)
+                ? (*frame)->sub_hdr.st.un.end_code
+                : (*frame)->sub_hdr.mt.un.end_code;
+            ctx->dbgprint("[ERROR] Endcode (0x%04X): %s\n",
+                    end_code, slmp_get_endcode_msg(end_code));
         }
 
         return MELCLI_ERROR_OPERATION_FAILED;

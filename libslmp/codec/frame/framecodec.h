@@ -33,6 +33,7 @@
 #define SLMP_REQ_EMT_DATA_DL_OFFSET                     4
 #define SLMP_PUSH_EMT_DATA_DL_OFFSET                    4
 #define SLMP_RES_EMT_DATA_DL_OFFSET                     6
+#define SLMP_ERR_EMT_DATA_DL_OFFSET                     6
 #define SLMP_REQ_LMT_DATA_DL_OFFSET                     12
 #define SLMP_RES_LMT_DATA_DL_OFFSET                     12
 #define SLMP_ERR_LMT_DATA_DL_OFFSET                     20
@@ -50,6 +51,7 @@
 #define SLMP_REQ_EMT_FIXED_PART_LEN                     24
 #define SLMP_PUSH_EMT_FIXED_PART_LEN                    24
 #define SLMP_RES_EMT_FIXED_PART_LEN                     26
+#define SLMP_ERR_EMT_FIXED_PART_LEN                     26
 #define SLMP_REQ_LMT_FIXED_PART_LEN                     28
 #define SLMP_RES_LMT_FIXED_PART_LEN                     28
 #define SLMP_ERR_LMT_FIXED_PART_LEN                     36

@@ -8,7 +8,10 @@
 #define __MELCLIAPI_H__
 
 #ifndef MELCLIAPI
-    #if defined(_WIN32) /* && defined(MSVC) */
+    #if defined(LIBMELCLI_STATIC)
+        /* Static linkage: no dllimport/dllexport decoration. */
+        #define MELCLIAPI
+    #elif defined(_WIN32) /* && defined(MSVC) */
         #ifdef LIBMELCLI_EXPORTS
             #define MELCLIAPI __declspec(dllexport)
         #else

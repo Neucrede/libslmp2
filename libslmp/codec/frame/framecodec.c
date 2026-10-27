@@ -99,19 +99,23 @@ SLMPAPI slmp_frame_t* SLMPCALL slmp_decode_frame(
     switch (ftype) {
     case SLMP_FTYPE_REQ_ST:
     case SLMP_FTYPE_RES_ST:
+    case SLMP_FTYPE_ERR_ST:
         decode_frame = &decode_frame_st;
         break;
     case SLMP_FTYPE_REQ_MT:
     case SLMP_FTYPE_RES_MT:
+    case SLMP_FTYPE_ERR_MT:
         decode_frame = &decode_frame_mt;
         break;
     case SLMP_FTYPE_REQ_EMT:
     case SLMP_FTYPE_PUSH_EMT:
     case SLMP_FTYPE_RES_EMT:
+    case SLMP_FTYPE_ERR_EMT:
         decode_frame = &decode_frame_emt;
         break;
     case SLMP_FTYPE_REQ_LMT:
     case SLMP_FTYPE_RES_LMT:
+    case SLMP_FTYPE_ERR_LMT:
         assert(type != SLMP_ASCII_STREAM);
         if (type == SLMP_ASCII_STREAM) {
             slmp_set_errno(SLMP_ERROR_BAD_STREAM_TYPE);
@@ -120,6 +124,7 @@ SLMPAPI slmp_frame_t* SLMPCALL slmp_decode_frame(
         decode_frame = &decode_frame_lmt;
         break;
     default:
+        slmp_set_errno(SLMP_ERROR_BAD_FTYPE);
         return NULL;
     }
     
@@ -614,6 +619,7 @@ slmp_frame_t* decode_frame_emt(uint8_t *stream, size_t len, int type, size_t *le
         DECODE_FRAME_CASE_FTYPE(REQ, EMT)
         DECODE_FRAME_CASE_FTYPE(RES, EMT)
         DECODE_FRAME_CASE_FTYPE(PUSH, EMT)
+        DECODE_FRAME_CASE_FTYPE(ERR, EMT)
     DECODE_FRAME_END_SWITCH_FTYPE()
     DECODE_FRAME_INITIALIZE_LOCAL_VARIABLES_2()
 
@@ -640,6 +646,15 @@ slmp_frame_t* decode_frame_emt(uint8_t *stream, size_t len, int type, size_t *le
         &(frame->sub_hdr.emt.flgm));
     frame->sub_hdr.emt.data_len = dl;
 
+    /* Check end_code for EMT response and set error mask if needed */
+    if (ftype == SLMP_FTYPE_RES_EMT) {
+        dec16bp(&(stream[m * SLMP_EMT_ENDCODE_OFFSET]), &end_code);
+        if (end_code > 0) {
+            ftype |= SLMP_FTYPE_ERR_MASK;
+            frame->hdr.ftype = ftype;
+        }
+    }
+
     switch (ftype) {
     case SLMP_FTYPE_REQ_EMT:
         /* fall through */
@@ -664,6 +679,13 @@ slmp_frame_t* decode_frame_emt(uint8_t *stream, size_t len, int type, size_t *le
         /* End code */
         dec16bp(&(stream[m * SLMP_EMT_ENDCODE_OFFSET]),
             &(frame->cmd_data.emt.end_code));
+        /* Response data */
+        decnp(&(stream[m * SLMP_EMT_RESDATA_OFFSET]), frame->raw_data,
+            m * raw_data_len);
+        break;
+    case SLMP_FTYPE_ERR_EMT:
+        /* Error frame - end_code already read above */
+        frame->cmd_data.emt.end_code = end_code;
         /* Response data */
         decnp(&(stream[m * SLMP_EMT_RESDATA_OFFSET]), frame->raw_data,
             m * raw_data_len);

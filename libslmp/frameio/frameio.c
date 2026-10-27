@@ -150,6 +150,7 @@ static frame_type_t get_frame_type(slmp_frame_t *frame)
     case SLMP_FTYPE_REQ_EMT:
     case SLMP_FTYPE_PUSH_EMT:
     case SLMP_FTYPE_RES_EMT:
+    case SLMP_FTYPE_ERR_EMT:
         return FTYPE_EMT;
     case SLMP_FTYPE_REQ_LMT:
     case SLMP_FTYPE_RES_LMT:
@@ -357,6 +358,7 @@ __outer_for_loop:
 
         t = get_current_timestamp();
         if ((timeout > 0) && (t0 + timeout < t)) {
+            slmp_set_errno(SLMP_ERROR_TIMEOUT);
             goto __cleanup;
         }
 
@@ -428,6 +430,12 @@ static int identify_stream_type(uint8_t *buf, size_t n)
 
     /* Try binary */
     x = buf[0] | ((uint32_t)(buf[1]) << 8);
+    
+    /* Check if it's an error frame by checking ERR_MASK bit */
+    if (x & SLMP_FTYPE_ERR_MASK) {
+        x &= ~SLMP_FTYPE_ERR_MASK;
+    }
+    
     switch (x) {
     case SLMP_FTYPE_REQ_ST:
     case SLMP_FTYPE_RES_ST:
@@ -452,7 +460,7 @@ static int identify_stream_type(uint8_t *buf, size_t n)
         ||  strcmp(y, "D400") == 0        /* res_mt, err_mt */
         ||  strcmp(y, "5D00") == 0        /* req_emt */
         ||  strcmp(y, "9D00") == 0        /* push_emt */
-        ||  strcmp(y, "DD00") == 0        /* res_emt */
+        ||  strcmp(y, "DD00") == 0        /* res_emt, err_emt */
     )
     {
         return SLMP_ASCII_STREAM;

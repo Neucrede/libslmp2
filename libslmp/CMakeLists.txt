@@ -22,14 +22,21 @@ set(sources
     ${server_sources}
 )
 
-if (CMAKE_HOST_WIN32)
-    set(sources ${sources} ${CMAKE_CURRENT_SOURCE_DIR}/libslmp.def ${CMAKE_CURRENT_SOURCE_DIR}/win32rsrc/rsrc.rc)
-    set(LIBRARIES ${CMAKE_INSTALL_LIBDIR}/libslmp${CMAKE_IMPORT_LIBRARY_SUFFIX})
+if (BUILD_SHARED_LIBS)
+    # Shared library: .def controls DLL exports, resource file embeds version info.
+    if (CMAKE_HOST_WIN32)
+        set(sources ${sources} ${CMAKE_CURRENT_SOURCE_DIR}/libslmp.def ${CMAKE_CURRENT_SOURCE_DIR}/win32rsrc/rsrc.rc)
+        set(LIBRARIES ${CMAKE_INSTALL_LIBDIR}/libslmp${CMAKE_IMPORT_LIBRARY_SUFFIX})
+    else ()
+        set(LIBRARIES ${CMAKE_INSTALL_LIBDIR}/libslmp${CMAKE_SHARED_LIBRARY_SUFFIX})
+    endif ()
 else ()
-    set(LIBRARIES ${CMAKE_INSTALL_LIBDIR}/libslmp${CMAKE_SHARED_LIBRARY_SUFFIX})
+    # Static library: no .def / DLL resource needed.
+    set(LIBRARIES ${CMAKE_INSTALL_LIBDIR}/libslmp${CMAKE_STATIC_LIBRARY_SUFFIX})
 endif ()
 
-add_library(slmp SHARED ${sources})
+# Library type is driven by BUILD_SHARED_LIBS (SHARED when ON, STATIC when OFF).
+add_library(slmp ${sources})
 
 set_target_properties(slmp PROPERTIES
     PREFIX "lib"
@@ -38,9 +45,22 @@ set_target_properties(slmp PROPERTIES
 
 option(ENABLE_TSD "Enable TSD" ON)
 
+if (BUILD_SHARED_LIBS)
+    if (CMAKE_HOST_WIN32)
+        target_compile_definitions(slmp PRIVATE -DLIBSLMP_EXPORTS)
+    endif ()
+else ()
+    # Propagate to consumers so SLMPAPI resolves to empty (no dllimport).
+    target_compile_definitions(slmp PUBLIC -DLIBSLMP_STATIC)
+endif ()
+
 if (CMAKE_HOST_WIN32)
-    target_compile_definitions(slmp PRIVATE -DLIBSLMP_EXPORTS)
-    target_link_libraries(slmp PRIVATE ws2_32)
+    if (BUILD_SHARED_LIBS)
+        target_link_libraries(slmp PRIVATE ws2_32)
+    else ()
+        # Static consumers inherit the system dependency transitively.
+        target_link_libraries(slmp PUBLIC ws2_32)
+    endif ()
     set(USE_WINDOWS_THREADS ON)
 elseif (CMAKE_HOST_UNIX)
     if (ENABLE_TSD)

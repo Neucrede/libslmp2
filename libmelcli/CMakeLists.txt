@@ -4,16 +4,28 @@ include(GNUInstallDirs)
 
 file (GLOB sources ${CMAKE_CURRENT_SOURCE_DIR}/*.c ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)
 
-if (CMAKE_HOST_WIN32)
-    set(sources ${sources} ${CMAKE_CURRENT_SOURCE_DIR}/libmelcli.def ${CMAKE_CURRENT_SOURCE_DIR}/win32rsrc/rsrc.rc)
-    set(LIBRARIES ${CMAKE_INSTALL_LIBDIR}/libmelcli${CMAKE_IMPORT_LIBRARY_SUFFIX})
+if (BUILD_SHARED_LIBS)
+    # Shared library: .def controls DLL exports, resource file embeds version info.
+    if (CMAKE_HOST_WIN32)
+        set(sources ${sources} ${CMAKE_CURRENT_SOURCE_DIR}/libmelcli.def ${CMAKE_CURRENT_SOURCE_DIR}/win32rsrc/rsrc.rc)
+        set(LIBRARIES ${CMAKE_INSTALL_LIBDIR}/libmelcli${CMAKE_IMPORT_LIBRARY_SUFFIX})
+    else ()
+        set(LIBRARIES ${CMAKE_INSTALL_LIBDIR}/libmelcli${CMAKE_SHARED_LIBRARY_SUFFIX})
+    endif ()
 else ()
-    set(LIBRARIES ${CMAKE_INSTALL_LIBDIR}/libmelcli${CMAKE_SHARED_LIBRARY_SUFFIX})
+    # Static library: no .def / DLL resource needed.
+    set(LIBRARIES ${CMAKE_INSTALL_LIBDIR}/libmelcli${CMAKE_STATIC_LIBRARY_SUFFIX})
 endif ()
 
-add_library(melcli SHARED ${sources})
+# Library type is driven by BUILD_SHARED_LIBS (SHARED when ON, STATIC when OFF).
+add_library(melcli ${sources})
 
-target_compile_definitions(melcli PRIVATE -DLIBMELCLI_EXPORTS)
+if (BUILD_SHARED_LIBS)
+    target_compile_definitions(melcli PRIVATE -DLIBMELCLI_EXPORTS)
+else ()
+    # Propagate to consumers so MELCLIAPI resolves to empty (no dllimport).
+    target_compile_definitions(melcli PUBLIC -DLIBMELCLI_STATIC)
+endif ()
 
 set_target_properties(melcli PROPERTIES
     PREFIX "lib"
@@ -44,7 +56,12 @@ if (NOT HAVE_STRLCPY)
     target_sources(melcli PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/strlcpy.c)
 endif ()
 
-target_link_libraries(melcli PRIVATE slmp)
+# Static consumers must inherit slmp (and its system deps) transitively.
+if (BUILD_SHARED_LIBS)
+    target_link_libraries(melcli PRIVATE slmp)
+else ()
+    target_link_libraries(melcli PUBLIC slmp)
+endif ()
 
 configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/config.h.in

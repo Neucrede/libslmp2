@@ -88,11 +88,22 @@
 #define MELCLI_CLEAR_ALL                                (1 << 7)
 /** @} */
 
+/** \name Frame types */
+/** @{ */
+/** Use 3E (ST type) frames for communication. */
+#define MELCLI_FRAME_TYPE_3E                            1
+/** Use 4E (MT type) frames for communication. This is the default. */
+#define MELCLI_FRAME_TYPE_4E                            2
+/** @} */
+
 /** Initializer for connected station. */
 #define MELCLI_CONNECTED_STATION    { 0x00, 0xFF, 0x03FF, 0x00, 0x00 }
 
 /** Initializer for default timeout values. */
 #define MELCLI_TIMEOUT_DEFAULT      { 1, 1, 500, 5 }
+
+/** Initializer for default frame type. */
+#define MELCLI_FRAME_TYPE_DEFAULT   MELCLI_FRAME_TYPE_4E
 
 
 #endif /* __MELCLIDEF_H__ */
