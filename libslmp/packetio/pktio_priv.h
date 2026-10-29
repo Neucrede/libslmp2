@@ -106,8 +106,11 @@ struct slmp_pktio {
     int fd2;                                        /* Accepted socket */
     char peer_ipaddr[24];                           /* Peer IP address */
 
-    int echo;                               /* Whether to dump traffic data */
+    int echo;                       /* Whether to dump traffic data */
     int (CDECLCALL *dbgprint)(const char*, ...);    /* Debug print function */
+
+    char* pre_recv_data;            /* Data prepended before received data */
+    size_t pre_recv_data_len;
     
     pktio_backend_t* backend;                       /* Function table */
     void* backend_ctx;                              /* Impl specific context */

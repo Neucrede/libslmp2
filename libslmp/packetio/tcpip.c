@@ -98,6 +98,8 @@ SLMPAPI slmp_pktio_t* SLMPCALL slmp_pktio_new_tcpip(
     pktio->backend = &backend;
     pktio->backend_ctx = ctx;
     pktio->dbgprint = &printf;
+    pktio->pre_recv_data = NULL;
+    pktio->pre_recv_data_len = 0;
 
 #if defined(SIGPIPE) && (!defined(MSG_NOSIGNAL) || (MSG_NOSIGNAL == 0))
     /*

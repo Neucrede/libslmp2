@@ -1776,6 +1776,8 @@ static int receive_frame(melcli_ctx_t* ctx, int serial, slmp_frame_t** frame)
             ctx->dbgprint("[ERROR] %s\n", slmp_get_err_msg(slmp_get_errno()));
         }
 
+        slmp_pktio_discard(ctx->pktio);
+
         return MELCLI_ERROR_RECEIVE_FRAMES;
     }
 

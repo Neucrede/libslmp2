@@ -15,7 +15,7 @@
 
 #include "pktio_priv.h"
 
-static void hex_print(slmp_pktio_t *pktio, const char* buf, size_t len)
+static void hex_print(const char* buf, size_t len)
 {
     size_t i;
 
@@ -35,6 +35,11 @@ SLMPAPI void SLMPCALL slmp_pktio_free(slmp_pktio_t *pktio)
     }
 
     pktio->backend->pfn_free(pktio);
+
+    if (pktio->pre_recv_data != NULL) {
+        free(pktio->pre_recv_data);
+        pktio->pre_recv_data = NULL;
+    }
 }
 
 SLMPAPI int SLMPCALL slmp_pktio_init(slmp_pktio_t *pktio)
@@ -114,7 +119,7 @@ SLMPAPI size_t SLMPCALL slmp_pktio_send(slmp_pktio_t *pktio, void *buf,
 
     if (pktio->echo && (bytes_sent > 0)) {
         __DBGPRINT1("Sent %d bytes.", bytes_sent);
-        hex_print(pktio, (const char*)buf, bytes_sent);
+        hex_print((const char*)buf, bytes_sent);
     }
 
     return bytes_sent;
@@ -137,11 +142,39 @@ SLMPAPI size_t SLMPCALL slmp_pktio_recv(slmp_pktio_t *pktio, void *buf, size_t l
         return 0;
     }
 
-    bytes_recv = pktio->backend->pfn_recv(pktio, buf, len, timeout);
+    if (pktio->pre_recv_data_len > 0) {
+        if (pktio->pre_recv_data_len >= len) {
+            memcpy(buf, pktio->pre_recv_data, len);
+            bytes_recv = len;
+            
+            if (pktio->pre_recv_data_len > len) {
+                memmove(pktio->pre_recv_data, pktio->pre_recv_data + len,
+                    pktio->pre_recv_data_len - len);
+            }
+
+            pktio->pre_recv_data_len -= len;
+        }
+        else {
+            memcpy(buf, pktio->pre_recv_data, pktio->pre_recv_data_len);
+            bytes_recv = pktio->backend->pfn_recv(
+                pktio, 
+                (char*)(buf) + pktio->pre_recv_data_len, 
+                len - pktio->pre_recv_data_len, 
+                timeout);
+            
+            if (bytes_recv > 0) {
+                bytes_recv += pktio->pre_recv_data_len;
+                pktio->pre_recv_data_len = 0;
+            }
+        }
+    }
+    else {
+        bytes_recv = pktio->backend->pfn_recv(pktio, buf, len, timeout);
+    }
 
     if (pktio->echo && (bytes_recv > 0)) {
         __DBGPRINT1("Received %d bytes.", bytes_recv);
-        hex_print(pktio, (const char*)buf, bytes_recv);
+        hex_print((const char*)buf, bytes_recv);
     }
 
     return bytes_recv;
@@ -155,7 +188,48 @@ SLMPAPI void SLMPCALL slmp_pktio_discard(slmp_pktio_t *pktio)
         return;
     }
 
+    pktio->pre_recv_data_len = 0;
+
     pktio->backend->pfn_discard(pktio);
+}
+
+SLMPAPI int SLMPCALL slmp_pktio_set_recv_data_preamble(slmp_pktio_t *pktio, void *data, size_t n)
+{
+    if ((pktio == NULL) || (data == NULL) || (n == 0)) {
+        slmp_set_errno(SLMP_ERROR_INVALID_ARGUMENTS);
+        return -1;
+    }
+
+    if (pktio->pre_recv_data == NULL) {
+        size_t n0 = n;
+        if (n0 < 4096) {
+            n0 = 4096;
+        }
+
+        if ((pktio->pre_recv_data = malloc(n0)) == NULL) {
+            pktio->pre_recv_data_len = 0;
+            slmp_set_errno(SLMP_ERROR_OUT_OF_MEMORY);
+            return -1;
+        }
+    }
+    else if (n > pktio->pre_recv_data_len) {
+        if ((pktio->pre_recv_data = realloc(pktio->pre_recv_data, n)) == NULL) {
+            pktio->pre_recv_data_len = 0;
+            slmp_set_errno(SLMP_ERROR_OUT_OF_MEMORY);
+            return -1;
+        }
+    }
+
+    pktio->pre_recv_data_len = n;
+    memcpy(pktio->pre_recv_data, data, n);
+
+    if (pktio->echo) {
+        __DBGPRINT1("Put back %u bytes.", n);
+        hex_print((const char*)data, n);
+    }
+
+    slmp_set_errno(SLMP_ERROR_SUCCESS);
+    return 0;
 }
 
 SLMPAPI const char* SLMPCALL slmp_pktio_get_peer_ipaddr(slmp_pktio_t *pktio)

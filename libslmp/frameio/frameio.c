@@ -12,6 +12,7 @@
 #include "slmp/slmperr.h"
 #include "slmp/slmpfrmio.h"
 #include "slmp/slmpcodec.h"
+#include "slmp/slmpmem.h"
 #include "../slmp_intl.h"
 
 
@@ -182,11 +183,11 @@ static size_t send_frames_st_mt_emt(slmp_pktio_t *pktio, slmp_frame_t **frames,
 
         if (len > buf_len) {
             if (buf != NULL) {
-                free(buf);
+                slmp_free(buf);
             }
 
             buf_len = 2 * len;
-            if ((buf = malloc(buf_len)) == NULL) {
+            if ((buf = slmp_malloc(buf_len)) == NULL) {
                 slmp_set_errno(SLMP_ERROR_OUT_OF_MEMORY);
                 goto __cleanup;
             }
@@ -212,7 +213,7 @@ static size_t send_frames_st_mt_emt(slmp_pktio_t *pktio, slmp_frame_t **frames,
 
 __cleanup:
     if (buf != NULL) {
-        free(buf);
+        slmp_free(buf);
     }
     return num_frames_sent;
 }
@@ -235,9 +236,15 @@ static size_t segm_and_send_lmt_frame(slmp_pktio_t *pktio, slmp_frame_t *frame,
         slmp_set_errno(SLMP_ERROR_INCORRECT_SIZE);
         return 0;
     }
+    
+    raw_data_len = SLMP_FRAME_RAW_DATA_SIZE(frame);
+    if (raw_data_len != 0) {
+        num_segm = (raw_data_len - 1) / SLMP_FRAMEIO_MAX_RAW_DATA_LEN + 1;
+    }
+    else {
+        num_segm = 1;
+    }
 
-    raw_data_len = frame->size - sizeof(slmp_frame_t) + 1;
-    num_segm = (raw_data_len - 1) / SLMP_FRAMEIO_MAX_RAW_DATA_LEN + 1;
     if (num_segm > UINT16_MAX - 1) {
         slmp_set_errno(SLMP_ERROR_DATA_TOO_LARGE);
         return 0;
@@ -247,7 +254,7 @@ static size_t segm_and_send_lmt_frame(slmp_pktio_t *pktio, slmp_frame_t *frame,
         cur_frame = frame;
     }
     else {
-        if ((cur_frame = (slmp_frame_t*)malloc(
+        if ((cur_frame = (slmp_frame_t*)slmp_malloc(
                 SLMP_FRAME_STRUCT_SIZE(SLMP_FRAMEIO_MAX_RAW_DATA_LEN + 1))) 
             == NULL) 
         {
@@ -278,16 +285,17 @@ static size_t segm_and_send_lmt_frame(slmp_pktio_t *pktio, slmp_frame_t *frame,
         len = slmp_encode_frame(cur_frame, NULL, type);
         if (len == 0) {
             /* An error occured... */
+            /* error code set by slmp_encode_frame() */
             goto __cleanup;
         }
 
         if (len > buf_len) {
             if (buf != NULL) {
-                free(buf);
+                slmp_free(buf);
             }
 
             buf_len = 2 * len;
-            if ((buf = malloc(buf_len)) == NULL) {
+            if ((buf = slmp_malloc(buf_len)) == NULL) {
                 slmp_set_errno(SLMP_ERROR_OUT_OF_MEMORY);
                 goto __cleanup;
             }
@@ -317,11 +325,11 @@ static size_t segm_and_send_lmt_frame(slmp_pktio_t *pktio, slmp_frame_t *frame,
 
 __cleanup:
     if ((cur_frame != NULL) && (cur_frame != frame)) {
-        free(cur_frame);
+        slmp_free(cur_frame);
     }
 
     if (buf != NULL) {
-        free(buf);
+        slmp_free(buf);
     }
 
     return num_frames_sent;
@@ -331,28 +339,31 @@ static size_t receive_frames(slmp_pktio_t *pktio, slmp_frame_t **frames, size_t 
     int *type, int timeout)
 {
     const size_t buf_len = 4096;
-    uint8_t *buf;
-    size_t idx_frm = 0;
-    size_t len_recv;
-    int err;
-    size_t offset = 0;
-    size_t len_remains = 0;
-    slmp_frame_t *frame;
-    uint64_t t0 = get_current_timestamp();
-    uint64_t t;
-    int cur_type, prev_type = SLMP_BINARY_STREAM;
+    const int max_retries = 3;
 
-    if ((buf = (uint8_t*)malloc(buf_len)) == NULL) {
+    uint8_t *buf;
+    size_t idx_frm = 0; /* index of current frame */
+    size_t len_recv; /* length of received data packet */
+    size_t offset = 0; /* write pointer position */
+    size_t len_remains = 0; /* number of bytes left unprocessed */
+    slmp_frame_t *frame;
+    uint64_t t0 = get_current_timestamp(), t;
+    int err;
+    int retry = 0;
+    int strm_type = -1;   /* current type of stream encoding */
+
+    if ((buf = (uint8_t*)slmp_malloc(buf_len)) == NULL) {
         slmp_set_errno(SLMP_ERROR_OUT_OF_MEMORY);
         goto __cleanup;
     }
 
     memset(frames, 0, n * sizeof(slmp_frame_t*));
 
-    for (idx_frm = 0; idx_frm != n; ) {
+    for (idx_frm = retry = 0; (idx_frm != n) && (retry < max_retries); ) {
 __outer_for_loop:
         if (buf_len <= offset) {
             slmp_set_errno(SLMP_ERROR_RUN_OUT_OF_INTERNAL_BUFFER);
+            offset = 0; /* discard */
             goto __cleanup;
         }
 
@@ -373,34 +384,48 @@ __outer_for_loop:
                 continue;
             }
             else {
+                offset = 0; /* discard */
                 goto __cleanup;
             }
         }
+        else if (len_recv < 4) {
+            offset += len_recv;
+            continue;
+        }
 
         t = get_current_timestamp();
-        while ((idx_frm != n) && (offset + len_recv > 0)) {
-            cur_type = identify_stream_type(buf, offset + len_recv);
-            if (cur_type != -1) {
-                prev_type = cur_type;
+        while ((idx_frm != n) && (offset + len_recv >= 4)) {
+            if (strm_type < 0) {
+                strm_type = identify_stream_type(buf, offset + len_recv);
+                
+                if (strm_type < 0) {
+                    slmp_set_errno(SLMP_ERROR_BAD_STREAM_TYPE);
+                    offset = 0; /* discard */
+                    goto __cleanup;
+                }
             }
-            
-            frame = slmp_decode_frame(buf, offset + len_recv, 
-                cur_type != -1 ? cur_type : prev_type, &len_remains);
+
+            frame = slmp_decode_frame(buf, offset + len_recv, strm_type,
+                &len_remains);
 
             if (frame == NULL) {
+                offset += len_recv;
+
                 err = slmp_get_errno();
                 if (err == SLMP_ERROR_BUFFER_TOO_SHORT) {
-                    offset += len_recv;
                     goto __outer_for_loop;
                 }
                 else {
+                    offset = 0; /* discard */
                     goto __cleanup;
                 }
             }
 
             frame->timestamp = t;
             frames[idx_frm] = frame;
+            type[idx_frm] = strm_type;
             ++idx_frm;
+            strm_type = -1;
 
             if (len_remains != 0) {
                 memmove(buf, &(buf[offset + len_recv - len_remains]), len_remains);
@@ -411,11 +436,14 @@ __outer_for_loop:
         }
     }
 
-    *type = cur_type;
     slmp_set_errno(SLMP_ERROR_SUCCESS);
 
 __cleanup:
-    free(buf);
+    if (offset > 0) {
+        /* Put back unprocessed data left by last slmp_decode_frame() call. */
+        slmp_pktio_set_recv_data_preamble(pktio, buf, offset);
+    }
+    slmp_free(buf);
     return idx_frm;
 }
 
@@ -452,7 +480,7 @@ static int identify_stream_type(uint8_t *buf, size_t n)
     }
     
     /* Try ASCII */
-    strlcpy(y, buf, 5);
+    memcpy(y, buf, 5);
     if (
             strcmp(y, "5000") == 0        /* req_st */
         ||  strcmp(y, "D000") == 0        /* res_st, err_st */

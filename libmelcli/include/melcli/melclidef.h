@@ -94,6 +94,10 @@
 #define MELCLI_FRAME_TYPE_3E                            1
 /** Use 4E (MT type) frames for communication. This is the default. */
 #define MELCLI_FRAME_TYPE_4E                            2
+/** Synonym of MELCLI_FRAME_TYPE_3E */
+#define MELCLI_FRAME_TYPE_ST        MELCLI_FRAME_TYPE_3E
+/** Synonym of MELCLI_FRAME_TYPE_MT */
+#define MELCLI_FRAME_TYPE_MT        MELCLI_FRAME_TYPE_4E
 /** @} */
 
 /** Initializer for connected station. */

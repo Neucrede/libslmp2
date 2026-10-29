@@ -47,6 +47,8 @@ EXPORTS
     slmp_pktio_udpip_set_recv_timeout @40
     slmp_pktio_udpip_set_broadcast @41
 
+    slmp_pktio_set_recv_data_preamble @42
+
     slmp_server_new @45
     slmp_server_free @46
     slmp_server_init @47
@@ -54,6 +56,7 @@ EXPORTS
     slmp_server_mainloop @49
     slmp_server_set_retcode @50
     slmp_server_get_pktio @51
+    slmp_server_notify @52
 
     slmp_send_frames @55
     slmp_receive_frames @56

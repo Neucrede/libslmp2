@@ -14,9 +14,9 @@
 
 #include "slmp/slmpapi.h"
 
-/** Default connection timeout (sec). */
+/** Default connection timeout (sec). 0 for infinite. */
 #define UDPIP_PKTIO_DEFAULT_CONN_TIMEOUT       2
-/** Default receive timeout (sec). */
+/** Default receive timeout (sec). 0 for infinite. */
 #define UDPIP_PKTIO_DEFAULT_RECV_TIMEOUT       2
 
 

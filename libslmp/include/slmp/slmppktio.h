@@ -102,8 +102,8 @@ SLMPAPI int SLMPCALL slmp_pktio_accept(slmp_pktio_t *pktio);
  * \param[in] buf Pointer to the data to be sent.
  * \param[in] len Byte length of the data.
  *
- * \return If the function succeeds, it returns the value of 0. 
- * If the function fails, the function returns a value of -1. Call
+ * \return If the function succeeds, it returns number of bytes sent. 
+ * If the function fails, the function returns a value of 0. Call
  * slmp_get_errno() to get the error number.
  */
 SLMPAPI size_t SLMPCALL slmp_pktio_send(slmp_pktio_t *pktio, void *buf, size_t len);
@@ -120,8 +120,8 @@ SLMPAPI size_t SLMPCALL slmp_pktio_send(slmp_pktio_t *pktio, void *buf, size_t l
  * or equal to zero, the default timeout value associated with 
  * the specified packet IO object will be used.
  *
- * \return If the function succeeds, it returns the value of 0. 
- * If the function fails, the function returns a value of -1. Call
+ * \return If the function succeeds, it returns number of bytes received.
+ * If the function fails, the function returns a value of 0. Call
  * slmp_get_errno() to get the error number.
  */
 SLMPAPI size_t SLMPCALL slmp_pktio_recv(slmp_pktio_t *pktio, void *buf, size_t len, 
@@ -133,6 +133,21 @@ SLMPAPI size_t SLMPCALL slmp_pktio_recv(slmp_pktio_t *pktio, void *buf, size_t l
  * \param[in] pktio Pointer to packet IO object.
  */
 SLMPAPI void SLMPCALL slmp_pktio_discard(slmp_pktio_t *pktio);
+
+/**
+ * \brief Set data block to be prepended onto the front of data returned by next 
+ * slmp_pktio_recv() call. 
+ *
+ * \param[in] pktio Pointer to a packet IO object.
+ * \param[in] data Pointer to the data block.
+ * \param[in] n Size of the data block.
+ *
+ * \return If the function succeeds, it returns a value of 0.
+ * If the function fails, the function returns a value of -1. Call
+ * slmp_get_errno() to get the error number.
+ */
+SLMPAPI int SLMPCALL slmp_pktio_set_recv_data_preamble(
+    slmp_pktio_t *pktio, void* data, size_t n);
 
 /**
  * \brief For TCP/IP, this function returns the IP address of the station

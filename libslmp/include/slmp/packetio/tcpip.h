@@ -14,8 +14,11 @@
 
 #include "slmp/slmpapi.h"
 
+/** Default connection timeout (sec). 0 for infinite. */
 #define TCPIP_PKTIO_DEFAULT_CONN_TIMEOUT       2
-#define TCPIP_PKTIO_DEFAULT_ACCEPT_TIMEOUT     5
+/** Default accept timeout (sec). 0 for infinite. */
+#define TCPIP_PKTIO_DEFAULT_ACCEPT_TIMEOUT     0
+/** Default receive timeout (sec). 0 for infinite. */
 #define TCPIP_PKTIO_DEFAULT_RECV_TIMEOUT       2
 
 #ifdef __cplusplus

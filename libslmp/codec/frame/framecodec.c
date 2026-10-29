@@ -37,6 +37,7 @@ SLMPAPI size_t SLMPCALL slmp_encode_frame(
     case SLMP_FTYPE_REQ_EMT:
     case SLMP_FTYPE_PUSH_EMT:
     case SLMP_FTYPE_RES_EMT:
+    case SLMP_FTYPE_ERR_EMT:
         encode_frame = &encode_frame_emt;
         break;
     case SLMP_FTYPE_REQ_LMT:
@@ -99,23 +100,19 @@ SLMPAPI slmp_frame_t* SLMPCALL slmp_decode_frame(
     switch (ftype) {
     case SLMP_FTYPE_REQ_ST:
     case SLMP_FTYPE_RES_ST:
-    case SLMP_FTYPE_ERR_ST:
         decode_frame = &decode_frame_st;
         break;
     case SLMP_FTYPE_REQ_MT:
     case SLMP_FTYPE_RES_MT:
-    case SLMP_FTYPE_ERR_MT:
         decode_frame = &decode_frame_mt;
         break;
     case SLMP_FTYPE_REQ_EMT:
     case SLMP_FTYPE_PUSH_EMT:
     case SLMP_FTYPE_RES_EMT:
-    case SLMP_FTYPE_ERR_EMT:
         decode_frame = &decode_frame_emt;
         break;
     case SLMP_FTYPE_REQ_LMT:
     case SLMP_FTYPE_RES_LMT:
-    case SLMP_FTYPE_ERR_LMT:
         assert(type != SLMP_ASCII_STREAM);
         if (type == SLMP_ASCII_STREAM) {
             slmp_set_errno(SLMP_ERROR_BAD_STREAM_TYPE);
@@ -131,6 +128,8 @@ SLMPAPI slmp_frame_t* SLMPCALL slmp_decode_frame(
     slmp_set_errno(SLMP_ERROR_SUCCESS);
     return decode_frame(stream, len, type, len_remains);
 }
+
+/*****************************************************************************/
 
 size_t encode_frame_st(slmp_frame_t *frame, uint8_t *stream, int type)
 {
@@ -297,6 +296,7 @@ size_t encode_frame_emt(slmp_frame_t *frame, uint8_t *stream, int type)
         ENCODE_FRAME_CASE_FTYPE(REQ_EMT)
         ENCODE_FRAME_CASE_FTYPE(RES_EMT)
         ENCODE_FRAME_CASE_FTYPE(PUSH_EMT)
+        ENCODE_FRAME_CASE_FTYPE(ERR_EMT)
     ENCODE_FRAME_END_SWITCH_FTYPE()
     ENCODE_FRAME_INITIALIZE_LOCAL_VARIABLES_2()
 
@@ -349,7 +349,9 @@ size_t encode_frame_emt(slmp_frame_t *frame, uint8_t *stream, int type)
         encnp(frame->raw_data, &(stream[m * SLMP_EMT_REQDATA_OFFSET]),
             raw_data_len);
         break;
-    case SLMP_FTYPE_RES_EMT:
+    case SLMP_FTYPE_RES_EMT:    
+        /* fall-through */
+    case SLMP_FTYPE_ERR_EMT:
         /* Command */
         enc16b(frame->cmd_data.emt.cmd, &(stream[m * SLMP_EMT_CMD_OFFSET]));
         /* Sub-command */
@@ -615,6 +617,15 @@ slmp_frame_t* decode_frame_emt(uint8_t *stream, size_t len, int type, size_t *le
 {
     DECODE_FRAME_DECLARE_LOCAL_VARIABLES()
     DECODE_FRAME_INITIALIZE_LOCAL_VARIABLES_1(EMT)
+    
+    /* Check end_code for EMT response and set error mask if needed */
+    if (ftype == SLMP_FTYPE_RES_EMT) {
+        dec16bp(&(stream[m * SLMP_EMT_ENDCODE_OFFSET]), &end_code);
+        if (end_code > 0) {
+            ftype |= SLMP_FTYPE_ERR_MASK;
+        }
+    }    
+        
     DECODE_FRAME_BEGIN_SWITCH_FTYPE()
         DECODE_FRAME_CASE_FTYPE(REQ, EMT)
         DECODE_FRAME_CASE_FTYPE(RES, EMT)
@@ -645,15 +656,6 @@ slmp_frame_t* decode_frame_emt(uint8_t *stream, size_t len, int type, size_t *le
     dec16bp(&(stream[m * SLMP_EMT_SUBHDR_FLGM_OFFSET]),
         &(frame->sub_hdr.emt.flgm));
     frame->sub_hdr.emt.data_len = dl;
-
-    /* Check end_code for EMT response and set error mask if needed */
-    if (ftype == SLMP_FTYPE_RES_EMT) {
-        dec16bp(&(stream[m * SLMP_EMT_ENDCODE_OFFSET]), &end_code);
-        if (end_code > 0) {
-            ftype |= SLMP_FTYPE_ERR_MASK;
-            frame->hdr.ftype = ftype;
-        }
-    }
 
     switch (ftype) {
     case SLMP_FTYPE_REQ_EMT:
