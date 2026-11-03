@@ -83,7 +83,7 @@ typedef size_t (*pfn_pktio_send_t)(pktio_t* /* pktio */, void* /* buf */,
     size_t /* len */);
 typedef size_t (*pfn_pktio_recv_t)(pktio_t* /* pktio */, void* /* buf */,
     size_t /* len */, int /* timeout */);
-typedef void (*pfn_pktio_discard_t)(pktio_t* /* pktio */);
+typedef int (*pfn_pktio_discard_t)(pktio_t* /* pktio */);
 typedef void (*pfn_pktio_free_t)(pktio_t* /* pktio */);
 
 
@@ -107,7 +107,7 @@ struct slmp_pktio {
     char peer_ipaddr[24];                           /* Peer IP address */
 
     int echo;                       /* Whether to dump traffic data */
-    int (CDECLCALL *dbgprint)(const char*, ...);    /* Debug print function */
+    int (PRINTF_CALL *dbgprint)(const char*, ...);    /* Debug print function */
 
     char* pre_recv_data;            /* Data prepended before received data */
     size_t pre_recv_data_len;

@@ -10,7 +10,7 @@
 #ifndef __LIBMELCLI_CONFIG_H__
 #define __LIBMELCLI_CONFIG_H__
 
-#define LIBMELCLI_VERSION "v1.0"
+#define LIBMELCLI_VERSION "v1.0.2"
 
 #undef HAVE_STDINT_H
 #undef HAVE_STRLCPY

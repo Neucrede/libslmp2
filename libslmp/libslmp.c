@@ -164,7 +164,11 @@ SLMPAPI void SLMPCALL slmp_milli_sleep(int ms)
 
 #include <windows.h>
 
+#ifdef __WATCOMC__
+BOOL WINAPI LibMain(HINSTANCE hInstDll, DWORD dwReason, LPVOID lpvReserved)
+#else
 BOOL WINAPI DllMain(HINSTANCE hInstDll, DWORD dwReason, LPVOID lpvReserved)
+#endif
 {
     BOOL bRet = TRUE;
 

@@ -25,7 +25,7 @@ static int _disconnect(pktio_t *pktio);
 static int _accept(pktio_t *pktio);
 static size_t _send(pktio_t *pktio, void* buf, size_t len);
 static size_t _recv(pktio_t *pktio, void* buf, size_t len, int timeout);
-static void _discard(pktio_t *pktio);
+static int _discard(pktio_t *pktio);
 static void _free(pktio_t *pktio);
 
 static pktio_backend_t backend = {
@@ -552,7 +552,7 @@ static size_t _recv(pktio_t *pktio, void* buf, size_t len, int timeout)
     return 0;
 }
 
-static void _discard(pktio_t *pktio)
+static int _discard(pktio_t *pktio)
 {
     _ctx_t *ctx;
     int fd = pktio->fd;
@@ -560,6 +560,8 @@ static void _discard(pktio_t *pktio)
     char buf[512];
     struct timeval tv;
     fd_set rfds;
+    uint64_t t0 = get_current_timestamp(), t = t0;
+    const int timeout = 5000;   /* milliseconds */
 
     assert(pktio->type == SLMP_PKTIO_UDPIP);
     ctx = (_ctx_t*)(pktio->backend_ctx);
@@ -567,7 +569,7 @@ static void _discard(pktio_t *pktio)
 
     if (fd < 0) {
         slmp_set_errno(SLMP_ERROR_NO_CONNECTION);
-        return;
+        return -1;
     }
 
     pktio->peer_ipaddr[0] = 0x00;
@@ -598,7 +600,15 @@ static void _discard(pktio_t *pktio)
         else {
             break;
         }
-    } while (ret > 0);
+    } while ((ret > 0) && (t - t0 < timeout));
+
+    if (t - t0 >= timeout) {
+        slmp_set_errno(SLMP_ERROR_DATA_TOO_LARGE);
+        return -1;
+    }
+
+    slmp_set_errno(SLMP_ERROR_SUCCESS);
+    return 0;
 }
 
 static void _free(pktio_t *pktio)

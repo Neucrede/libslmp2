@@ -20,7 +20,7 @@ public: /* IUnknown */
 
 private:
     friend class Impl;
-    class Impl : public IMELSECClientContext
+    class Impl : public IMELSECClientContext2
     {
     public:
         Impl(MELSECClient* pBackObj, IUnknown* pUnkOuter);
@@ -201,6 +201,13 @@ private:
         virtual HRESULT STDMETHODCALLTYPE LoopbackTest(
             /* [retval][out] */ VARIANT_BOOL *pbSuccess);
 
+    public: /* IMELSECClientContext2 */
+        virtual /* [propget][helpstring] */ HRESULT STDMETHODCALLTYPE get_FrameType( 
+            /* [retval][out] */ FrameType __RPC_FAR *pType);
+        
+        virtual /* [propput][helpstring] */ HRESULT STDMETHODCALLTYPE put_FrameType( 
+            /* [in] */ FrameType type);
+
     private:
         HRESULT BatchReadImpl(BSTR bstrAddress, short cUnitCount, SAFEARRAY **pparrValues, 
             VARTYPE vt);
@@ -220,6 +227,7 @@ private:
 
     private:
         ProtocolType m_proto;
+        FrameType m_frameType;
         
         BSTR m_bstrRemoteIPAddress;
         SHORT m_iRemotePort;

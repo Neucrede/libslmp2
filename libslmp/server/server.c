@@ -34,7 +34,7 @@ SLMPAPI slmp_server_t* SLMPCALL slmp_server_new(
     memcpy(&(svr->cfg), cfg, sizeof(slmp_server_config_t));
     
     svr->cfg.ipaddr[sizeof(svr->cfg.ipaddr) - 1] = 0x00;
-    if (strlen(svr->cfg.ipaddr) < 0) {
+    if (strlen(svr->cfg.ipaddr) == 0) {
         strlcpy(svr->cfg.ipaddr, SLMP_SERVER_IP_ADDRESS_ANY,
             sizeof(svr->cfg.ipaddr));
     }

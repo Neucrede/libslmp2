@@ -28,9 +28,8 @@
     #endif
 #endif
 
-
 #if defined(_WIN32)
-    #if defined(_MSC_VER)
+    #if defined(_MSC_VER) || defined(__WATCOMC__)
         #define MELCLICALL __stdcall
         #define CDECLCALL __cdecl
     #elif defined(__MINGW32__)
@@ -40,6 +39,12 @@
         #define MELCLICALL
         #define CDECLCALL
     #endif
+#endif
+
+#ifdef __WATCOMC__
+#   define PRINTF_CALL
+#else
+#   define PRINTF_CALL CDECLCALL
 #endif
 
 

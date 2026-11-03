@@ -2,7 +2,7 @@ VERSION 5.00
 Begin VB.Form FrmMain 
    BorderStyle     =   1  'Fixed Single
    Caption         =   "Neucrede's MELSECClient Demo Application"
-   ClientHeight    =   4575
+   ClientHeight    =   5670
    ClientLeft      =   45
    ClientTop       =   330
    ClientWidth     =   6030
@@ -19,12 +19,44 @@ Begin VB.Form FrmMain
    LinkTopic       =   "Form1"
    MaxButton       =   0   'False
    MinButton       =   0   'False
-   ScaleHeight     =   4575
+   ScaleHeight     =   5670
    ScaleWidth      =   6030
    StartUpPosition =   3  '´°¿ÚÈ±Ê¡
+   Begin VB.Frame Frame2 
+      Caption         =   "Frame Type"
+      Height          =   975
+      Left            =   120
+      TabIndex        =   21
+      Top             =   4560
+      Width           =   5775
+      Begin VB.CommandButton cmdSetFrameTypeMT 
+         Caption         =   "Set MT"
+         Height          =   375
+         Left            =   3960
+         TabIndex        =   24
+         Top             =   360
+         Width           =   1575
+      End
+      Begin VB.CommandButton cmdSetFrameTypeST 
+         Caption         =   "Set ST"
+         Height          =   375
+         Left            =   2280
+         TabIndex        =   23
+         Top             =   360
+         Width           =   1575
+      End
+      Begin VB.CommandButton cmdGetFrameType 
+         Caption         =   "Get"
+         Height          =   375
+         Left            =   240
+         TabIndex        =   22
+         Top             =   360
+         Width           =   1575
+      End
+   End
    Begin VB.Timer tmrUpdateUI 
       Interval        =   100
-      Left            =   3840
+      Left            =   3480
       Top             =   0
    End
    Begin VB.Frame sbFunctions 
@@ -284,6 +316,22 @@ Done:
     g_bConnected = False
 End Sub
 
+Private Sub cmdGetFrameType_Click()
+    Dim mc2 As IMELSECClientContext2
+    Dim ft As FrameType
+    
+    Set mc2 = g_mc
+    ft = mc2.FrameType
+    
+    Select Case ft
+    Case ST
+        MsgBox "ST", vbInformation, "Frame Type"
+    Case MT
+        MsgBox "MT", vbInformation, "Frame Type"
+    End Select
+    
+End Sub
+
 Private Sub cmdLoopbackTest_Click()
     On Error GoTo ErrHandler
     
@@ -323,6 +371,24 @@ Private Sub cmdRemote_Click()
     End If
 End Sub
 
+Private Sub cmdSetFrameTypeMT_Click()
+    Dim mc2 As IMELSECClientContext2
+    
+    Set mc2 = g_mc
+    mc2.FrameType = MT
+    
+    cmdGetFrameType_Click
+End Sub
+
+Private Sub cmdSetFrameTypeST_Click()
+    Dim mc2 As IMELSECClientContext2
+    
+    Set mc2 = g_mc
+    mc2.FrameType = ST
+    
+    cmdGetFrameType_Click
+End Sub
+
 Private Sub Form_Load()
     cmbProtocol.ListIndex = 0
 End Sub
@@ -344,4 +410,6 @@ Private Sub tmrUpdateUI_Timer()
     txtLocalPort.Enabled = (Not g_bConnected) And bUdpIp
     cmdConnect.Enabled = Not g_bConnected
     cmdDisconnect.Enabled = g_bConnected
+    
+    sbFunctions.Enabled = g_bConnected
 End Sub

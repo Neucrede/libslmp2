@@ -1,0 +1,11 @@
+*.lst
+*.err
+*.dll
+*.imp
+*.lib
+*.res
+*.mk*
+*.lk*
+*.sym
+*.map
+

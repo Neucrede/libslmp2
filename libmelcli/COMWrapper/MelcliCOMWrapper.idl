@@ -15,6 +15,12 @@ typedef enum
     ClearAll                = (1 << 7)
 } ClearMode;
 
+typedef enum
+{
+    ST = 1,
+    MT = 2
+} FrameType;
+
 /* ***********************************************************************/
 
 [
@@ -172,6 +178,22 @@ interface IMELSECClientContext : IDispatch
 };
 
 [
+    object,
+    uuid(BB9C2540-7AE5-4c1b-A8F1-B9BF87EE0002),
+    helpstring("IMELSECClientContext2 Interface"),
+    pointer_default(unique),
+    oleautomation,
+    dual
+]
+interface IMELSECClientContext2 : IMELSECClientContext
+{
+    [helpstring("Frame type.")]
+    [propget] HRESULT FrameType([out, retval] FrameType* pType);
+    [helpstring("Frame type.")]
+    [propput] HRESULT FrameType([in] FrameType type);
+};
+
+[
     uuid(BB9C2540-7AE5-4c1b-A8F1-B9BF87EEFF01),
     helpstring("Neucrede's MelcliCOMWrapper Library"),
     version(1.0)
@@ -188,6 +210,7 @@ library MelcliCOMWrapper
     coclass MELSECClient
     {
         [default] interface IMELSECClientContext;
+        interface IMELSECClientContext2;
         interface ISupportErrorInfo;
     };
 

@@ -131,8 +131,12 @@ SLMPAPI size_t SLMPCALL slmp_pktio_recv(slmp_pktio_t *pktio, void *buf, size_t l
  * \brief Remove all data from input buffer.
  *
  * \param[in] pktio Pointer to packet IO object.
+ *
+ * \return If the function succeeds, it returns a value of 0.
+ * If the function fails, the function returns a value of -1. Call
+ * slmp_get_errno() to get the error number.
  */
-SLMPAPI void SLMPCALL slmp_pktio_discard(slmp_pktio_t *pktio);
+SLMPAPI int SLMPCALL slmp_pktio_discard(slmp_pktio_t *pktio);
 
 /**
  * \brief Set data block to be prepended onto the front of data returned by next 
@@ -195,7 +199,7 @@ SLMPAPI int SLMPCALL slmp_pktio_set_timeout(slmp_pktio_t *pktio, int type, int t
  * `printf()` does.
  */
 SLMPAPI int SLMPCALL slmp_pktio_set_dbgprint_fcn(
-    slmp_pktio_t *pktio, int (CDECLCALL* pfn)(const char*, ...));
+    slmp_pktio_t *pktio, int (PRINTF_CALL* pfn)(const char*, ...));
 
 #ifdef __cplusplus
 }

@@ -112,7 +112,7 @@ typedef slmp_server_hook_loop_iter_t slmp_server_hook_post_loop_iter_t;
 /** @} */
 
 /** \brief Formatted print function used by debug and logging print */
-typedef int (CDECLCALL *slmp_server_printf_t)(const char*, ...);
+typedef int (PRINTF_CALL *slmp_server_printf_t)(const char*, ...);
 
 /** \brief Server configuration */
 typedef struct slmp_server_config

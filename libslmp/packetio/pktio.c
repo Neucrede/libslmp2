@@ -6,6 +6,8 @@
 
 #include <stdio.h>
 #include <assert.h>
+#include <string.h>
+#include <stdlib.h>
 
 #include "slmp/slmpdef.h"
 #include "slmp/slmperr.h"
@@ -161,11 +163,9 @@ SLMPAPI size_t SLMPCALL slmp_pktio_recv(slmp_pktio_t *pktio, void *buf, size_t l
                 (char*)(buf) + pktio->pre_recv_data_len, 
                 len - pktio->pre_recv_data_len, 
                 timeout);
-            
-            if (bytes_recv > 0) {
-                bytes_recv += pktio->pre_recv_data_len;
-                pktio->pre_recv_data_len = 0;
-            }
+                        
+            bytes_recv += pktio->pre_recv_data_len;
+            pktio->pre_recv_data_len = 0;
         }
     }
     else {
@@ -180,17 +180,17 @@ SLMPAPI size_t SLMPCALL slmp_pktio_recv(slmp_pktio_t *pktio, void *buf, size_t l
     return bytes_recv;
 }
 
-SLMPAPI void SLMPCALL slmp_pktio_discard(slmp_pktio_t *pktio)
+SLMPAPI int SLMPCALL slmp_pktio_discard(slmp_pktio_t *pktio)
 {
     assert(pktio != NULL);
     if (pktio == NULL) {
         slmp_set_errno(SLMP_ERROR_INVALID_ARGUMENTS);
-        return;
+        return -1;
     }
 
     pktio->pre_recv_data_len = 0;
 
-    pktio->backend->pfn_discard(pktio);
+    return pktio->backend->pfn_discard(pktio);
 }
 
 SLMPAPI int SLMPCALL slmp_pktio_set_recv_data_preamble(slmp_pktio_t *pktio, void *data, size_t n)
@@ -296,7 +296,7 @@ SLMPAPI int SLMPCALL slmp_pktio_set_timeout(slmp_pktio_t *pktio, int type,
 }
 
 SLMPAPI int SLMPCALL slmp_pktio_set_dbgprint_fcn(
-    slmp_pktio_t *pktio, int (CDECLCALL* pfn)(const char*, ...))
+    slmp_pktio_t *pktio, int (PRINTF_CALL* pfn)(const char*, ...))
 {
     assert(pktio != NULL);
     if (pktio == NULL) {

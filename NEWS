@@ -1,0 +1,14 @@
+Version 1.0.2
+===============
+
+    * libslmp: add EMT error frame support (Siriling)
+    * libslmp: fix SLMP_ERROR_DATA_TOO_LARGE error in segm_and_send_lmt_frame() 
+        if raw_data_len is 0 (Neucrede)
+    * libslmp: fix receive_frames() discarding partial frames might cause subsequent 
+        receive_frames() calls to fail until receive buffer been emptied (Neucrede)
+    * libmelcli: add hexadecimal address parser (Siriling)
+    * libmelcli: add ST/3E frame support (Siriling)
+    * libmelcli: fix 65535+ frame serial mismatch error (Neucrede)
+    * MelcliCOMWrapper: add IMELSECClientContext2 interface (Neucrede)
+    * build: fix VS6 resource compiler error RC4214 on Windows NT 4 English version (Neucrede)
+

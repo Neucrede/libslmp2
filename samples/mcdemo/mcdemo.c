@@ -17,23 +17,13 @@
 #endif
 
 
-/* ****************************************************************************
- * It may be needed to modify these values according to actual hardware 
- * configuration.
- */
-#if 0   /* 1: UDP/IP, 0: TCP/IP */
-    int ctxtype = MELCLI_TYPE_UDPIP;
-    char target_ip_addr[64] = "192.168.128.200";
-    int target_port = 8889;
-    char local_ip_addr[64] = "192.168.128.1";
-    int local_port = 0;
-#else
-    int ctxtype = MELCLI_TYPE_TCPIP;
-    char target_ip_addr[64] = "192.168.128.200";
-    int target_port = 8888;
-    char local_ip_addr[64] = "0.0.0.0";
-    int local_port = 0;
-#endif
+int ctxtype = MELCLI_TYPE_TCPIP;
+char target_ip_addr[64] = "192.168.128.200";
+int target_port = 8888;
+char local_ip_addr[64] = "0.0.0.0";
+int local_port = 0;
+int frame_type = MELCLI_FRAME_TYPE_MT;
+
 const melcli_station_t target_station = MELCLI_CONNECTED_STATION;
 const melcli_timeout_t timeout = MELCLI_TIMEOUT_DEFAULT;
 /* ****************************************************************************/
@@ -130,6 +120,21 @@ static int init()
             scanf("%s", local_ip_addr);
         }
     }
+
+    printf("Frame type? 1 = ST; 2 = MT\n");
+    _FLUSH_STDIN()
+    ch = getchar();
+    switch (ch) {
+    case '1':
+        frame_type = MELCLI_FRAME_TYPE_ST;
+        break;
+    case '2':
+        frame_type = MELCLI_FRAME_TYPE_MT;
+        break;
+    default:
+        frame_type = MELCLI_FRAME_TYPE_DEFAULT;
+        break;
+    }
         
     /* Create a connection context and store it into `g_ctx`. */
     g_ctx = melcli_new_context(ctxtype, target_ip_addr, target_port,
@@ -138,6 +143,8 @@ static int init()
         printf("Failed to create connection context. \n");
         return -1;
     }
+
+    melcli_set_frame_type(g_ctx, frame_type);
     
     /* Enable debug information printout. */
     melcli_set_debug(g_ctx, 1);

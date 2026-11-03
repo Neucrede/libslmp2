@@ -30,9 +30,16 @@
         #pragma message("WARNING: Address width is unknown for target platform. Assuming 32 bit.")
         #pragma pack(4)
     #endif
+#elif defined(__WATCOMC__)
+    #if defined(__386__)
+        #pragma pack(4)
+    #elif defined(__I86__)
+        #error "16-bit target systems not supported."
+    #endif
 #else
     #pragma message("WARNING: Address width is unknown for target platform. Assuming 32 bit.")
     #pragma pack(4)
 #endif
 
 #endif /* __PUSHPACK4__ */
+

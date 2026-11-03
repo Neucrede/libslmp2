@@ -21,6 +21,8 @@ public interface MelcliLibrary extends Library {
             String localIPAddress, int localPort, Station.ByReference station,
             Timeout.ByReference timeout);
     void melcli_free_context(Pointer ctx);
+    int melcli_get_frame_type();
+    int melcli_set_frame_type(Pointer ctx, int type);
     int melcli_connect(Pointer ctx);
     void melcli_disconnect(Pointer ctx);
     void melcli_free(Pointer p);

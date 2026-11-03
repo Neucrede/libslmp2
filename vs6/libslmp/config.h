@@ -10,7 +10,7 @@
 #ifndef __LIBSLMP_CONFIG_H__
 #define __LIBSLMP_CONFIG_H__
 
-#define LIBSLMP_VERSION "v1.0"
+#define LIBSLMP_VERSION "v1.0.2"
 
 /* #undef HAVE_STRLCPY */
 

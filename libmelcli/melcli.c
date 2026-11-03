@@ -180,7 +180,7 @@ MELCLIAPI void MELCLICALL melcli_free_context(
 }
 
 MELCLIAPI void MELCLICALL melcli_set_dbgprint_fcn(
-    melcli_ctx_t* ctx, int (CDECLCALL* pfn)(const char*, ...))
+    melcli_ctx_t* ctx, int (PRINTF_CALL* pfn)(const char*, ...))
 {
     if (ctx == NULL) {
         return;

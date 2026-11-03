@@ -6,8 +6,8 @@
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_NEU)
 #ifdef _WIN32
-LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
-#pragma code_page(936)
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
 #endif //_WIN32
 
 #ifndef _MAC
@@ -17,8 +17,8 @@ LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,0,0,1
- PRODUCTVERSION 1,0,0,1
+ FILEVERSION 1,0,2,1
+ PRODUCTVERSION 1,0,2,1
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x29L
@@ -35,15 +35,15 @@ BEGIN
         BEGIN
             VALUE "Comments", "\0"
             VALUE "CompanyName", "Neucrede\0"
-            VALUE "FileDescription", "SLMP client library dedicated for Mitsubishi(R) MELSEC(R) series PLCs\0"
-            VALUE "FileVersion", "1.0\0"
+            VALUE "FileDescription", "SLMP client library for Mitsubishi(R) MELSEC(R) series PLCs\0"
+            VALUE "FileVersion", "1.0.2\0"
             VALUE "InternalName", "libmelcli.dll\0"
-            VALUE "LegalCopyright", "Copyright (C) 2021-2025 Neucrede <neucrede@sina.com>\0"
+            VALUE "LegalCopyright", "Copyright (C) 2021-2026 Neucrede <neucrede@sina.com>\0"
             VALUE "LegalTrademarks", "BSD 2-Clause License\0"
             VALUE "OriginalFilename", "libmelcli.dll\0"
             VALUE "PrivateBuild", "\0"
             VALUE "ProductName", "libslmp\0"
-            VALUE "ProductVersion", "1.0\0"
+            VALUE "ProductVersion", "1.0.2\0"
             VALUE "SpecialBuild", "\0"
         END
     END
@@ -64,8 +64,8 @@ END
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
 #ifdef _WIN32
-LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
-#pragma code_page(936)
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
 #endif //_WIN32
 
 #ifdef APSTUDIO_INVOKED

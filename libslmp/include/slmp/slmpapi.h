@@ -31,7 +31,7 @@
 
 
 #if defined(_WIN32)
-    #if defined(_MSC_VER)
+    #if defined(_MSC_VER) || defined(__WATCOMC__)
         #define SLMPCALL __stdcall
         #define CDECLCALL __cdecl
     #elif defined(__MINGW32__)
@@ -42,6 +42,16 @@
         #define CDECLCALL
     #endif
 #endif
+
+
+#ifdef __WATCOMC__
+#   define MALLOC_CALL
+#   define PRINTF_CALL
+#else
+#   define MALLOC_CALL CDECLCALL
+#   define PRINTF_CALL CDECLCALL
+#endif
+
 
 
 #endif /* __SLMPAPI_H__ */

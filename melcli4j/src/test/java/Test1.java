@@ -3,6 +3,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import net.libslmp.melcli4j.FrameType;
 import net.libslmp.melcli4j.MELSECClient;
 import net.libslmp.melcli4j.MELSECClientBuilder;
 import org.junit.jupiter.api.Test;
@@ -20,7 +21,11 @@ public class Test1 {
     @org.junit.jupiter.api.BeforeAll
     public static void setUpClass() throws Exception {
         MELSECClientBuilder mcb = new MELSECClientBuilder();
-        mc = mcb.remoteIPAddress("192.168.128.200").remotePort(8888).protocol(Protocol.TCPIP).build();
+        mc = mcb.remoteIPAddress("192.168.128.200")
+                .remotePort(8888)
+                .protocol(Protocol.TCPIP)
+                .frameType(FrameType.MT)
+                .build();
         
         System.out.println("Connecting...");
         mc.connect();

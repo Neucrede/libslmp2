@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.libslmp</groupId>
     <artifactId>melcli4j</artifactId>
-    <version>1.0</version>
+    <version>1.0.2</version>
     <packaging>jar</packaging>
     <build>
         <plugins>
@@ -12,7 +12,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.22.0</version>
                 <configuration>
-<!--                    <skipTests>true</skipTests>-->
+                    <skipTests>true</skipTests>
                 </configuration>
             </plugin>
             
@@ -40,7 +40,7 @@
                 <configuration>
                     <locale>en_US</locale>
                     <bottom>
-                        <![CDATA[Copyright 2021-2023 Neucrede &lt;neucrede@sina.com&gt;]]>
+                        <![CDATA[Copyright 2021-Now Neucrede &lt;neucrede@sina.com&gt;]]>
                     </bottom>
                 </configuration>
             </plugin>

@@ -26,7 +26,7 @@ static int _disconnect(pktio_t *pktio);
 static int _accept(pktio_t *pktio);
 static size_t _send(pktio_t *pktio, void* buf, size_t len);
 static size_t _recv(pktio_t *pktio, void* buf, size_t len, int timeout);
-static void _discard(pktio_t *pktio);
+static int _discard(pktio_t *pktio);
 static void _free(pktio_t *pktio);
 
 static pktio_backend_t backend = {
@@ -734,7 +734,7 @@ static size_t _recv(pktio_t *pktio, void* buf, size_t len, int timeout)
     return 0;
 }
 
-static void _discard(pktio_t *pktio)
+static int _discard(pktio_t *pktio)
 {
     _ctx_t *ctx;
     int fd;
@@ -742,6 +742,8 @@ static void _discard(pktio_t *pktio)
     char buf[512];
     fd_set rfds;
     struct timeval tv;
+    uint64_t t0 = get_current_timestamp(), t = t0;
+    const int timeout = 5000;   /* milliseconds */
     
     assert(pktio->type == SLMP_PKTIO_TCPIP);
     ctx = (_ctx_t*)(pktio->backend_ctx);
@@ -757,12 +759,12 @@ static void _discard(pktio_t *pktio)
     default:
         assert(0 && "Packet IO context corrupted.");
         slmp_set_errno(SLMP_ERROR_PKTIO_CONTEXT_CORRUPTED);
-        return;
+        return -1;
     }
 
     if (fd < 0) {
         slmp_set_errno(SLMP_ERROR_NO_CONNECTION);
-        return;
+        return -1;
     }
     
     if (ctx->recv_timeout > 0) {
@@ -787,11 +789,20 @@ static void _discard(pktio_t *pktio)
         ret = select(fd + 1, &rfds, NULL, NULL, &tv); 
         if (ret > 0) {
             ret = recv(fd, buf, sizeof(buf), 0);
+            t = get_current_timestamp();
         }
         else {
             break;
         }
-    } while (ret > 0);
+    } while ((ret > 0) && (t - t0 < timeout));
+
+    if (t - t0 >= timeout) {
+        slmp_set_errno(SLMP_ERROR_DATA_TOO_LARGE);
+        return -1;
+    }
+
+    slmp_set_errno(SLMP_ERROR_SUCCESS);
+    return 0;
 }
 
 static void _free(pktio_t *pktio)

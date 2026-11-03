@@ -76,7 +76,7 @@ typedef struct melcli_ctx {
     slmp_pktio_t* pktio;
     melcli_station_t station;   /* default target station */
     melcli_timeout_t timeout;
-    int (CDECLCALL *dbgprint)(const char*, ...);
+    int (PRINTF_CALL *dbgprint)(const char*, ...);
     int debug;          /* whether to enable debug print */
     uint16_t serial;    /* next frame serial */
     int frame_type;     /* MELCLI_FRAME_TYPE_3E or MELCLI_FRAME_TYPE_4E */

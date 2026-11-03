@@ -10,6 +10,7 @@ import com.sun.jna.Pointer;
 public class MELSECClientBuilder {
 
     private Protocol protocol;
+    private FrameType frameType;
     private String remoteIPAddress;
     private int remotePort;
     private String localIPAddress;
@@ -19,6 +20,7 @@ public class MELSECClientBuilder {
 
     public MELSECClientBuilder() {
         protocol = Protocol.TCPIP;
+        frameType = FrameType.MT;
         remoteIPAddress = "127.0.0.1";
         remotePort = 8888;
         localIPAddress = "0.0.0.0";
@@ -29,6 +31,11 @@ public class MELSECClientBuilder {
 
     public MELSECClientBuilder protocol(Protocol protocol) {
         this.protocol = protocol;
+        return this;
+    }
+    
+    public MELSECClientBuilder frameType(FrameType ft) {
+        this.frameType = ft;
         return this;
     }
 
@@ -101,6 +108,8 @@ public class MELSECClientBuilder {
             inst.melcli_uninit();
             throw new IllegalArgumentException();
         }
+        
+        inst.melcli_set_frame_type(pCtx, frameType.toInt());
         
         return new MELSECClientImpl(pCtx);
     }

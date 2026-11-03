@@ -17,13 +17,13 @@
 #include "slmpapi.h"
 
 /** Memory allocator function prototype. */
-typedef void* (CDECLCALL *pfn_slmp_malloc_t)(size_t /* size */);
+typedef void* (MALLOC_CALL *pfn_slmp_malloc_t)(size_t /* size */);
 
 /** Array memory allocator function prototype. */
-typedef void* (CDECLCALL *pfn_slmp_calloc_t)(size_t /* num */, size_t /* size */);
+typedef void* (MALLOC_CALL *pfn_slmp_calloc_t)(size_t /* num */, size_t /* size */);
 
 /** Memory deallocator function prototype. */
-typedef void (CDECLCALL *pfn_slmp_free_t)(void* /* ptr */);
+typedef void (MALLOC_CALL *pfn_slmp_free_t)(void* /* ptr */);
 
 #ifdef __cplusplus
 extern "C" {

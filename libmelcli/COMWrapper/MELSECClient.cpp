@@ -42,7 +42,11 @@ STDMETHODIMP MELSECClient::QueryInterface(REFIID riid, LPVOID* ppv)
     }
     else if ((riid == IID_IMELSECClientContext) || (riid == IID_IDispatch)) {
         m_impl->AddRef();
-        *ppv = m_impl;
+        *ppv = reinterpret_cast<IMELSECClientContext*>(m_impl);
+    }
+    else if (riid == IID_IMELSECClientContext2) {
+        m_impl->AddRef();
+        *ppv = reinterpret_cast<IMELSECClientContext2*>(m_impl);
     }
     else if (riid == IID_ISupportErrorInfo) {
         m_supportErrorInfoImpl->AddRef();
@@ -114,6 +118,7 @@ MELSECClient::Impl::Impl(MELSECClient* pBackObj, IUnknown* pUnkOuter)
     m_pUnkOuter = (pUnkOuter != NULL) ? pUnkOuter : pBackObj;
 
     m_proto = UDPIP;
+    m_frameType = MT;
     
     m_bstrRemoteIPAddress = SysAllocString(L"");
     m_iRemotePort = 8889;
@@ -481,6 +486,8 @@ HRESULT MELSECClient::Impl::Connect(VARIANT_BOOL * pbSuccess)
 
     int err = melcli_connect(m_pCtx);
     if (err == MELCLI_ERROR_SUCCESS) {
+        melcli_set_frame_type(m_pCtx, (int)m_frameType);
+
         *pbSuccess = VARIANT_TRUE;
     }
     else {
@@ -861,6 +868,37 @@ HRESULT MELSECClient::Impl::LoopbackTest(VARIANT_BOOL * pbSuccess)
     } while (false);
 
     return hr;
+}
+
+HRESULT STDMETHODCALLTYPE MELSECClient::Impl::get_FrameType(FrameType __RPC_FAR *pType)
+{
+    if (pType == NULL) {
+        return E_POINTER;
+    }
+
+    if (m_pCtx != NULL) {
+        int iType = melcli_get_frame_type(m_pCtx);
+        *pType = (FrameType)(iType);
+    }
+    else {
+        *pType = m_frameType;
+    }
+    
+    return S_OK;
+}
+
+HRESULT STDMETHODCALLTYPE MELSECClient::Impl::put_FrameType(FrameType type)
+{
+    m_frameType = type;
+
+    if (m_pCtx != NULL) {
+        int iType = (int)(type);
+        melcli_set_frame_type(m_pCtx, iType);
+
+        return (iType == melcli_get_frame_type(m_pCtx)) ? S_OK : E_INVALIDARG;
+    }
+    
+    return S_OK;
 }
 
 /* **************************************************************************/
