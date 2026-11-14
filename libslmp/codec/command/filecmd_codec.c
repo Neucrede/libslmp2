@@ -222,7 +222,7 @@ SLMPAPI size_t SLMPCALL slmp_encode_res_get_file_info_entry(
         /* ext */ 
         ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->ext), 3); 
         /* attr */ 
-        ENCODE_AND_ADVANCE_STREAM_8B(cmd->attr); 
+        ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->attr), 1); 
         /* last_edit_time */ 
         ENCODE_AND_ADVANCE_STREAM_16B(cmd->last_edit_time); 
         /* last_edit_date */ 
@@ -238,7 +238,7 @@ SLMPAPI size_t SLMPCALL slmp_encode_res_get_file_info_entry(
         /* ext */ 
         ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->ext), 3); 
         /* attr */ 
-        ENCODE_AND_ADVANCE_STREAM_8B(cmd->attr); 
+        ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->attr), 1); 
         /* last_edit_time */ 
         ENCODE_AND_ADVANCE_STREAM_16B(cmd->last_edit_time); 
         /* last_edit_date */ 
@@ -267,7 +267,7 @@ SLMPAPI slmp_cmd_hdr_t* SLMPCALL slmp_decode_res_get_file_info_entry(
         /* ext */ 
         DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->ext), 3); 
         /* attr */ 
-        DECODE_AND_ADVANCE_STREAM_8B(&(cmd->attr)); 
+        DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->attr), 1); 
         /* last_edit_time */ 
         DECODE_AND_ADVANCE_STREAM_16B(&(cmd->last_edit_time)); 
         /* last_edit_date */ 
@@ -283,7 +283,7 @@ SLMPAPI slmp_cmd_hdr_t* SLMPCALL slmp_decode_res_get_file_info_entry(
         /* ext */ 
         DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->ext), 3); 
         /* attr */ 
-        DECODE_AND_ADVANCE_STREAM_8B(&(cmd->attr)); 
+        DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->attr), 1); 
         /* last_edit_time */ 
         DECODE_AND_ADVANCE_STREAM_16B(&(cmd->last_edit_time)); 
         /* last_edit_date */ 
@@ -315,7 +315,7 @@ SLMPAPI size_t SLMPCALL slmp_encode_res_get_file_info_detail_entry(
         /* ext */ 
         ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->ext), 3); 
         /* attr */ 
-        ENCODE_AND_ADVANCE_STREAM_8B(cmd->attr); 
+        ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->attr), 1); 
         /* last_edit_time */ 
         ENCODE_AND_ADVANCE_STREAM_16B(cmd->last_edit_time); 
         /* last_edit_date */ 
@@ -333,7 +333,7 @@ SLMPAPI size_t SLMPCALL slmp_encode_res_get_file_info_detail_entry(
         /* ext */ 
         ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->ext), 3); 
         /* attr */ 
-        ENCODE_AND_ADVANCE_STREAM_8B(cmd->attr); 
+        ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->attr), 1); 
         /* last_edit_time */ 
         ENCODE_AND_ADVANCE_STREAM_16B(cmd->last_edit_time); 
         /* last_edit_date */ 
@@ -364,7 +364,7 @@ SLMPAPI slmp_cmd_hdr_t* SLMPCALL slmp_decode_res_get_file_info_detail_entry(
         /* ext */ 
         DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->ext), 3); 
         /* attr */ 
-        DECODE_AND_ADVANCE_STREAM_8B(&(cmd->attr)); 
+        DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->attr), 1); 
         /* last_edit_time */ 
         DECODE_AND_ADVANCE_STREAM_16B(&(cmd->last_edit_time)); 
         /* last_edit_date */ 
@@ -382,7 +382,7 @@ SLMPAPI slmp_cmd_hdr_t* SLMPCALL slmp_decode_res_get_file_info_detail_entry(
         /* ext */ 
         DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->ext), 3); 
         /* attr */ 
-        DECODE_AND_ADVANCE_STREAM_8B(&(cmd->attr)); 
+        DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->attr), 1); 
         /* last_edit_time */ 
         DECODE_AND_ADVANCE_STREAM_16B(&(cmd->last_edit_time)); 
         /* last_edit_date */ 
@@ -421,7 +421,7 @@ SLMPAPI size_t SLMPCALL slmp_encode_req_change_file_edit_time(
         /* ext */ 
         ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->ext), 3); 
         /* attr */ 
-        ENCODE_AND_ADVANCE_STREAM_8B(cmd->attr); 
+        ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->attr), 1); 
         /* pattern */ 
         ENCODE_AND_ADVANCE_STREAM_16B(cmd->pattern); 
         /* last_edit_time */ 
@@ -442,7 +442,7 @@ SLMPAPI size_t SLMPCALL slmp_encode_req_change_file_edit_time(
         /* ext */ 
         ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->ext), 3); 
         /* attr */ 
-        ENCODE_AND_ADVANCE_STREAM_8B(cmd->attr); 
+        ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->attr), 1); 
         /* pattern */ 
         ENCODE_AND_ADVANCE_STREAM_16B(cmd->pattern); 
         /* last_edit_time */ 
@@ -476,7 +476,7 @@ SLMPAPI slmp_cmd_hdr_t* SLMPCALL slmp_decode_req_change_file_edit_time(
         /* ext */ 
         DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->ext), 3); 
         /* attr */ 
-        DECODE_AND_ADVANCE_STREAM_8B(&(cmd->attr)); 
+        DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->attr), 1); 
         /* pattern */ 
         DECODE_AND_ADVANCE_STREAM_16B(&(cmd->pattern)); 
         /* last_edit_time */ 
@@ -497,7 +497,7 @@ SLMPAPI slmp_cmd_hdr_t* SLMPCALL slmp_decode_req_change_file_edit_time(
         /* ext */ 
         DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->ext), 3); 
         /* attr */ 
-        DECODE_AND_ADVANCE_STREAM_8B(&(cmd->attr)); 
+        DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->attr), 1); 
         /* pattern */ 
         DECODE_AND_ADVANCE_STREAM_16B(&(cmd->pattern)); 
         /* last_edit_time */ 
@@ -534,7 +534,7 @@ SLMPAPI size_t SLMPCALL slmp_encode_req_change_file_info(
         /* old_ext */ 
         ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->old_ext), 3); 
         /* old_attr */ 
-        ENCODE_AND_ADVANCE_STREAM_8B(cmd->old_attr); 
+        ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->old_attr), 1); 
         /* pattern */ 
         ENCODE_AND_ADVANCE_STREAM_16B(cmd->pattern); 
         /* new_name */ 
@@ -542,7 +542,7 @@ SLMPAPI size_t SLMPCALL slmp_encode_req_change_file_info(
         /* new_ext */ 
         ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->new_ext), 3); 
         /* new_attr */ 
-        ENCODE_AND_ADVANCE_STREAM_8B(cmd->new_attr); 
+        ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->new_attr), 1); 
         /* size */ 
         ENCODE_AND_ADVANCE_STREAM_32B(cmd->size); 
         /* reserved2 */ 
@@ -561,7 +561,7 @@ SLMPAPI size_t SLMPCALL slmp_encode_req_change_file_info(
         /* old_ext */ 
         ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->old_ext), 3); 
         /* old_attr */ 
-        ENCODE_AND_ADVANCE_STREAM_8B(cmd->old_attr); 
+        ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->old_attr), 1); 
         /* pattern */ 
         ENCODE_AND_ADVANCE_STREAM_16B(cmd->pattern); 
         /* new_name */ 
@@ -569,7 +569,7 @@ SLMPAPI size_t SLMPCALL slmp_encode_req_change_file_info(
         /* new_ext */ 
         ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->new_ext), 3); 
         /* new_attr */ 
-        ENCODE_AND_ADVANCE_STREAM_8B(cmd->new_attr); 
+        ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->new_attr), 1); 
         /* size */ 
         ENCODE_AND_ADVANCE_STREAM_32B(cmd->size); 
         /* reserved2 */ 
@@ -601,7 +601,7 @@ SLMPAPI slmp_cmd_hdr_t* SLMPCALL slmp_decode_req_change_file_info(
         /* old_ext */ 
         DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->old_ext), 3); 
         /* old_attr */ 
-        DECODE_AND_ADVANCE_STREAM_8B(&(cmd->old_attr)); 
+        DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->old_attr), 1); 
         /* pattern */ 
         DECODE_AND_ADVANCE_STREAM_16B(&(cmd->pattern)); 
         /* new_name */ 
@@ -609,7 +609,7 @@ SLMPAPI slmp_cmd_hdr_t* SLMPCALL slmp_decode_req_change_file_info(
         /* new_ext */ 
         DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->new_ext), 3); 
         /* new_attr */ 
-        DECODE_AND_ADVANCE_STREAM_8B(&(cmd->new_attr)); 
+        DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->new_attr), 1); 
         /* size */ 
         DECODE_AND_ADVANCE_STREAM_32B(&(cmd->size)); 
         /* reserved2 */ 
@@ -628,7 +628,7 @@ SLMPAPI slmp_cmd_hdr_t* SLMPCALL slmp_decode_req_change_file_info(
         /* old_ext */ 
         DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->old_ext), 3); 
         /* old_attr */ 
-        DECODE_AND_ADVANCE_STREAM_8B(&(cmd->old_attr)); 
+        DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->old_attr), 1); 
         /* pattern */ 
         DECODE_AND_ADVANCE_STREAM_16B(&(cmd->pattern)); 
         /* new_name */ 
@@ -636,7 +636,7 @@ SLMPAPI slmp_cmd_hdr_t* SLMPCALL slmp_decode_req_change_file_info(
         /* new_ext */ 
         DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->new_ext), 3); 
         /* new_attr */ 
-        DECODE_AND_ADVANCE_STREAM_8B(&(cmd->new_attr)); 
+        DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->new_attr), 1); 
         /* size */ 
         DECODE_AND_ADVANCE_STREAM_32B(&(cmd->size)); 
         /* reserved2 */ 
@@ -669,7 +669,7 @@ SLMPAPI size_t SLMPCALL slmp_encode_req_file_search(
         /* ext */ 
         ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->ext), 3); 
         /* attr */ 
-        ENCODE_AND_ADVANCE_STREAM_8B(cmd->attr); 
+        ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->attr), 1); 
     } 
     else if (type == SLMP_ASCII_STREAM) { 
         /* pwd */ 
@@ -682,7 +682,7 @@ SLMPAPI size_t SLMPCALL slmp_encode_req_file_search(
         /* ext */ 
         ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->ext), 3); 
         /* attr */ 
-        ENCODE_AND_ADVANCE_STREAM_8B(cmd->attr); 
+        ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->attr), 1); 
     } 
 
     return min_buf_size; 
@@ -708,7 +708,7 @@ SLMPAPI slmp_cmd_hdr_t* SLMPCALL slmp_decode_req_file_search(
         /* ext */ 
         DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->ext), 3); 
         /* attr */ 
-        DECODE_AND_ADVANCE_STREAM_8B(&(cmd->attr)); 
+        DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->attr), 1); 
     } 
     else if (type == SLMP_ASCII_STREAM) { 
         /* pwd */ 
@@ -721,7 +721,7 @@ SLMPAPI slmp_cmd_hdr_t* SLMPCALL slmp_decode_req_file_search(
         /* ext */ 
         DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->ext), 3); 
         /* attr */ 
-        DECODE_AND_ADVANCE_STREAM_8B(&(cmd->attr)); 
+        DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->attr), 1); 
     } 
 
     return &(cmd->hdr); 
@@ -805,7 +805,7 @@ SLMPAPI size_t SLMPCALL slmp_encode_req_file_read(
         /* ext */ 
         ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->ext), 3); 
         /* attr */ 
-        ENCODE_AND_ADVANCE_STREAM_8B(cmd->attr); 
+        ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->attr), 1); 
         /* offset */ 
         ENCODE_AND_ADVANCE_STREAM_32B(cmd->offset); 
         /* num_bytes */ 
@@ -824,7 +824,7 @@ SLMPAPI size_t SLMPCALL slmp_encode_req_file_read(
         /* ext */ 
         ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->ext), 3); 
         /* attr */ 
-        ENCODE_AND_ADVANCE_STREAM_8B(cmd->attr); 
+        ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->attr), 1); 
         /* offset */ 
         ENCODE_AND_ADVANCE_STREAM_32B(cmd->offset); 
         /* num_bytes */ 
@@ -856,7 +856,7 @@ SLMPAPI slmp_cmd_hdr_t* SLMPCALL slmp_decode_req_file_read(
         /* ext */ 
         DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->ext), 3); 
         /* attr */ 
-        DECODE_AND_ADVANCE_STREAM_8B(&(cmd->attr)); 
+        DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->attr), 1); 
         /* offset */ 
         DECODE_AND_ADVANCE_STREAM_32B(&(cmd->offset)); 
         /* num_bytes */ 
@@ -875,7 +875,7 @@ SLMPAPI slmp_cmd_hdr_t* SLMPCALL slmp_decode_req_file_read(
         /* ext */ 
         DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->ext), 3); 
         /* attr */ 
-        DECODE_AND_ADVANCE_STREAM_8B(&(cmd->attr)); 
+        DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->attr), 1); 
         /* offset */ 
         DECODE_AND_ADVANCE_STREAM_32B(&(cmd->offset)); 
         /* num_bytes */ 
@@ -966,7 +966,7 @@ SLMPAPI size_t SLMPCALL slmp_encode_req_file_write(
         /* ext */ 
         ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->ext), 3); 
         /* attr */ 
-        ENCODE_AND_ADVANCE_STREAM_8B(cmd->attr); 
+        ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->attr), 1); 
         /* offset */ 
         ENCODE_AND_ADVANCE_STREAM_32B(cmd->offset); 
         /* num_bytes */ 
@@ -987,7 +987,7 @@ SLMPAPI size_t SLMPCALL slmp_encode_req_file_write(
         /* ext */ 
         ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->ext), 3); 
         /* attr */ 
-        ENCODE_AND_ADVANCE_STREAM_8B(cmd->attr); 
+        ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->attr), 1); 
         /* offset */ 
         ENCODE_AND_ADVANCE_STREAM_32B(cmd->offset); 
         /* num_bytes */ 
@@ -1021,7 +1021,7 @@ SLMPAPI slmp_cmd_hdr_t* SLMPCALL slmp_decode_req_file_write(
         /* ext */ 
         DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->ext), 3); 
         /* attr */ 
-        DECODE_AND_ADVANCE_STREAM_8B(&(cmd->attr)); 
+        DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->attr), 1); 
         /* offset */ 
         DECODE_AND_ADVANCE_STREAM_32B(&(cmd->offset)); 
         /* num_bytes */ 
@@ -1042,7 +1042,7 @@ SLMPAPI slmp_cmd_hdr_t* SLMPCALL slmp_decode_req_file_write(
         /* ext */ 
         DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->ext), 3); 
         /* attr */ 
-        DECODE_AND_ADVANCE_STREAM_8B(&(cmd->attr)); 
+        DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->attr), 1); 
         /* offset */ 
         DECODE_AND_ADVANCE_STREAM_32B(&(cmd->offset)); 
         /* num_bytes */ 
@@ -1059,43 +1059,6 @@ SLMPAPI size_t SLMPCALL slmp_encode_req_file_set_reset_file_lock(
 { 
     ENCODE_COMMAND_DECLARE_LOCAL_VARIABLES(slmp_req_file_set_reset_file_lock_t); 
     ENCODE_COMMAND_INITIALIZE_LOCAL_VARIABLES(slmp_req_file_set_reset_file_lock_t, 0); 
-
-    ENCODE_COMMAND_SET_MIN_BUF_SIZE(0, 0, 0, 0); 
-    
-    if (stream == NULL) { 
-        return min_buf_size; 
-    } 
-    
-    if (type == SLMP_BINARY_STREAM) { 
-    } 
-    else if (type == SLMP_ASCII_STREAM) { 
-    } 
-
-    return min_buf_size; 
-}
-
-SLMPAPI slmp_cmd_hdr_t* SLMPCALL slmp_decode_req_file_set_reset_file_lock( 
-    uint8_t *stream, size_t len, int type, int addr_width) 
-{ 
-    DECODE_COMMAND_DECLARE_LOCAL_VARIABLES(slmp_req_file_set_reset_file_lock_t); 
-    DECODE_COMMAND_INITIALIZE_LOCAL_VARIABLES(); 
-    DECODE_COMMAND_CHECK_STREAM_LENGTH(0, 0, 0, 0); 
-    DECODE_COMMAND_ALLOC_MEMORY(slmp_req_file_set_reset_file_lock_t); 
-    DECODE_COMMAND_FILL_COMMAND_HEADER(slmp_req_file_set_reset_file_lock_t); 
-    
-    if (type == SLMP_BINARY_STREAM) { 
-    } 
-    else if (type == SLMP_ASCII_STREAM) { 
-    } 
-
-    return &(cmd->hdr); 
-}
-
-SLMPAPI size_t SLMPCALL slmp_encode_res_file_set_reset_file_lock(
-    slmp_cmd_hdr_t *hdr, uint8_t *stream, int type)
-{ 
-    ENCODE_COMMAND_DECLARE_LOCAL_VARIABLES(slmp_res_file_set_reset_file_lock_t); 
-    ENCODE_COMMAND_INITIALIZE_LOCAL_VARIABLES(slmp_res_file_set_reset_file_lock_t, 0); 
 
     ENCODE_COMMAND_SET_MIN_BUF_SIZE(18, 18, 24, 24); 
     
@@ -1115,7 +1078,7 @@ SLMPAPI size_t SLMPCALL slmp_encode_res_file_set_reset_file_lock(
         /* ext */ 
         ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->ext), 3); 
         /* attr */ 
-        ENCODE_AND_ADVANCE_STREAM_8B(cmd->attr); 
+        ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->attr), 1); 
     } 
     else if (type == SLMP_ASCII_STREAM) { 
         /* mode */ 
@@ -1129,20 +1092,20 @@ SLMPAPI size_t SLMPCALL slmp_encode_res_file_set_reset_file_lock(
         /* ext */ 
         ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->ext), 3); 
         /* attr */ 
-        ENCODE_AND_ADVANCE_STREAM_8B(cmd->attr); 
+        ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->attr), 1); 
     } 
 
     return min_buf_size; 
 }
 
-SLMPAPI slmp_cmd_hdr_t* SLMPCALL slmp_decode_res_file_set_reset_file_lock( 
+SLMPAPI slmp_cmd_hdr_t* SLMPCALL slmp_decode_req_file_set_reset_file_lock( 
     uint8_t *stream, size_t len, int type, int addr_width) 
 { 
-    DECODE_COMMAND_DECLARE_LOCAL_VARIABLES(slmp_res_file_set_reset_file_lock_t); 
+    DECODE_COMMAND_DECLARE_LOCAL_VARIABLES(slmp_req_file_set_reset_file_lock_t); 
     DECODE_COMMAND_INITIALIZE_LOCAL_VARIABLES(); 
     DECODE_COMMAND_CHECK_STREAM_LENGTH(18, 18, 24, 24); 
-    DECODE_COMMAND_ALLOC_MEMORY(slmp_res_file_set_reset_file_lock_t); 
-    DECODE_COMMAND_FILL_COMMAND_HEADER(slmp_res_file_set_reset_file_lock_t); 
+    DECODE_COMMAND_ALLOC_MEMORY(slmp_req_file_set_reset_file_lock_t); 
+    DECODE_COMMAND_FILL_COMMAND_HEADER(slmp_req_file_set_reset_file_lock_t); 
     
     if (type == SLMP_BINARY_STREAM) { 
         /* mode */ 
@@ -1156,7 +1119,7 @@ SLMPAPI slmp_cmd_hdr_t* SLMPCALL slmp_decode_res_file_set_reset_file_lock(
         /* ext */ 
         DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->ext), 3); 
         /* attr */ 
-        DECODE_AND_ADVANCE_STREAM_8B(&(cmd->attr)); 
+        DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->attr), 1); 
     } 
     else if (type == SLMP_ASCII_STREAM) { 
         /* mode */ 
@@ -1170,7 +1133,7 @@ SLMPAPI slmp_cmd_hdr_t* SLMPCALL slmp_decode_res_file_set_reset_file_lock(
         /* ext */ 
         DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->ext), 3); 
         /* attr */ 
-        DECODE_AND_ADVANCE_STREAM_8B(&(cmd->attr)); 
+        DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->attr), 1); 
     } 
 
     return &(cmd->hdr); 
@@ -1201,7 +1164,7 @@ SLMPAPI size_t SLMPCALL slmp_encode_req_file_copy_a(
         /* src_ext */ 
         ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->src_ext), 3); 
         /* src_attr */ 
-        ENCODE_AND_ADVANCE_STREAM_8B(cmd->src_attr); 
+        ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->src_attr), 1); 
         /* src_offset */ 
         ENCODE_AND_ADVANCE_STREAM_32B(cmd->src_offset); 
         /* num_bytes */ 
@@ -1220,7 +1183,7 @@ SLMPAPI size_t SLMPCALL slmp_encode_req_file_copy_a(
         /* dst_ext */ 
         ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->dst_ext), 3); 
         /* dst_attr */ 
-        ENCODE_AND_ADVANCE_STREAM_8B(cmd->dst_attr); 
+        ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->dst_attr), 1); 
         /* dst_offset */ 
         ENCODE_AND_ADVANCE_STREAM_32B(cmd->dst_offset); 
     } 
@@ -1237,7 +1200,7 @@ SLMPAPI size_t SLMPCALL slmp_encode_req_file_copy_a(
         /* src_ext */ 
         ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->src_ext), 3); 
         /* src_attr */ 
-        ENCODE_AND_ADVANCE_STREAM_8B(cmd->src_attr); 
+        ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->src_attr), 1); 
         /* src_offset */ 
         ENCODE_AND_ADVANCE_STREAM_32B(cmd->src_offset); 
         /* num_bytes */ 
@@ -1256,7 +1219,7 @@ SLMPAPI size_t SLMPCALL slmp_encode_req_file_copy_a(
         /* dst_ext */ 
         ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->dst_ext), 3); 
         /* dst_attr */ 
-        ENCODE_AND_ADVANCE_STREAM_8B(cmd->dst_attr); 
+        ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->dst_attr), 1); 
         /* dst_offset */ 
         ENCODE_AND_ADVANCE_STREAM_32B(cmd->dst_offset); 
     } 
@@ -1286,7 +1249,7 @@ SLMPAPI slmp_cmd_hdr_t* SLMPCALL slmp_decode_req_file_copy_a(
         /* src_ext */ 
         DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->src_ext), 3); 
         /* src_attr */ 
-        DECODE_AND_ADVANCE_STREAM_8B(&(cmd->src_attr)); 
+        DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->src_attr), 1); 
         /* src_offset */ 
         DECODE_AND_ADVANCE_STREAM_32B(&(cmd->src_offset)); 
         /* num_bytes */ 
@@ -1305,7 +1268,7 @@ SLMPAPI slmp_cmd_hdr_t* SLMPCALL slmp_decode_req_file_copy_a(
         /* dst_ext */ 
         DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->dst_ext), 3); 
         /* dst_attr */ 
-        DECODE_AND_ADVANCE_STREAM_8B(&(cmd->dst_attr)); 
+        DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->dst_attr), 1); 
         /* dst_offset */ 
         DECODE_AND_ADVANCE_STREAM_32B(&(cmd->dst_offset)); 
     } 
@@ -1322,7 +1285,7 @@ SLMPAPI slmp_cmd_hdr_t* SLMPCALL slmp_decode_req_file_copy_a(
         /* src_ext */ 
         DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->src_ext), 3); 
         /* src_attr */ 
-        DECODE_AND_ADVANCE_STREAM_8B(&(cmd->src_attr)); 
+        DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->src_attr), 1); 
         /* src_offset */ 
         DECODE_AND_ADVANCE_STREAM_32B(&(cmd->src_offset)); 
         /* num_bytes */ 
@@ -1341,7 +1304,7 @@ SLMPAPI slmp_cmd_hdr_t* SLMPCALL slmp_decode_req_file_copy_a(
         /* dst_ext */ 
         DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->dst_ext), 3); 
         /* dst_attr */ 
-        DECODE_AND_ADVANCE_STREAM_8B(&(cmd->dst_attr)); 
+        DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->dst_attr), 1); 
         /* dst_offset */ 
         DECODE_AND_ADVANCE_STREAM_32B(&(cmd->dst_offset)); 
     } 
@@ -1358,8 +1321,8 @@ SLMPAPI size_t SLMPCALL slmp_encode_req_file_copy_b(
     var_part_size += (size_t)(cmd->dst_name_len); 
     var_part_size += (size_t)(cmd->src_name_len); 
     ENCODE_COMMAND_SET_MIN_BUF_SIZE( 
-        24 + var_part_size, 
-        24 + var_part_size, 
+        32 + var_part_size, 
+        32 + var_part_size, 
         40 + var_part_size, 
         40 + var_part_size 
     ); 
@@ -1370,7 +1333,7 @@ SLMPAPI size_t SLMPCALL slmp_encode_req_file_copy_b(
     
     if (type == SLMP_BINARY_STREAM) { 
         /* dummy */ 
-        ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->dummy), 8); 
+        ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->dummy), 16); 
         /* dst_pwd */ 
         ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->dst_pwd), 4); 
         /* dst_drv_name */ 
@@ -1390,7 +1353,7 @@ SLMPAPI size_t SLMPCALL slmp_encode_req_file_copy_b(
     } 
     else if (type == SLMP_ASCII_STREAM) { 
         /* dummy */ 
-        ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->dummy), 8); 
+        ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->dummy), 16); 
         /* dst_pwd */ 
         ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->dst_pwd), 4); 
         /* dst_drv_name */ 
@@ -1417,13 +1380,13 @@ SLMPAPI slmp_cmd_hdr_t* SLMPCALL slmp_decode_req_file_copy_b(
 { 
     DECODE_COMMAND_DECLARE_LOCAL_VARIABLES(slmp_req_file_copy_b_t); 
     DECODE_COMMAND_INITIALIZE_LOCAL_VARIABLES(); 
-    DECODE_COMMAND_CHECK_STREAM_LENGTH(24, 24, 40, 40); 
+    DECODE_COMMAND_CHECK_STREAM_LENGTH(32, 32, 40, 40); 
     DECODE_COMMAND_ALLOC_MEMORY(slmp_req_file_copy_b_t); 
     DECODE_COMMAND_FILL_COMMAND_HEADER(slmp_req_file_copy_b_t); 
     
     if (type == SLMP_BINARY_STREAM) { 
         /* dummy */ 
-        DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->dummy), 8); 
+        DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->dummy), 16); 
         /* dst_pwd */ 
         DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->dst_pwd), 4); 
         /* dst_drv_name */ 
@@ -1443,7 +1406,7 @@ SLMPAPI slmp_cmd_hdr_t* SLMPCALL slmp_decode_req_file_copy_b(
     } 
     else if (type == SLMP_ASCII_STREAM) { 
         /* dummy */ 
-        DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->dummy), 8); 
+        DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->dummy), 16); 
         /* dst_pwd */ 
         DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->dst_pwd), 4); 
         /* dst_drv_name */ 
@@ -1490,7 +1453,7 @@ SLMPAPI size_t SLMPCALL slmp_encode_req_file_delete_a(
         /* ext */ 
         ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->ext), 3); 
         /* attr */ 
-        ENCODE_AND_ADVANCE_STREAM_8B(cmd->attr); 
+        ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->attr), 1); 
     } 
     else if (type == SLMP_ASCII_STREAM) { 
         /* pwd */ 
@@ -1505,7 +1468,7 @@ SLMPAPI size_t SLMPCALL slmp_encode_req_file_delete_a(
         /* ext */ 
         ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->ext), 3); 
         /* attr */ 
-        ENCODE_AND_ADVANCE_STREAM_8B(cmd->attr); 
+        ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->attr), 1); 
     } 
 
     return min_buf_size; 
@@ -1533,7 +1496,7 @@ SLMPAPI slmp_cmd_hdr_t* SLMPCALL slmp_decode_req_file_delete_a(
         /* ext */ 
         DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->ext), 3); 
         /* attr */ 
-        DECODE_AND_ADVANCE_STREAM_8B(&(cmd->attr)); 
+        DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->attr), 1); 
     } 
     else if (type == SLMP_ASCII_STREAM) { 
         /* pwd */ 
@@ -1548,7 +1511,7 @@ SLMPAPI slmp_cmd_hdr_t* SLMPCALL slmp_decode_req_file_delete_a(
         /* ext */ 
         DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->ext), 3); 
         /* attr */ 
-        DECODE_AND_ADVANCE_STREAM_8B(&(cmd->attr)); 
+        DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->attr), 1); 
     } 
 
     return &(cmd->hdr); 
@@ -1637,10 +1600,10 @@ SLMPAPI size_t SLMPCALL slmp_encode_req_read_dir_unicode(
 
     var_part_size += (size_t)(cmd->name_len); 
     ENCODE_COMMAND_SET_MIN_BUF_SIZE( 
-        13 + var_part_size, 
-        13 + var_part_size, 
-        21 + var_part_size, 
-        21 + var_part_size 
+        14 + var_part_size, 
+        14 + var_part_size, 
+        24 + var_part_size, 
+        24 + var_part_size 
     ); 
     
     if (stream == NULL) { 
@@ -1649,7 +1612,7 @@ SLMPAPI size_t SLMPCALL slmp_encode_req_read_dir_unicode(
     
     if (type == SLMP_BINARY_STREAM) { 
         /* reserved4 */ 
-        ENCODE_AND_ADVANCE_STREAM_32B(cmd->reserved4); 
+        ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->reserved4), 4); 
         /* drv_name */ 
         ENCODE_AND_ADVANCE_STREAM_16B(cmd->drv_name); 
         /* fnum_begin */ 
@@ -1657,7 +1620,7 @@ SLMPAPI size_t SLMPCALL slmp_encode_req_read_dir_unicode(
         /* num_files */ 
         ENCODE_AND_ADVANCE_STREAM_16B(cmd->num_files); 
         /* name_len */ 
-        ENCODE_AND_ADVANCE_STREAM_8B(cmd->name_len); 
+        ENCODE_AND_ADVANCE_STREAM_16B(cmd->name_len); 
         /* name_utf16le */ 
         ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY_N(cmd->name_utf16le, cmd->name_len); 
         /* reserved2 */ 
@@ -1665,7 +1628,7 @@ SLMPAPI size_t SLMPCALL slmp_encode_req_read_dir_unicode(
     } 
     else if (type == SLMP_ASCII_STREAM) { 
         /* reserved4 */ 
-        ENCODE_AND_ADVANCE_STREAM_32B(cmd->reserved4); 
+        ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->reserved4), 4); 
         /* drv_name */ 
         ENCODE_AND_ADVANCE_STREAM_16B(cmd->drv_name); 
         /* fnum_begin */ 
@@ -1673,7 +1636,7 @@ SLMPAPI size_t SLMPCALL slmp_encode_req_read_dir_unicode(
         /* num_files */ 
         ENCODE_AND_ADVANCE_STREAM_16B(cmd->num_files); 
         /* name_len */ 
-        ENCODE_AND_ADVANCE_STREAM_8B(cmd->name_len); 
+        ENCODE_AND_ADVANCE_STREAM_16B(cmd->name_len); 
         /* name_utf16le */ 
         ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY_N(cmd->name_utf16le, cmd->name_len); 
         /* reserved2 */ 
@@ -1688,13 +1651,13 @@ SLMPAPI slmp_cmd_hdr_t* SLMPCALL slmp_decode_req_read_dir_unicode(
 { 
     DECODE_COMMAND_DECLARE_LOCAL_VARIABLES(slmp_req_read_dir_unicode_t); 
     DECODE_COMMAND_INITIALIZE_LOCAL_VARIABLES(); 
-    DECODE_COMMAND_CHECK_STREAM_LENGTH(13, 13, 21, 21); 
+    DECODE_COMMAND_CHECK_STREAM_LENGTH(14, 14, 24, 24); 
     DECODE_COMMAND_ALLOC_MEMORY(slmp_req_read_dir_unicode_t); 
     DECODE_COMMAND_FILL_COMMAND_HEADER(slmp_req_read_dir_unicode_t); 
     
     if (type == SLMP_BINARY_STREAM) { 
         /* reserved4 */ 
-        DECODE_AND_ADVANCE_STREAM_32B(&(cmd->reserved4)); 
+        DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->reserved4), 4); 
         /* drv_name */ 
         DECODE_AND_ADVANCE_STREAM_16B(&(cmd->drv_name)); 
         /* fnum_begin */ 
@@ -1702,7 +1665,7 @@ SLMPAPI slmp_cmd_hdr_t* SLMPCALL slmp_decode_req_read_dir_unicode(
         /* num_files */ 
         DECODE_AND_ADVANCE_STREAM_16B(&(cmd->num_files)); 
         /* name_len */ 
-        DECODE_AND_ADVANCE_STREAM_8B(&(cmd->name_len)); 
+        DECODE_AND_ADVANCE_STREAM_16B(&(cmd->name_len)); 
         /* name_utf16le */ 
         DECODE_AND_ADVANCE_STREAM_COPY_MEMORY_N(cmd->name_utf16le, cmd->name_len); 
         /* reserved2 */ 
@@ -1710,7 +1673,7 @@ SLMPAPI slmp_cmd_hdr_t* SLMPCALL slmp_decode_req_read_dir_unicode(
     } 
     else if (type == SLMP_ASCII_STREAM) { 
         /* reserved4 */ 
-        DECODE_AND_ADVANCE_STREAM_32B(&(cmd->reserved4)); 
+        DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->reserved4), 4); 
         /* drv_name */ 
         DECODE_AND_ADVANCE_STREAM_16B(&(cmd->drv_name)); 
         /* fnum_begin */ 
@@ -1718,7 +1681,7 @@ SLMPAPI slmp_cmd_hdr_t* SLMPCALL slmp_decode_req_read_dir_unicode(
         /* num_files */ 
         DECODE_AND_ADVANCE_STREAM_16B(&(cmd->num_files)); 
         /* name_len */ 
-        DECODE_AND_ADVANCE_STREAM_8B(&(cmd->name_len)); 
+        DECODE_AND_ADVANCE_STREAM_16B(&(cmd->name_len)); 
         /* name_utf16le */ 
         DECODE_AND_ADVANCE_STREAM_COPY_MEMORY_N(cmd->name_utf16le, cmd->name_len); 
         /* reserved2 */ 
@@ -1915,7 +1878,7 @@ SLMPAPI size_t SLMPCALL slmp_encode_req_search_dir_file(
     ENCODE_COMMAND_DECLARE_LOCAL_VARIABLES(slmp_req_search_dir_file_t); 
     ENCODE_COMMAND_INITIALIZE_LOCAL_VARIABLES(slmp_req_search_dir_file_t, 0); 
 
-    var_part_size += (size_t)(cmd->num_file_name); 
+    var_part_size += (size_t)((cmd->num_file_name + cmd->num_dir_name)); 
     ENCODE_COMMAND_SET_MIN_BUF_SIZE( 
         10 + var_part_size, 
         10 + var_part_size, 
@@ -1937,7 +1900,7 @@ SLMPAPI size_t SLMPCALL slmp_encode_req_search_dir_file(
         /* num_file_name */ 
         ENCODE_AND_ADVANCE_STREAM_16B(cmd->num_file_name); 
         /* file_name */ 
-        ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY_N(cmd->file_name, cmd->num_file_name); 
+        ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY_N(cmd->file_name, (cmd->num_file_name + cmd->num_dir_name)); 
     } 
     else if (type == SLMP_ASCII_STREAM) { 
         /* pwd */ 
@@ -1949,7 +1912,7 @@ SLMPAPI size_t SLMPCALL slmp_encode_req_search_dir_file(
         /* num_file_name */ 
         ENCODE_AND_ADVANCE_STREAM_16B(cmd->num_file_name); 
         /* file_name */ 
-        ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY_N(cmd->file_name, cmd->num_file_name); 
+        ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY_N(cmd->file_name, (cmd->num_file_name + cmd->num_dir_name)); 
     } 
 
     return min_buf_size; 
@@ -1974,7 +1937,7 @@ SLMPAPI slmp_cmd_hdr_t* SLMPCALL slmp_decode_req_search_dir_file(
         /* num_file_name */ 
         DECODE_AND_ADVANCE_STREAM_16B(&(cmd->num_file_name)); 
         /* file_name */ 
-        DECODE_AND_ADVANCE_STREAM_COPY_MEMORY_N(cmd->file_name, cmd->num_file_name); 
+        DECODE_AND_ADVANCE_STREAM_COPY_MEMORY_N(cmd->file_name, (cmd->num_file_name + cmd->num_dir_name)); 
     } 
     else if (type == SLMP_ASCII_STREAM) { 
         /* pwd */ 
@@ -1986,7 +1949,7 @@ SLMPAPI slmp_cmd_hdr_t* SLMPCALL slmp_decode_req_search_dir_file(
         /* num_file_name */ 
         DECODE_AND_ADVANCE_STREAM_16B(&(cmd->num_file_name)); 
         /* file_name */ 
-        DECODE_AND_ADVANCE_STREAM_COPY_MEMORY_N(cmd->file_name, cmd->num_file_name); 
+        DECODE_AND_ADVANCE_STREAM_COPY_MEMORY_N(cmd->file_name, (cmd->num_file_name + cmd->num_dir_name)); 
     } 
 
     return &(cmd->hdr); 
@@ -2062,7 +2025,7 @@ SLMPAPI size_t SLMPCALL slmp_encode_req_new_file_a(
         /* ext */ 
         ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->ext), 3); 
         /* attr */ 
-        ENCODE_AND_ADVANCE_STREAM_8B(cmd->attr); 
+        ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->attr), 1); 
         /* size */ 
         ENCODE_AND_ADVANCE_STREAM_32B(cmd->size); 
         /* reserved2 */ 
@@ -2081,7 +2044,7 @@ SLMPAPI size_t SLMPCALL slmp_encode_req_new_file_a(
         /* ext */ 
         ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->ext), 3); 
         /* attr */ 
-        ENCODE_AND_ADVANCE_STREAM_8B(cmd->attr); 
+        ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->attr), 1); 
         /* size */ 
         ENCODE_AND_ADVANCE_STREAM_32B(cmd->size); 
         /* reserved2 */ 
@@ -2113,7 +2076,7 @@ SLMPAPI slmp_cmd_hdr_t* SLMPCALL slmp_decode_req_new_file_a(
         /* ext */ 
         DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->ext), 3); 
         /* attr */ 
-        DECODE_AND_ADVANCE_STREAM_8B(&(cmd->attr)); 
+        DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->attr), 1); 
         /* size */ 
         DECODE_AND_ADVANCE_STREAM_32B(&(cmd->size)); 
         /* reserved2 */ 
@@ -2132,7 +2095,7 @@ SLMPAPI slmp_cmd_hdr_t* SLMPCALL slmp_decode_req_new_file_a(
         /* ext */ 
         DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->ext), 3); 
         /* attr */ 
-        DECODE_AND_ADVANCE_STREAM_8B(&(cmd->attr)); 
+        DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->attr), 1); 
         /* size */ 
         DECODE_AND_ADVANCE_STREAM_32B(&(cmd->size)); 
         /* reserved2 */ 
@@ -2554,8 +2517,9 @@ SLMPAPI size_t SLMPCALL slmp_encode_res_read_file(
     slmp_cmd_hdr_t *hdr, uint8_t *stream, int type)
 { 
     ENCODE_COMMAND_DECLARE_LOCAL_VARIABLES(slmp_res_read_file_t); 
-    ENCODE_COMMAND_INITIALIZE_LOCAL_VARIABLES(slmp_res_read_file_t, 1); 
+    ENCODE_COMMAND_INITIALIZE_LOCAL_VARIABLES(slmp_res_read_file_t, 0); 
 
+    var_part_size += (size_t)(cmd->num_bytes); 
     ENCODE_COMMAND_SET_MIN_BUF_SIZE( 
         2 + var_part_size, 
         2 + var_part_size, 
@@ -2571,13 +2535,13 @@ SLMPAPI size_t SLMPCALL slmp_encode_res_read_file(
         /* num_bytes */ 
         ENCODE_AND_ADVANCE_STREAM_16B(cmd->num_bytes); 
         /* data */ 
-        ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->data), var_part_size); 
+        ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY_N(cmd->data, cmd->num_bytes); 
     } 
     else if (type == SLMP_ASCII_STREAM) { 
         /* num_bytes */ 
         ENCODE_AND_ADVANCE_STREAM_16B(cmd->num_bytes); 
         /* data */ 
-        ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->data), var_part_size); 
+        ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY_N(cmd->data, cmd->num_bytes); 
     } 
 
     return min_buf_size; 
@@ -2596,13 +2560,13 @@ SLMPAPI slmp_cmd_hdr_t* SLMPCALL slmp_decode_res_read_file(
         /* num_bytes */ 
         DECODE_AND_ADVANCE_STREAM_16B(&(cmd->num_bytes)); 
         /* data */ 
-        DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->data), var_part_size); 
+        DECODE_AND_ADVANCE_STREAM_COPY_MEMORY_N(cmd->data, cmd->num_bytes); 
     } 
     else if (type == SLMP_ASCII_STREAM) { 
         /* num_bytes */ 
         DECODE_AND_ADVANCE_STREAM_16B(&(cmd->num_bytes)); 
         /* data */ 
-        DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->data), var_part_size); 
+        DECODE_AND_ADVANCE_STREAM_COPY_MEMORY_N(cmd->data, cmd->num_bytes); 
     } 
 
     return &(cmd->hdr); 
@@ -2612,8 +2576,9 @@ SLMPAPI size_t SLMPCALL slmp_encode_req_write_file(
     slmp_cmd_hdr_t *hdr, uint8_t *stream, int type)
 { 
     ENCODE_COMMAND_DECLARE_LOCAL_VARIABLES(slmp_req_write_file_t); 
-    ENCODE_COMMAND_INITIALIZE_LOCAL_VARIABLES(slmp_req_write_file_t, 1); 
+    ENCODE_COMMAND_INITIALIZE_LOCAL_VARIABLES(slmp_req_write_file_t, 0); 
 
+    var_part_size += (size_t)(cmd->num_bytes); 
     ENCODE_COMMAND_SET_MIN_BUF_SIZE( 
         8 + var_part_size, 
         8 + var_part_size, 
@@ -2633,7 +2598,7 @@ SLMPAPI size_t SLMPCALL slmp_encode_req_write_file(
         /* num_bytes */ 
         ENCODE_AND_ADVANCE_STREAM_16B(cmd->num_bytes); 
         /* data */ 
-        ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->data), var_part_size); 
+        ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY_N(cmd->data, cmd->num_bytes); 
     } 
     else if (type == SLMP_ASCII_STREAM) { 
         /* fp */ 
@@ -2643,7 +2608,7 @@ SLMPAPI size_t SLMPCALL slmp_encode_req_write_file(
         /* num_bytes */ 
         ENCODE_AND_ADVANCE_STREAM_16B(cmd->num_bytes); 
         /* data */ 
-        ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->data), var_part_size); 
+        ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY_N(cmd->data, cmd->num_bytes); 
     } 
 
     return min_buf_size; 
@@ -2666,7 +2631,7 @@ SLMPAPI slmp_cmd_hdr_t* SLMPCALL slmp_decode_req_write_file(
         /* num_bytes */ 
         DECODE_AND_ADVANCE_STREAM_16B(&(cmd->num_bytes)); 
         /* data */ 
-        DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->data), var_part_size); 
+        DECODE_AND_ADVANCE_STREAM_COPY_MEMORY_N(cmd->data, cmd->num_bytes); 
     } 
     else if (type == SLMP_ASCII_STREAM) { 
         /* fp */ 
@@ -2676,7 +2641,7 @@ SLMPAPI slmp_cmd_hdr_t* SLMPCALL slmp_decode_req_write_file(
         /* num_bytes */ 
         DECODE_AND_ADVANCE_STREAM_16B(&(cmd->num_bytes)); 
         /* data */ 
-        DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->data), var_part_size); 
+        DECODE_AND_ADVANCE_STREAM_COPY_MEMORY_N(cmd->data, cmd->num_bytes); 
     } 
 
     return &(cmd->hdr); 

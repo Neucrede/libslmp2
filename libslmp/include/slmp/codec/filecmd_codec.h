@@ -94,12 +94,6 @@ SLMPAPI size_t SLMPCALL slmp_encode_req_file_set_reset_file_lock(
 SLMPAPI slmp_cmd_hdr_t* SLMPCALL slmp_decode_req_file_set_reset_file_lock(
     uint8_t *stream, size_t len, int type, int addr_width);
 
-SLMPAPI size_t SLMPCALL slmp_encode_res_file_set_reset_file_lock(
-    slmp_cmd_hdr_t *hdr, uint8_t *stream, int type);
-
-SLMPAPI slmp_cmd_hdr_t* SLMPCALL slmp_decode_res_file_set_reset_file_lock(
-    uint8_t *stream, size_t len, int type, int addr_width);
-
 SLMPAPI size_t SLMPCALL slmp_encode_req_file_copy_a(
     slmp_cmd_hdr_t *hdr, uint8_t *stream, int type);
 

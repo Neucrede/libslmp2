@@ -238,7 +238,7 @@ typedef struct slmp_req_device_write_ext {
      */
     union {
         uint16_t bin;
-        uint16_t ascii;
+        uint8_t ascii;
     } indir_spec;
     /**
      * Extension specification
@@ -687,8 +687,8 @@ typedef struct slmp_req_device_write_random_bit_unit {
             uint16_t l;
         } bin;
         union {
-            uint16_t s;
-            uint32_t l; /* 32b */
+            uint8_t s;
+            uint16_t l;
         } ascii;
     } mem_type;
     /**
@@ -716,8 +716,8 @@ typedef struct slmp_req_device_write_random_bit_unit {
             uint16_t l;
         } bin;
         union {
-            uint16_t s;
-            uint32_t l; /* 32b */
+            uint8_t s;
+            uint16_t l;
         } ascii;
     } data;
 } slmp_req_device_write_random_bit_unit_t;
@@ -810,8 +810,8 @@ typedef struct slmp_req_device_write_random_ext_word_unit {
      */
     union {
         union {
-            uint32_t s; /* 24b */
-            uint32_t l; /* 32b */
+            uint8_t s[3]; /* string */
+            uint8_t l[4]; /* string */
         } ascii;
     } dev_mod;
     /**
@@ -960,8 +960,8 @@ typedef struct slmp_req_device_write_random_ext_bit_unit {
      */
     union {
         union {
-            uint32_t s; /* 24b */
-            uint32_t l; /* 32b */
+            uint8_t s[3]; /* string */
+            uint8_t l[4]; /* string */
         } ascii;
     } dev_mod;
     /**
@@ -982,8 +982,8 @@ typedef struct slmp_req_device_write_random_ext_bit_unit {
             uint16_t l;
         } bin;
         union {
-            uint16_t s;
-            uint32_t l; /* 32b */
+            uint8_t s;
+            uint16_t l;
         } ascii;
     } data;
 } slmp_req_device_write_random_ext_bit_unit_t;

@@ -10,8 +10,9 @@ SLMPAPI size_t SLMPCALL slmp_encode_req_node_search(
     slmp_cmd_hdr_t *hdr, uint8_t *stream, int type)
 { 
     ENCODE_COMMAND_DECLARE_LOCAL_VARIABLES(slmp_req_node_search_t); 
-    ENCODE_COMMAND_INITIALIZE_LOCAL_VARIABLES(slmp_req_node_search_t, 1); 
+    ENCODE_COMMAND_INITIALIZE_LOCAL_VARIABLES(slmp_req_node_search_t, 0); 
 
+    var_part_size += (size_t)(cmd->ip_addr_size); 
     ENCODE_COMMAND_SET_MIN_BUF_SIZE( 
         7 + var_part_size, 
         7 + var_part_size, 
@@ -29,7 +30,7 @@ SLMPAPI size_t SLMPCALL slmp_encode_req_node_search(
         /* ip_addr_size */ 
         ENCODE_AND_ADVANCE_STREAM_8B(cmd->ip_addr_size); 
         /* ip_addr */ 
-        ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->ip_addr), var_part_size); 
+        ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY_N(cmd->ip_addr, cmd->ip_addr_size); 
     } 
     else if (type == SLMP_ASCII_STREAM) { 
         /* mac_addr */ 
@@ -37,7 +38,7 @@ SLMPAPI size_t SLMPCALL slmp_encode_req_node_search(
         /* ip_addr_size */ 
         ENCODE_AND_ADVANCE_STREAM_8B(cmd->ip_addr_size); 
         /* ip_addr */ 
-        ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->ip_addr), var_part_size); 
+        ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY_N(cmd->ip_addr, cmd->ip_addr_size); 
     } 
 
     return min_buf_size; 
@@ -58,7 +59,7 @@ SLMPAPI slmp_cmd_hdr_t* SLMPCALL slmp_decode_req_node_search(
         /* ip_addr_size */ 
         DECODE_AND_ADVANCE_STREAM_8B(&(cmd->ip_addr_size)); 
         /* ip_addr */ 
-        DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->ip_addr), var_part_size); 
+        DECODE_AND_ADVANCE_STREAM_COPY_MEMORY_N(cmd->ip_addr, cmd->ip_addr_size); 
     } 
     else if (type == SLMP_ASCII_STREAM) { 
         /* mac_addr */ 
@@ -66,7 +67,7 @@ SLMPAPI slmp_cmd_hdr_t* SLMPCALL slmp_decode_req_node_search(
         /* ip_addr_size */ 
         DECODE_AND_ADVANCE_STREAM_8B(&(cmd->ip_addr_size)); 
         /* ip_addr */ 
-        DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->ip_addr), var_part_size); 
+        DECODE_AND_ADVANCE_STREAM_COPY_MEMORY_N(cmd->ip_addr, cmd->ip_addr_size); 
     } 
 
     return &(cmd->hdr); 

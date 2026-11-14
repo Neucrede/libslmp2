@@ -439,7 +439,7 @@ SLMPAPI size_t SLMPCALL slmp_encode_req_device_write_ext(
         switch (cmd->hdr.addr_width) { 
         case SLMP_ADDRESS_16BIT: 
             /* tarDevice */ 
-            ENCODE_AND_ADVANCE_STREAM_16B(cmd->indir_spec.ascii); 
+            ENCODE_AND_ADVANCE_STREAM_8B(cmd->indir_spec.ascii); 
             ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->ext_spec.ascii), 4); 
             ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->ext_spec_mod.ascii.s), 3); 
             ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->mem_type.ascii.s), 2); 
@@ -452,7 +452,7 @@ SLMPAPI size_t SLMPCALL slmp_encode_req_device_write_ext(
             break;
         case SLMP_ADDRESS_32BIT: 
             /* tarDevice */ 
-            ENCODE_AND_ADVANCE_STREAM_16B(cmd->indir_spec.ascii); 
+            ENCODE_AND_ADVANCE_STREAM_8B(cmd->indir_spec.ascii); 
             ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->ext_spec.ascii), 4); 
             ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->ext_spec_mod.ascii.l), 4); 
             ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->mem_type.ascii.l), 4); 
@@ -516,7 +516,7 @@ SLMPAPI slmp_cmd_hdr_t* SLMPCALL slmp_decode_req_device_write_ext(
         switch (addr_width) { 
         case SLMP_ADDRESS_16BIT: 
             /* tarDevice */ 
-            DECODE_AND_ADVANCE_STREAM_16B(&(cmd->indir_spec.ascii)); 
+            DECODE_AND_ADVANCE_STREAM_8B(&(cmd->indir_spec.ascii)); 
             DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->ext_spec.ascii), 4); 
             DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->ext_spec_mod.ascii.s), 3); 
             DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->mem_type.ascii.s), 2); 
@@ -529,7 +529,7 @@ SLMPAPI slmp_cmd_hdr_t* SLMPCALL slmp_decode_req_device_write_ext(
             break;
         case SLMP_ADDRESS_32BIT: 
             /* tarDevice */ 
-            DECODE_AND_ADVANCE_STREAM_16B(&(cmd->indir_spec.ascii)); 
+            DECODE_AND_ADVANCE_STREAM_8B(&(cmd->indir_spec.ascii)); 
             DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->ext_spec.ascii), 4); 
             DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->ext_spec_mod.ascii.l), 4); 
             DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->mem_type.ascii.l), 4); 
@@ -1481,17 +1481,17 @@ SLMPAPI size_t SLMPCALL slmp_encode_req_device_write_random_bit_unit(
         switch (cmd->hdr.addr_width) { 
         case SLMP_ADDRESS_16BIT: 
             /* bit_unit */ 
-            ENCODE_AND_ADVANCE_STREAM_16B(cmd->mem_type.ascii.s); 
+            ENCODE_AND_ADVANCE_STREAM_8B(cmd->mem_type.ascii.s); 
             ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->addr.ascii.s), 6); 
             /* data */ 
-            ENCODE_AND_ADVANCE_STREAM_16B(cmd->data.ascii.s); 
+            ENCODE_AND_ADVANCE_STREAM_8B(cmd->data.ascii.s); 
             break;
         case SLMP_ADDRESS_32BIT: 
             /* bit_unit */ 
-            ENCODE_AND_ADVANCE_STREAM_32B(cmd->mem_type.ascii.l); 
+            ENCODE_AND_ADVANCE_STREAM_16B(cmd->mem_type.ascii.l); 
             ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->addr.ascii.l), 8); 
             /* data */ 
-            ENCODE_AND_ADVANCE_STREAM_32B(cmd->data.ascii.l); 
+            ENCODE_AND_ADVANCE_STREAM_16B(cmd->data.ascii.l); 
             break;
         default: 
             break; 
@@ -1534,17 +1534,17 @@ SLMPAPI slmp_cmd_hdr_t* SLMPCALL slmp_decode_req_device_write_random_bit_unit(
         switch (addr_width) { 
         case SLMP_ADDRESS_16BIT: 
             /* bit_unit */ 
-            DECODE_AND_ADVANCE_STREAM_16B(&(cmd->mem_type.ascii.s)); 
+            DECODE_AND_ADVANCE_STREAM_8B(&(cmd->mem_type.ascii.s)); 
             DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->addr.ascii.s), 6); 
             /* data */ 
-            DECODE_AND_ADVANCE_STREAM_16B(&(cmd->data.ascii.s)); 
+            DECODE_AND_ADVANCE_STREAM_8B(&(cmd->data.ascii.s)); 
             break;
         case SLMP_ADDRESS_32BIT: 
             /* bit_unit */ 
-            DECODE_AND_ADVANCE_STREAM_32B(&(cmd->mem_type.ascii.l)); 
+            DECODE_AND_ADVANCE_STREAM_16B(&(cmd->mem_type.ascii.l)); 
             DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->addr.ascii.l), 8); 
             /* data */ 
-            DECODE_AND_ADVANCE_STREAM_32B(&(cmd->data.ascii.l)); 
+            DECODE_AND_ADVANCE_STREAM_16B(&(cmd->data.ascii.l)); 
             break;
         default: 
             break; 
@@ -1669,7 +1669,7 @@ SLMPAPI size_t SLMPCALL slmp_encode_req_device_write_random_ext_word_unit(
             ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->ext_spec_mod.ascii.s), 3); 
             ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->mem_type.ascii.s), 2); 
             ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->addr.ascii.s), 6); 
-            ENCODE_AND_ADVANCE_STREAM_24B(cmd->dev_mod.ascii.s); 
+            ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->dev_mod.ascii.s), 3); 
             /* data */ 
             ENCODE_AND_ADVANCE_STREAM_16B(cmd->data); 
             break;
@@ -1680,7 +1680,7 @@ SLMPAPI size_t SLMPCALL slmp_encode_req_device_write_random_ext_word_unit(
             ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->ext_spec_mod.ascii.l), 4); 
             ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->mem_type.ascii.l), 4); 
             ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->addr.ascii.l), 10); 
-            ENCODE_AND_ADVANCE_STREAM_32B(cmd->dev_mod.ascii.l); 
+            ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->dev_mod.ascii.l), 4); 
             /* data */ 
             ENCODE_AND_ADVANCE_STREAM_16B(cmd->data); 
             break;
@@ -1738,7 +1738,7 @@ SLMPAPI slmp_cmd_hdr_t* SLMPCALL slmp_decode_req_device_write_random_ext_word_un
             DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->ext_spec_mod.ascii.s), 3); 
             DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->mem_type.ascii.s), 2); 
             DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->addr.ascii.s), 6); 
-            DECODE_AND_ADVANCE_STREAM_24B(&(cmd->dev_mod.ascii.s)); 
+            DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->dev_mod.ascii.s), 3); 
             /* data */ 
             DECODE_AND_ADVANCE_STREAM_16B(&(cmd->data)); 
             break;
@@ -1749,7 +1749,7 @@ SLMPAPI slmp_cmd_hdr_t* SLMPCALL slmp_decode_req_device_write_random_ext_word_un
             DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->ext_spec_mod.ascii.l), 4); 
             DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->mem_type.ascii.l), 4); 
             DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->addr.ascii.l), 10); 
-            DECODE_AND_ADVANCE_STREAM_32B(&(cmd->dev_mod.ascii.l)); 
+            DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->dev_mod.ascii.l), 4); 
             /* data */ 
             DECODE_AND_ADVANCE_STREAM_16B(&(cmd->data)); 
             break;
@@ -1977,9 +1977,9 @@ SLMPAPI size_t SLMPCALL slmp_encode_req_device_write_random_ext_bit_unit(
             ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->ext_spec_mod.ascii.s), 3); 
             ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->mem_type.ascii.s), 2); 
             ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->addr.ascii.s), 6); 
-            ENCODE_AND_ADVANCE_STREAM_24B(cmd->dev_mod.ascii.s); 
+            ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->dev_mod.ascii.s), 3); 
             /* data */ 
-            ENCODE_AND_ADVANCE_STREAM_16B(cmd->data.ascii.s); 
+            ENCODE_AND_ADVANCE_STREAM_8B(cmd->data.ascii.s); 
             break;
         case SLMP_ADDRESS_32BIT: 
             /* bit_unit */ 
@@ -1988,9 +1988,9 @@ SLMPAPI size_t SLMPCALL slmp_encode_req_device_write_random_ext_bit_unit(
             ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->ext_spec_mod.ascii.l), 4); 
             ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->mem_type.ascii.l), 4); 
             ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->addr.ascii.l), 10); 
-            ENCODE_AND_ADVANCE_STREAM_32B(cmd->dev_mod.ascii.l); 
+            ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->dev_mod.ascii.l), 4); 
             /* data */ 
-            ENCODE_AND_ADVANCE_STREAM_32B(cmd->data.ascii.l); 
+            ENCODE_AND_ADVANCE_STREAM_16B(cmd->data.ascii.l); 
             break;
         default: 
             break; 
@@ -2046,9 +2046,9 @@ SLMPAPI slmp_cmd_hdr_t* SLMPCALL slmp_decode_req_device_write_random_ext_bit_uni
             DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->ext_spec_mod.ascii.s), 3); 
             DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->mem_type.ascii.s), 2); 
             DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->addr.ascii.s), 6); 
-            DECODE_AND_ADVANCE_STREAM_24B(&(cmd->dev_mod.ascii.s)); 
+            DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->dev_mod.ascii.s), 3); 
             /* data */ 
-            DECODE_AND_ADVANCE_STREAM_16B(&(cmd->data.ascii.s)); 
+            DECODE_AND_ADVANCE_STREAM_8B(&(cmd->data.ascii.s)); 
             break;
         case SLMP_ADDRESS_32BIT: 
             /* bit_unit */ 
@@ -2057,9 +2057,9 @@ SLMPAPI slmp_cmd_hdr_t* SLMPCALL slmp_decode_req_device_write_random_ext_bit_uni
             DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->ext_spec_mod.ascii.l), 4); 
             DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->mem_type.ascii.l), 4); 
             DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->addr.ascii.l), 10); 
-            DECODE_AND_ADVANCE_STREAM_32B(&(cmd->dev_mod.ascii.l)); 
+            DECODE_AND_ADVANCE_STREAM_COPY_MEMORY(&(cmd->dev_mod.ascii.l), 4); 
             /* data */ 
-            DECODE_AND_ADVANCE_STREAM_32B(&(cmd->data.ascii.l)); 
+            DECODE_AND_ADVANCE_STREAM_16B(&(cmd->data.ascii.l)); 
             break;
         default: 
             break; 

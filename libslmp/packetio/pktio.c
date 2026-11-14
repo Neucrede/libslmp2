@@ -36,12 +36,12 @@ SLMPAPI void SLMPCALL slmp_pktio_free(slmp_pktio_t *pktio)
         return;
     }
 
-    pktio->backend->pfn_free(pktio);
-
     if (pktio->pre_recv_data != NULL) {
         free(pktio->pre_recv_data);
         pktio->pre_recv_data = NULL;
     }
+
+    pktio->backend->pfn_free(pktio);
 }
 
 SLMPAPI int SLMPCALL slmp_pktio_init(slmp_pktio_t *pktio)

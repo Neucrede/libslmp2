@@ -470,6 +470,11 @@ slmp_frame_t* decode_frame_st(uint8_t *stream, size_t len, int type, size_t *len
     DECODE_FRAME_INITIALIZE_LOCAL_VARIABLES_1(ST)
 
     if (ftype == SLMP_FTYPE_RES_ST) {
+        if (len < m * SLMP_ST_SUBHDR_TIMER_ENDCODE_RESERVED2_OFFSET + 2) {
+            slmp_set_errno(SLMP_ERROR_BUFFER_TOO_SHORT);
+            return NULL;
+        }
+
         dec16bp(&(stream[m * SLMP_ST_SUBHDR_TIMER_ENDCODE_RESERVED2_OFFSET]),
             &end_code);
         if (end_code > 0) {
@@ -544,6 +549,11 @@ slmp_frame_t* decode_frame_mt(uint8_t *stream, size_t len, int type, size_t *len
     DECODE_FRAME_INITIALIZE_LOCAL_VARIABLES_1(MT)
 
     if (ftype == SLMP_FTYPE_RES_MT) {
+        if (len < m * SLMP_MT_SUBHDR_TIMER_ENDCODE_RESERVED3_OFFSET + 2) {
+            slmp_set_errno(SLMP_ERROR_BUFFER_TOO_SHORT);
+            return NULL;
+        }
+
         dec16bp(&(stream[m * SLMP_MT_SUBHDR_TIMER_ENDCODE_RESERVED3_OFFSET]),
             &end_code);
         if (end_code > 0) {
@@ -620,6 +630,11 @@ slmp_frame_t* decode_frame_emt(uint8_t *stream, size_t len, int type, size_t *le
     
     /* Check end_code for EMT response and set error mask if needed */
     if (ftype == SLMP_FTYPE_RES_EMT) {
+        if (len < m * SLMP_EMT_ENDCODE_OFFSET + 2) {
+            slmp_set_errno(SLMP_ERROR_BUFFER_TOO_SHORT);
+            return NULL;
+        }
+
         dec16bp(&(stream[m * SLMP_EMT_ENDCODE_OFFSET]), &end_code);
         if (end_code > 0) {
             ftype |= SLMP_FTYPE_ERR_MASK;
@@ -709,6 +724,11 @@ slmp_frame_t* decode_frame_lmt(uint8_t *stream, size_t len, int type, size_t *le
     DECODE_FRAME_INITIALIZE_LOCAL_VARIABLES_1(LMT)
 
     if (ftype == SLMP_FTYPE_RES_LMT) {
+        if (len < m * SLMP_LMT_SUBHDR_TIMER_ENDCODE_OFFSET + 2) {
+            slmp_set_errno(SLMP_ERROR_BUFFER_TOO_SHORT);
+            return NULL;
+        }
+
         dec16bp(&(stream[m * SLMP_LMT_SUBHDR_TIMER_ENDCODE_OFFSET]),
             &end_code);
         if (end_code > 0) {

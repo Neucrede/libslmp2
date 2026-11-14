@@ -118,7 +118,7 @@ typedef struct slmp_res_get_file_info_entry {
     /**
      * File attributes
      */
-    uint8_t attr;
+    uint8_t attr[1]; /* string */
     /**
      * Time last edited
      */
@@ -155,7 +155,7 @@ typedef struct slmp_res_get_file_info_detail_entry {
     /**
      * File attributes
      */
-    uint8_t attr;
+    uint8_t attr[1]; /* string */
     /**
      * Time last edited
      */
@@ -171,7 +171,7 @@ typedef struct slmp_res_get_file_info_detail_entry {
     /**
      * Header text
      */
-    uint8_t hdr_text[32];
+    uint8_t hdr_text[32]; /* string */
 } slmp_res_get_file_info_detail_entry_t;
 
 /**
@@ -215,7 +215,7 @@ typedef struct slmp_req_change_file_edit_time {
     /**
      * File attributes
      */
-    uint8_t attr;
+    uint8_t attr[1]; /* string */
     /**
      * Pattern to change
      */
@@ -271,7 +271,7 @@ typedef struct slmp_req_change_file_info {
     /**
      * Old file attributes
      */
-    uint8_t old_attr;
+    uint8_t old_attr[1]; /* string */
     /**
      * Pattern to change
      */
@@ -287,7 +287,7 @@ typedef struct slmp_req_change_file_info {
     /**
      * New file attributes
      */
-    uint8_t new_attr;
+    uint8_t new_attr[1]; /* string */
     /**
      * File size
      */
@@ -335,7 +335,7 @@ typedef struct slmp_req_file_search {
     /**
      * File attributes
      */
-    uint8_t attr;
+    uint8_t attr[1]; /* string */
 } slmp_req_file_search_t;
 
 /**
@@ -396,7 +396,7 @@ typedef struct slmp_req_file_read {
     /**
      * File attributes
      */
-    uint8_t attr;
+    uint8_t attr[1]; /* string */
     /**
      * Offset
      */
@@ -459,7 +459,7 @@ typedef struct slmp_req_file_write {
     /**
      * Attributes
      */
-    uint8_t attr;
+    uint8_t attr[1]; /* string */
     /**
      * Offset
      */
@@ -475,18 +475,9 @@ typedef struct slmp_req_file_write {
 } slmp_req_file_write_t;
 
 /**
- * \brief Lock / unlock the file lock.
+ * \brief Locks / unlocks the file lock.
  */
 typedef struct slmp_req_file_set_reset_file_lock {
-    /** Header */ 
-    slmp_cmd_hdr_t hdr; 
-
-} slmp_req_file_set_reset_file_lock_t;
-
-/**
- * \brief Response of ReqFileSetResetFileLock
- */
-typedef struct slmp_res_file_set_reset_file_lock {
     /** Header */ 
     slmp_cmd_hdr_t hdr; 
 
@@ -513,8 +504,8 @@ typedef struct slmp_res_file_set_reset_file_lock {
     /**
      * File attributes
      */
-    uint8_t attr;
-} slmp_res_file_set_reset_file_lock_t;
+    uint8_t attr[1]; /* string */
+} slmp_req_file_set_reset_file_lock_t;
 
 /**
  * \brief Copy a file.
@@ -557,7 +548,7 @@ typedef struct slmp_req_file_copy_a {
     /**
      * Source file attributes
      */
-    uint8_t src_attr;
+    uint8_t src_attr[1]; /* string */
     /**
      * Source offset address
      */
@@ -604,7 +595,7 @@ typedef struct slmp_req_file_copy_a {
     /**
      * Destination file attributes
      */
-    uint8_t dst_attr;
+    uint8_t dst_attr[1]; /* string */
     /**
      * Destination offset address
      */
@@ -621,7 +612,7 @@ typedef struct slmp_req_file_copy_b {
     /**
      * Dummy data
      */
-    uint8_t dummy[8];
+    uint8_t dummy[16]; /* string */
     /**
      * Destination file password
      */
@@ -697,7 +688,7 @@ typedef struct slmp_req_file_delete_a {
     /**
      * File attributes
      */
-    uint8_t attr;
+    uint8_t attr[1]; /* string */
 } slmp_req_file_delete_a_t;
 
 /**
@@ -735,7 +726,7 @@ typedef struct slmp_req_read_dir_unicode {
     /**
      * Reserved
      */
-    uint32_t reserved4; /* 32b */
+    uint8_t reserved4[4]; /* string */
     /**
      * Drive name
      */
@@ -751,7 +742,7 @@ typedef struct slmp_req_read_dir_unicode {
     /**
      * Length of directory name
      */
-    uint8_t name_len;
+    uint16_t name_len;
     /**
      * Directory name
      */
@@ -851,7 +842,7 @@ typedef struct slmp_req_search_dir_file {
     /**
      * Filename
      */
-    uint8_t *file_name; /* (size = 'num_file_name') */
+    uint8_t *file_name; /* (size = '(cmd->num_file_name + cmd->num_dir_name)') */
 } slmp_req_search_dir_file_t;
 
 /**
@@ -906,7 +897,7 @@ typedef struct slmp_req_new_file_a {
     /**
      * File attributes
      */
-    uint8_t attr;
+    uint8_t attr[1]; /* string */
     /**
      * File size
      */
@@ -1067,7 +1058,7 @@ typedef struct slmp_res_read_file {
     /**
      * Data
      */
-    uint8_t data[1]; /* variable size */
+    uint8_t *data; /* (size = 'num_bytes') */
 } slmp_res_read_file_t;
 
 /**
@@ -1092,7 +1083,7 @@ typedef struct slmp_req_write_file {
     /**
      * Data
      */
-    uint8_t data[1]; /* variable size */
+    uint8_t *data; /* (size = 'num_bytes') */
 } slmp_req_write_file_t;
 
 /**

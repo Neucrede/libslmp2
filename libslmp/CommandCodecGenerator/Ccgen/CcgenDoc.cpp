@@ -110,7 +110,7 @@ void CCcgenDoc::Dump(CDumpContext& dc) const
 
 void CCcgenDoc::DeleteContents() 
 {
-    UpdateAllViews(NULL, 1);
+    UpdateAllViews(NULL, 0);
 
     m_strDesc.Empty();
     m_strCommandHeaderFilename = _T("commands.h");

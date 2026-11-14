@@ -31,7 +31,7 @@ typedef struct slmp_req_node_search {
     /**
      * Client IP address
      */
-    uint8_t ip_addr[1]; /* variable size */
+    uint8_t *ip_addr; /* (size = 'ip_addr_size') */
 } slmp_req_node_search_t;
 
 /**

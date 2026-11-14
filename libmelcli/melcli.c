@@ -518,6 +518,7 @@ MELCLIAPI int MELCLICALL melcli_random_read(
     const char** addr;
     size_t num_word_units = 0, num_dword_units = 0;
     int use_32bit_addr = -1;
+    size_t expected_resp_data_len;
     size_t per_req_unit_data_len, req_data_len, req_size;
     slmp_req_device_read_random_unit_t req_unit;
     slmp_req_device_read_random_t *req = NULL;
@@ -543,6 +544,8 @@ MELCLIAPI int MELCLICALL melcli_random_read(
     {
         ++num_dword_units;
     }
+
+    expected_resp_data_len = 2 * num_word_units + 4 * num_dword_units;
         
     if (    ((num_word_units == 0) && (num_dword_units == 0))
         ||  (num_word_units > 255) 
@@ -612,6 +615,16 @@ MELCLIAPI int MELCLICALL melcli_random_read(
 
     ret = receive_frame(ctx, serial, &frame);
     if (ret != MELCLI_ERROR_SUCCESS) {
+        goto __done;
+    }
+
+    if (SLMP_FRAME_RAW_DATA_SIZE(frame) < expected_resp_data_len) {
+        if (ctx->debug) {
+            ctx->dbgprint("[ERROR] Failed to decode the response frame. "
+                "Length of the data received is shorter than expected.\n");
+        }
+
+        ret = MELCLI_ERROR_DECODE_FRAME;
         goto __done;
     }
     
@@ -1123,8 +1136,9 @@ MELCLIAPI int MELCLICALL melcli_remote_control(
                 ctx->dbgprint("[ERROR] Failed to decode the response frame. %s\n",
                     slmp_get_err_msg(slmp_get_errno()));
                 ret = MELCLI_ERROR_DECODE_FRAME;
-                goto __done;
             }
+
+            goto __done;
         }
         else {
             res = (slmp_res_read_type_name_t*)(res_hdr);

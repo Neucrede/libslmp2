@@ -360,12 +360,15 @@ void CCodeGenerator::AppendFieldDeclAddrLenIndep(const CFieldObject* field, CStr
                 field->m_bStringBin16B, uIndent);
             break;
         case 1: // ASCII only
-            AppendVarDecl(field->m_strName, code, field->m_sizeAsc16B, 
+            AppendVarDecl(field->m_strName, code, 
+                field->m_bStringAsc16B ? field->m_sizeAsc16B : (field->m_sizeAsc16B - 1) / 2 + 1, 
                 field->m_bStringAsc16B, uIndent);
             break;
         case 2: // Both binary and ASCII
-            AppendUnionDecl(field->m_strName, code, _T("bin"), _T("ascii"), field->m_sizeBin16B,
-                field->m_sizeAsc16B, field->m_bStringBin16B, field->m_bStringAsc16B, uIndent,
+            AppendUnionDecl(field->m_strName, code, _T("bin"), _T("ascii"), 
+                field->m_sizeBin16B,
+                field->m_bStringAsc16B ? field->m_sizeAsc16B : (field->m_sizeAsc16B - 1) / 2 + 1, 
+                field->m_bStringBin16B, field->m_bStringAsc16B, uIndent,
                 TRUE);
             break;
         default:
@@ -408,8 +411,10 @@ void CCodeGenerator::AppendFieldDeclAddrLenDep(const CFieldObject* field, CStrin
                 field->m_sizeBin32B, field->m_bStringBin16B, field->m_bStringBin32B, uIndent);
             break;
         case 1: // ASCII only
-            AppendUnionDecl(_T("ascii"), code, _T("s"), _T("l"), field->m_sizeAsc16B,
-                field->m_sizeAsc32B, field->m_bStringAsc16B, field->m_bStringAsc32B, uIndent);
+            AppendUnionDecl(_T("ascii"), code, _T("s"), _T("l"), 
+                field->m_bStringAsc16B ? field->m_sizeAsc16B : (field->m_sizeAsc16B - 1) / 2 + 1,
+                field->m_bStringAsc32B ? field->m_sizeAsc32B : (field->m_sizeAsc32B - 1) / 2 + 1, 
+                field->m_bStringAsc16B, field->m_bStringAsc32B, uIndent);
             break;
         case 2: { // Both binary and ASCII
             bool bIdenticalSize = 
@@ -439,8 +444,10 @@ void CCodeGenerator::AppendFieldDeclAddrLenDep(const CFieldObject* field, CStrin
                 AppendUnionDecl(_T("bin"), code, _T("s"), _T("l"), field->m_sizeBin16B,
                     field->m_sizeBin32B, field->m_bStringBin16B, field->m_bStringBin32B, uIndent,
                     FALSE);
-                AppendUnionDecl(_T("ascii"), code, _T("s"), _T("l"), field->m_sizeAsc16B,
-                    field->m_sizeAsc32B, field->m_bStringAsc16B, field->m_bStringAsc32B, uIndent,
+                AppendUnionDecl(_T("ascii"), code, _T("s"), _T("l"), 
+                    field->m_bStringAsc16B ? field->m_sizeAsc16B : (field->m_sizeAsc16B - 1) / 2 + 1,
+                    field->m_bStringAsc32B ? field->m_sizeAsc32B : (field->m_sizeAsc32B - 1) / 2 + 1,  
+                    field->m_bStringAsc16B, field->m_bStringAsc32B, uIndent,
                     FALSE);
 
                 CString strDeclEnd;
@@ -582,8 +589,16 @@ void CCodeGenerator::AppendEncodeFcnImpl(const CCommandObject* cmd, CString& cod
         for (int i = 0; i <= varSizeFields.GetUpperBound(); ++i) {
             CFieldObject *field = varSizeFields.ElementAt(i);
             if (field->m_bSizeField && !field->m_strSizeField.IsEmpty()) {
-                strStmt.Format(_T("var_part_size += (size_t)(cmd->%s); \n"), 
-                    field->m_strSizeField);
+                CString strSize;
+                if (field->m_strSizeField.GetAt(0) == _T('(')) {
+                    strSize = field->m_strSizeField;
+                }
+                else {
+                    strSize.Format("cmd->%s", field->m_strSizeField);
+                }
+
+                strStmt.Format(_T("var_part_size += (size_t)(%s); \n"), 
+                    strSize);
                 code += IndentLine(strStmt, uIndent);
             }
         }
@@ -884,10 +899,10 @@ void CCodeGenerator::GetFieldAccessExpr(const CFieldObject* field, CString& strE
             switch (addrLen) {
             case AddressLength16B:
             case Unaware:
-                fieldLen = field->m_sizeAsc16B;
+                fieldLen = field->m_bStringAsc16B ? field->m_sizeAsc16B : (field->m_sizeAsc16B - 1) / 2 + 1;
                 break;
             case AddressLength32B:
-                fieldLen = field->m_sizeAsc32B;
+                fieldLen = field->m_bStringAsc32B ? field->m_sizeAsc32B : (field->m_sizeAsc32B - 1) / 2 + 1;
                 break;
             default:
                 break;
@@ -1119,13 +1134,23 @@ void CCodeGenerator::AppendFieldCodecStatement(const CFieldObject* field, CStrin
             str.Format(_T("COPY_MEMORY(&(%s), var_part_size); \n"), strFieldExpr);
             strStmt += (strPrefix + str);
         }
-        else if (!bDecode) {    /* Encode */
-            strStmt.Format(_T("ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY_N(%s, cmd->%s); \n"),
-                strFieldExpr, field->m_strSizeField);
-        }
-        else {  /* Decode */
-            strStmt.Format(_T("DECODE_AND_ADVANCE_STREAM_COPY_MEMORY_N(%s, cmd->%s); \n"),
-                strFieldExpr, field->m_strSizeField);
+        else {
+            CString strSize;
+            if (field->m_strSizeField.GetAt(0) == _T('(')) {
+                strSize = field->m_strSizeField;
+            }
+            else {
+                strSize.Format("cmd->%s", field->m_strSizeField);
+            }
+
+            if (!bDecode) {    /* Encode */
+                strStmt.Format(_T("ENCODE_AND_ADVANCE_STREAM_COPY_MEMORY_N(%s, %s); \n"),
+                    strFieldExpr, strSize);
+            }
+            else {  /* Decode */
+                strStmt.Format(_T("DECODE_AND_ADVANCE_STREAM_COPY_MEMORY_N(%s, %s); \n"),
+                    strFieldExpr, strSize);
+            }
         }
     }
 
